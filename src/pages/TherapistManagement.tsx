@@ -344,43 +344,70 @@ const TherapistManagement: React.FC = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">Therapist Management</h1>
+        <h1 className="text-3xl font-bold text-green-700">Therapist Management</h1>
         <button
           onClick={() => window.location.href = '/therapists/onboarding'}
-          className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
+          className="bg-green-800 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
         >
           Add New Therapist
         </button>
       </div>
 
       {/* Performance Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h3 className="text-lg font-semibold text-gray-700">Total Therapists</h3>
-          <p className="text-2xl font-bold text-gray-900">{performanceMetrics.totalTherapists}</p>
-        </div>
-        
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h3 className="text-lg font-semibold text-gray-700">Active Now</h3>
-          <p className="text-2xl font-bold text-green-600">{performanceMetrics.activeTherapists}</p>
-        </div>
-        
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h3 className="text-lg font-semibold text-gray-700">Avg Rating</h3>
-          <p className="text-2xl font-bold text-yellow-600">{performanceMetrics.averageRating.toFixed(1)}</p>
-          <p className="text-sm text-gray-600">/ 5.0</p>
-        </div>
-        
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h3 className="text-lg font-semibold text-gray-700">Total Sessions</h3>
-          <p className="text-2xl font-bold text-blue-600">{performanceMetrics.totalSessions}</p>
-        </div>
-        
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h3 className="text-lg font-semibold text-gray-700">Pending Verification</h3>
-          <p className="text-2xl font-bold text-red-600">{performanceMetrics.pendingVerifications}</p>
-        </div>
-      </div>
+  <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
+  {/* Total Therapists - Indigo */}
+  <div className="bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-lg shadow-md p-6 border-l-4 border-indigo-500">
+    <h3 className="text-lg font-semibold text-indigo-800">Total Therapists</h3>
+    <p className="text-2xl font-bold text-indigo-700">{performanceMetrics.totalTherapists}</p>
+    <div className="flex items-center mt-2">
+      <div className="w-3 h-3 bg-indigo-500 rounded-full mr-2"></div>
+      <p className="text-xs text-indigo-600">All registered therapists</p>
+    </div>
+  </div>
+  
+  {/* Active Now - Emerald */}
+  <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-lg shadow-md p-6 border-l-4 border-emerald-500">
+    <h3 className="text-lg font-semibold text-emerald-800">Active Now</h3>
+    <p className="text-2xl font-bold text-emerald-700">{performanceMetrics.activeTherapists}</p>
+    <div className="flex items-center mt-2">
+      <div className="w-3 h-3 bg-emerald-500 rounded-full mr-2"></div>
+      <p className="text-xs text-emerald-600">Currently online</p>
+    </div>
+  </div>
+  
+  {/* Avg Rating - Amber */}
+  <div className="bg-gradient-to-br from-amber-50 to-amber-100 rounded-lg shadow-md p-6 border-l-4 border-amber-500">
+    <h3 className="text-lg font-semibold text-amber-800">Avg Rating</h3>
+    <div className="flex items-baseline">
+      <p className="text-2xl font-bold text-amber-700">{performanceMetrics.averageRating.toFixed(1)}</p>
+      <p className="text-sm text-amber-600 ml-1">/ 5.0</p>
+    </div>
+    <div className="flex items-center mt-2">
+      <div className="w-3 h-3 bg-amber-500 rounded-full mr-2"></div>
+      <p className="text-xs text-amber-600">Customer satisfaction</p>
+    </div>
+  </div>
+  
+  {/* Total Sessions - Sky Blue */}
+  <div className="bg-gradient-to-br from-sky-50 to-sky-100 rounded-lg shadow-md p-6 border-l-4 border-sky-500">
+    <h3 className="text-lg font-semibold text-sky-800">Total Sessions</h3>
+    <p className="text-2xl font-bold text-sky-700">{performanceMetrics.totalSessions}</p>
+    <div className="flex items-center mt-2">
+      <div className="w-3 h-3 bg-sky-500 rounded-full mr-2"></div>
+      <p className="text-xs text-sky-600">Completed sessions</p>
+    </div>
+  </div>
+  
+  {/* Pending Verification - Rose */}
+  <div className="bg-gradient-to-br from-rose-50 to-rose-100 rounded-lg shadow-md p-6 border-l-4 border-rose-500">
+    <h3 className="text-lg font-semibold text-rose-800">Pending Verification</h3>
+    <p className="text-2xl font-bold text-rose-700">{performanceMetrics.pendingVerifications}</p>
+    <div className="flex items-center mt-2">
+      <div className="w-3 h-3 bg-rose-500 rounded-full mr-2"></div>
+      <p className="text-xs text-rose-600">Awaiting approval</p>
+    </div>
+  </div>
+</div>
 
       {/* Tabs */}
       <div className="bg-white rounded-lg shadow-md p-4 mb-6">

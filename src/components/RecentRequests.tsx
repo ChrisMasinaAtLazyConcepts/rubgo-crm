@@ -127,7 +127,7 @@ const RecentRequests: React.FC = () => {
   if (loading) {
     return (
       <div className="bg-white rounded-lg shadow-md p-6">
-        <h2 className="text-xl font-semibold mb-4">Recent Massage Requests</h2>
+        <h2 className="text-xl font-semibold mb-4 text-green-700">Recent Massage Requests</h2>
         <div className="space-y-4">
           {[...Array(5)].map((_, index) => (
             <div key={index} className="animate-pulse">

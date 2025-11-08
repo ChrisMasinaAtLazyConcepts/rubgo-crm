@@ -11,11 +11,11 @@ const StatsOverview = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       {stats.map((stat, index) => (
-        <div key={index} className="bg-white rounded-lg shadow-md p-6">
+        <div key={index} className="bg-[#0B1F3D] text-white rounded-lg shadow-md p-6">
           <div className="flex justify-between items-start">
             <div>
-              <p className="text-sm font-medium text-gray-600">{stat.label}</p>
-              <p className="text-2xl font-bold text-gray-900 mt-2">{stat.value}</p>
+              <p className="text-sm font-medium text-white">{stat.label}</p>
+              <p className="text-2xl font-bold text-green-600 mt-2">{stat.value}</p>
             </div>
             <span className={`px-2 py-1 rounded-full text-xs font-medium ${
               stat.changeType === 'positive' 

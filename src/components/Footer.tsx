@@ -1,18 +1,18 @@
 // frontend/src/components/Footer.tsx
 import React from 'react';
-
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
 
+
   return (
-    <footer className="bg-black text-white">
+    <footer className="bg-[#0B1F3D] text-white">
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col md:flex-row justify-between items-center">
           {/* Brand Section */}
           <div className="mb-4 md:mb-0">
             <div className="flex items-center space-x-2">
-              <span className="text-2xl font-bold text-white">RubGo</span>
-              <span className="text-sm text-gray-400">CRM</span>
+              <span className="text-2xl font-bold text-green-600">RubGo</span>
+              <span className="text-sm text-white">CRM</span>
             </div>
             <p className="text-gray-400 text-sm mt-2">
               Professional Massage Therapy Management

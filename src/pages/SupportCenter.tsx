@@ -375,43 +375,49 @@ const SupportCenter: React.FC = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">Support Center</h1>
+        <h1 className="text-3xl font-bold text-green-600">Support Center</h1>
         <button
           onClick={() => setShowTicketModal(true)}
-          className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
+          className="bg-greenRevenue Trend-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
         >
           Create Ticket
         </button>
       </div>
 
       {/* Stats Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <div className="bg-white rounded-lg shadow-md p-4 text-center">
-          <div className="text-2xl font-bold text-red-600">
-            {tickets.filter(t => t.status === 'open').length}
-          </div>
-          <div className="text-sm text-gray-600">Open Tickets</div>
-        </div>
-        <div className="bg-white rounded-lg shadow-md p-4 text-center">
-          <div className="text-2xl font-bold text-blue-600">
-            {tickets.filter(t => t.status === 'in-progress').length}
-          </div>
-          <div className="text-sm text-gray-600">In Progress</div>
-        </div>
-        <div className="bg-white rounded-lg shadow-md p-4 text-center">
-          <div className="text-2xl font-bold text-green-600">
-            {tickets.filter(t => t.status === 'resolved').length}
-          </div>
-          <div className="text-sm text-gray-600">Resolved</div>
-        </div>
-        <div className="bg-white rounded-lg shadow-md p-4 text-center">
-          <div className="text-2xl font-bold text-orange-600">
-            {tickets.filter(t => t.priority === 'urgent' || t.priority === 'high').length}
-          </div>
-          <div className="text-sm text-gray-600">High Priority</div>
-        </div>
-      </div>
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+  {/* Open Tickets - Red Theme */}
+  <div className="bg-[#FEF2F2] rounded-lg shadow-md p-4 text-center border-l-4 border-red-500">
+    <div className="text-2xl font-bold text-red-600">
+      {tickets.filter(t => t.status === 'open').length}
+    </div>
+    <div className="text-sm text-red-700">Open Tickets</div>
+  </div>
 
+  {/* In Progress - Blue Theme */}
+  <div className="bg-[#EFF6FF] rounded-lg shadow-md p-4 text-center border-l-4 border-blue-500">
+    <div className="text-2xl font-bold text-blue-600">
+      {tickets.filter(t => t.status === 'in-progress').length}
+    </div>
+    <div className="text-sm text-blue-700">In Progress</div>
+  </div>
+
+  {/* Resolved - Green Theme */}
+  <div className="bg-[#F0FDF4] rounded-lg shadow-md p-4 text-center border-l-4 border-green-500">
+    <div className="text-2xl font-bold text-green-600">
+      {tickets.filter(t => t.status === 'resolved').length}
+    </div>
+    <div className="text-sm text-green-700">Resolved</div>
+  </div>
+
+  {/* High Priority - Orange Theme */}
+  <div className="bg-[#FFF7ED] rounded-lg shadow-md p-4 text-center border-l-4 border-orange-500">
+    <div className="text-2xl font-bold text-orange-600">
+      {tickets.filter(t => t.priority === 'urgent' || t.priority === 'high').length}
+    </div>
+    <div className="text-sm text-orange-700">High Priority</div>
+  </div>
+</div>
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Filters Sidebar */}
         <div className="lg:col-span-1">

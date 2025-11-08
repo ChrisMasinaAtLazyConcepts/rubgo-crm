@@ -261,8 +261,43 @@ const PaymentManagement: React.FC = () => {
       <div className="flex justify-between items-center mb-6">
         <div className="flex items-center gap-3">
           <Coins className="w-8 h-8 text-green-900" />
-          <h1 className="text-3xl font-bold text-green-900">Billing</h1>
+          <h1 className="text-3xl font-bold text-green-900">Billing & Payments</h1>
         </div>
+        
+      {/* Payment Mode Selection */}
+      <div className="bg-gray-50 p-4 rounded-lg">
+        <h4 className="font-semibold mb-3 text-gray-800">Payment Mode</h4>
+        <div className="flex flex-col sm:flex-row gap-3">
+          <label className="flex items-center space-x-2 cursor-pointer">
+            <input
+              type="radio"
+              name="paymentMode"
+              value="automated"
+              className="w-4 h-4 text-blue-600 focus:ring-blue-500"
+              defaultChecked
+            />
+            <span className="text-gray-700">Manual</span>
+          </label>
+          <label className="flex items-center space-x-2 cursor-pointer">
+            <input
+              type="radio"
+              name="paymentMode"
+              value="monthly"
+              className="w-4 h-4 text-blue-600 focus:ring-blue-500"
+            />
+            <span className="text-gray-700">Auto Monthly</span>
+          </label>
+          <label className="flex items-center space-x-2 cursor-pointer">
+            <input
+              type="radio"
+              name="paymentMode"
+              value="weekly"
+              className="w-4 h-4 text-blue-600 focus:ring-blue-500"
+            />
+            <span className="text-gray-700">Auto Weekly</span>
+          </label>
+        </div>
+      </div>
         <div className="flex space-x-3">
           <button
             onClick={() => setShowManualPaymentModal(true)}
@@ -597,121 +632,126 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({ payment, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg p-6 w-full max-w-2xl">
-        <div className="flex justify-between items-start mb-6">
-          <h2 className="text-xl font-semibold">Payment Invoice</h2>
-          <div className="flex space-x-2">
-            <button
-              onClick={printInvoice}
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm"
-            >
-              Print
-            </button>
-            <button
-              onClick={onClose}
-              className="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm"
-            >
-              Close
-            </button>
+   <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+  <div className="bg-white rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+    <div className="flex justify-between items-start mb-6">
+      <h2 className="text-xl font-semibold">Payment Invoice</h2>
+      <div className="flex space-x-2">
+        <button
+          onClick={printInvoice}
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700"
+        >
+          Print
+        </button>
+        <button
+          onClick={onClose}
+          className="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm hover:bg-gray-400"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+
+    <div className="border rounded-lg p-6 space-y-6">
+      {/* Invoice Header */}
+      <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
+        <div className="bg-[#F9FCFF] flex items-center gap-4 w-full sm:w-auto p-4 rounded-lg">
+          <img
+            src={'./assets/images/Rubbgo3.png'}
+            alt={'RubGo Logo'}
+            className="w-32 h-16 object-contain"
+          />
+          <div>
+            <p className="text-gray-600 font-semibold">Instant EFT Payment</p>
           </div>
         </div>
+        
+        <div className="text-left sm:text-right w-full sm:w-auto">
+          <p className="text-gray-600 font-medium">Invoice #: {payment.requestId}</p>
+          <p className="text-gray-600">Date: {payment.paymentDate}</p>
+        </div>
+      </div>
 
-        <div className="border rounded-lg p-6">
-          {/* Invoice Header */}
-          <div className="flex justify-between items-start mb-6">
-            <div className="flex items-center gap-4">
-              <img
-                src={'./assets/images/Rubbgo2.png'}
-                alt={'RubGo Logo'}
-                className="w-16 h-16 object-contain"
-              />
-              <div>
-                <div className="flex items-center space-x-2">
-                  <span className="text-2xl font-bold text-green-800">RubGo</span>
-                </div>
-                <p className="text-gray-600">Payment Invoice</p>
-              </div>
-            </div>
-            <div className="text-right">
-              <p className="text-gray-600">Invoice #: {payment.requestId}</p>
-              <p className="text-gray-600">Date: {payment.paymentDate}</p>
-            </div>
+
+
+      {/* Therapist and Service Details */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div className="bg-gray-50 p-4 rounded-lg">
+          <h4 className="font-semibold mb-3 text-gray-800">Therapist Details</h4>
+          <p className="text-gray-900 font-medium">{payment.therapistName}</p>
+          <p className="text-gray-600 text-sm">ID: {payment.therapistId}</p>
+        </div>
+        <div className="bg-gray-50 p-4 rounded-lg">
+          <h4 className="font-semibold mb-3 text-gray-800">Service Details</h4>
+          <p className="text-gray-900 font-medium">{payment.serviceType}</p>
+          <p className="text-gray-600 text-sm">Customer: {payment.customerName}</p>
+        </div>
+      </div>
+
+
+      {/* Payment Breakdown */}
+      <div className="border-t border-b py-6">
+        <h4 className="font-semibold mb-4 text-lg text-gray-800">Payment Breakdown</h4>
+        <div className="space-y-3">
+          <div className="flex justify-between items-center py-2">
+            <span className="text-gray-700">Base Price:</span>
+            <span className="font-medium">R{payment.basePrice}</span>
           </div>
-
-          {/* Payment Logos */}
-          <div className="flex justify-end items-center gap-4 mb-6">
-            <img
-              src={'./assets/images/ozow.jfif'}
-              alt={'Ozow Payment'}
-              className="w-16 h-16 object-contain"
-            />
-            <img
-              src={'./assets/images/payfast.png'}
-              alt={'PayFast Payment'}
-              className="w-16 h-16 object-contain"
-            />
+          <div className="flex justify-between items-center py-2">
+            <span className="text-gray-700">Travel Fee:</span>
+            <span className="font-medium">R{payment.travelFee}</span>
           </div>
-
-          {/* Therapist and Service Details */}
-          <div className="grid grid-cols-2 gap-6 mb-6">
-            <div>
-              <h4 className="font-semibold mb-2">Therapist Details</h4>
-              <p>{payment.therapistName}</p>
-              <p className="text-gray-600">ID: {payment.therapistId}</p>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-2">Service Details</h4>
-              <p>{payment.serviceType}</p>
-              <p className="text-gray-600">Customer: {payment.customerName}</p>
-            </div>
+          <div className="flex justify-between items-center py-2 border-b pb-3">
+            <span className="text-gray-700 font-medium">Subtotal:</span>
+            <span className="font-bold">R{payment.basePrice + payment.travelFee}</span>
           </div>
-
-          {/* Payment Breakdown */}
-          <div className="border-t border-b py-4 mb-4">
-            <h4 className="font-semibold mb-3">Payment Breakdown</h4>
-            <div className="space-y-2">
-              <div className="flex justify-between">
-                <span>Base Price:</span>
-                <span>R{payment.basePrice}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Travel Fee:</span>
-                <span>R{payment.travelFee}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Subtotal:</span>
-                <span>R{payment.basePrice + payment.travelFee}</span>
-              </div>
-              <div className="flex justify-between text-red-600">
-                <span>RubGo Service Fee (12%):</span>
-                <span>- R{payment.rubgoServiceFee}</span>
-              </div>
-              <div className="flex justify-between font-bold text-lg border-t pt-2">
-                <span>Therapist Earnings:</span>
-                <span className="text-green-600">R{payment.therapistEarnings}</span>
-              </div>
-            </div>
+          <div className="flex justify-between items-center py-2">
+            <span className="text-red-700">RubGo Service Fee (12%):</span>
+            <span className="text-red-700 font-medium">- R{payment.rubgoServiceFee}</span>
           </div>
-
-          {/* Payment Status */}
-          <div className="flex justify-between items-center">
-            <div>
-              <span className="font-semibold">Status:</span>
-              <span className={`ml-2 px-2 py-1 rounded-full text-xs ${payment.status === 'completed' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
-                {payment.status.charAt(0).toUpperCase() + payment.status.slice(1)}
-              </span>
-            </div>
-            {payment.payoutDate && (
-              <div className="text-right">
-                <span className="font-semibold">Paid Out:</span>
-                <span className="ml-2">{payment.payoutDate}</span>
-              </div>
-            )}
+          <div className="flex justify-between items-center py-3 border-t pt-4">
+            <span className="text-lg font-bold text-gray-900">Therapist Earnings:</span>
+            <span className="text-xl font-bold text-green-600">R{payment.therapistEarnings}</span>
           </div>
         </div>
       </div>
+
+      {/* Payment Status */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pt-4">
+        <div className="flex items-center">
+          <span className="font-semibold text-gray-800 mr-3">Status:</span>
+          <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+            payment.status === 'completed' 
+              ? 'bg-green-100 text-green-800' 
+              : 'bg-yellow-100 text-yellow-800'
+          }`}>
+            {payment.status.charAt(0).toUpperCase() + payment.status.slice(1)}
+          </span>
+        </div>
+        {payment.payoutDate && (
+          <div className="text-left sm:text-right">
+            <span className="font-semibold text-gray-800">Paid Out:</span>
+            <span className="ml-2 text-gray-700">{payment.payoutDate}</span>
+          </div>
+        )}
+      </div>
+
+            {/* Payment Logos */}
+      <div className="flex justify-center sm:justify-start items-center gap-6 py-4 border-y">
+        <img
+          src={'./assets/images/ozow.jfif'}
+          alt={'Ozow Payment'}
+          className="w-20 h-20 object-contain"
+        />
+        <img
+          src={'./assets/images/payfast.png'}
+          alt={'PayFast Payment'}
+          className="w-20 h-20 object-contain"
+        />
+      </div>
     </div>
+  </div>
+</div>
   );
 };
 

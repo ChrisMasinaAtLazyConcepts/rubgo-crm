@@ -1,5 +1,28 @@
 // frontend/src/pages/AnalyticsDashboard.tsx
 import React, { useState, useEffect } from 'react';
+import { 
+  FaUsers, 
+  FaMoneyBillWave, 
+  FaCalendarCheck, 
+  FaChartLine,
+  FaArrowUp, 
+  FaArrowDown, 
+  FaMinus 
+} from 'react-icons/fa';
+import { Doughnut, Bar } from 'react-chartjs-2';
+import { 
+  Chart as ChartJS, 
+  ArcElement, 
+  Tooltip, 
+  Legend,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title
+} from 'chart.js';
+
+// Register Chart.js components
+ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title);
 
 interface KPI {
   label: string;
@@ -7,7 +30,7 @@ interface KPI {
   change: number;
   changeType: 'positive' | 'negative' | 'neutral';
   format?: 'currency' | 'number' | 'percentage';
-  icon: string;
+  icon: React.ReactNode;
 }
 
 interface RevenueData {
@@ -54,71 +77,39 @@ const AnalyticsDashboard: React.FC = () => {
   }, [timeRange]);
 
   const loadDashboardData = () => {
-    // Mock data - replace with API calls
+    // Mock KPIs data with React Icons
     const mockKpis: KPI[] = [
       {
-        label: 'Total Revenue',
-        value: 125430,
+        label: 'Total Users',
+        value: 1250,
         change: 12.5,
         changeType: 'positive',
+        format: 'number',
+        icon: <FaUsers className="w-6 h-6" />
+      },
+      {
+        label: 'Total Revenue',
+        value: 125000,
+        change: 8.3,
+        changeType: 'positive',
         format: 'currency',
-        icon: '💰'
+        icon: <FaMoneyBillWave className="w-6 h-6" />
       },
       {
-        label: 'Total Bookings',
-        value: 342,
-        change: 8.2,
-        changeType: 'positive',
-        format: 'number',
-        icon: '📅'
-      },
-      {
-        label: 'Active Therapists',
-        value: 28,
-        change: 15.8,
-        changeType: 'positive',
-        format: 'number',
-        icon: '👨‍⚕️'
-      },
-      {
-        label: 'New Customers',
-        value: 89,
-        change: 5.6,
-        changeType: 'positive',
-        format: 'number',
-        icon: '👥'
-      },
-      {
-        label: 'Cancellation Rate',
-        value: 4.2,
+        label: 'Appointments',
+        value: 345,
         change: -2.1,
-        changeType: 'positive',
-        format: 'percentage',
-        icon: '❌'
-      },
-      {
-        label: 'Avg Session Rating',
-        value: 4.7,
-        change: 0.3,
-        changeType: 'positive',
+        changeType: 'negative',
         format: 'number',
-        icon: '⭐'
+        icon: <FaCalendarCheck className="w-6 h-6" />
       },
       {
-        label: 'Therapist Utilization',
-        value: 78,
-        change: 12.4,
+        label: 'Growth Rate',
+        value: 15.7,
+        change: 3.2,
         changeType: 'positive',
         format: 'percentage',
-        icon: '📊'
-      },
-      {
-        label: 'Repeat Customer Rate',
-        value: 42,
-        change: 8.7,
-        changeType: 'positive',
-        format: 'percentage',
-        icon: '🔄'
+        icon: <FaChartLine className="w-6 h-6" />
       }
     ];
 
@@ -175,17 +166,17 @@ const AnalyticsDashboard: React.FC = () => {
 
   const getChangeColor = (changeType: string) => {
     switch (changeType) {
-      case 'positive': return 'text-green-600 bg-green-100';
-      case 'negative': return 'text-red-600 bg-red-100';
-      default: return 'text-gray-600 bg-gray-100';
+      case 'positive': return 'bg-green-500/20 text-green-300';
+      case 'negative': return 'bg-red-500/20 text-red-300';
+      default: return 'bg-gray-500/20 text-gray-300';
     }
   };
 
   const getChangeIcon = (changeType: string) => {
     switch (changeType) {
-      case 'positive': return '↗';
-      case 'negative': return '↘';
-      default: return '→';
+      case 'positive': return <FaArrowUp className="inline w-3 h-3" />;
+      case 'negative': return <FaArrowDown className="inline w-3 h-3" />;
+      default: return <FaMinus className="inline w-3 h-3" />;
     }
   };
 
@@ -211,7 +202,7 @@ const AnalyticsDashboard: React.FC = () => {
       </div>
 
       {/* Time Period Summary */}
-      <div className="bg-green-600 rounded-lg shadow-lg text-white p-6 mb-8">
+      <div className="bg-[#0B1F3D] rounded-lg shadow-lg text-white p-6 mb-8">
         <div className="flex justify-between items-start">
           <div>
             <h2 className="text-2xl font-bold mb-2">Performance Overview</h2>
@@ -258,17 +249,19 @@ const AnalyticsDashboard: React.FC = () => {
       {(activeTab === 'overview' || activeTab === 'revenue') && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {kpis.map((kpi, index) => (
-            <div key={index} className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+            <div key={index} className="bg-[#0B1F3D] rounded-lg shadow-lg p-6 hover:shadow-xl transition-all duration-300 border border-blue-700/30 hover:border-blue-500/50">
               <div className="flex justify-between items-start mb-4">
-                <div className="text-2xl">{kpi.icon}</div>
+                <div className="text-2xl text-white bg-blue-600/20 p-2 rounded-lg">
+                  {kpi.icon}
+                </div>
                 <span className={`px-2 py-1 rounded-full text-xs font-medium ${getChangeColor(kpi.changeType)}`}>
                   {getChangeIcon(kpi.changeType)} {kpi.change}%
                 </span>
               </div>
-              <div className="text-2xl font-bold text-gray-900 mb-1">
+              <div className="text-2xl font-bold text-white mb-1">
                 {formatValue(kpi.value, kpi.format)}
               </div>
-              <div className="text-sm text-gray-600">{kpi.label}</div>
+              <div className="text-sm text-gray-300">{kpi.label}</div>
             </div>
           ))}
         </div>
@@ -280,19 +273,101 @@ const AnalyticsDashboard: React.FC = () => {
         {(activeTab === 'overview' || activeTab === 'revenue') && (
           <div className="lg:col-span-2 bg-white rounded-lg shadow-md p-6">
             <h3 className="text-lg font-semibold mb-4">Revenue Trend</h3>
-            <div className="space-y-4">
-              {revenueData.map((day, index) => (
-                <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                  <div className="flex-1">
-                    <div className="font-medium text-gray-900">{day.date}</div>
-                    <div className="text-sm text-gray-600">{day.bookings} bookings</div>
-                  </div>
-                  <div className="text-right">
-                    <div className="font-bold text-lg text-green-600">R{day.revenue.toLocaleString()}</div>
-                    <div className="text-sm text-gray-600">Avg: R{day.averageOrder}</div>
-                  </div>
-                </div>
-              ))}
+            <div className="h-80">
+              <Bar
+                data={{
+                  labels: revenueData.map(day => day.date),
+                  datasets: [
+                    {
+                      label: 'Daily Revenue',
+                      data: revenueData.map(day => day.revenue),
+                      backgroundColor: '#10B981',
+                      borderColor: '#047857',
+                      borderWidth: 1,
+                      borderRadius: 6,
+                      borderSkipped: false,
+                    },
+                    {
+                      label: 'Number of Bookings',
+                      data: revenueData.map(day => day.bookings),
+                      backgroundColor: '#3B82F6',
+                      borderColor: '#1D4ED8',
+                      borderWidth: 1,
+                      borderRadius: 6,
+                      borderSkipped: false,
+                      yAxisID: 'y1',
+                    }
+                  ]
+                }}
+                options={{
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  interaction: {
+                    mode: 'index' as const,
+                    intersect: false,
+                  },
+                  scales: {
+                    x: {
+                      grid: {
+                        display: false
+                      }
+                    },
+                    y: {
+                      type: 'linear' as const,
+                      display: true,
+                      position: 'left' as const,
+                      title: {
+                        display: true,
+                        text: 'Revenue (R)'
+                      },
+                      grid: {
+                        color: '#F3F4F6'
+                      }
+                    },
+                    y1: {
+                      type: 'linear' as const,
+                      display: true,
+                      position: 'right' as const,
+                      title: {
+                        display: true,
+                        text: 'Bookings'
+                      },
+                      grid: {
+                        drawOnChartArea: false,
+                      },
+                    },
+                  },
+                  plugins: {
+                    legend: {
+                      position: 'top' as const,
+                    },
+                    tooltip: {
+                      callbacks: {
+                        label: function(context: any) {
+                          let label = context.dataset.label || '';
+                          if (label) {
+                            label += ': ';
+                          }
+                          if (context.datasetIndex === 0) {
+                            label += `R${context.parsed.y.toLocaleString()}`;
+                          } else {
+                            label += `${context.parsed.y} bookings`;
+                          }
+                          return label;
+                        },
+                        afterLabel: function(context: any) {
+                          if (context.datasetIndex === 0) {
+                            const dayIndex = Number(context.dataIndex);
+                            const day = revenueData[dayIndex];
+                            return `Avg: R${day.averageOrder}`;
+                          }
+                          return '';
+                        }
+                      }
+                    }
+                  }
+                }}
+              />
             </div>
           </div>
         )}
@@ -427,32 +502,104 @@ const AnalyticsDashboard: React.FC = () => {
       {/* Geographic Performance */}
       {(activeTab === 'overview' || activeTab === 'geography') && (
         <div className="bg-white rounded-lg shadow-md p-6">
-          <h3 className="text-lg font-semibold mb-4">Geographic Performance</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {geographicPerformance.map((area, index) => (
-              <div key={index} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                <div className="flex justify-between items-start mb-3">
-                  <h4 className="font-semibold text-gray-900">{area.area}</h4>
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                    area.growth >= 10 ? 'bg-green-100 text-green-800' :
-                    area.growth >= 5 ? 'bg-yellow-100 text-yellow-800' :
-                    'bg-red-100 text-red-800'
-                  }`}>
-                    {area.growth}%
-                  </span>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Bookings:</span>
-                    <span className="font-medium">{area.bookings}</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Revenue:</span>
-                    <span className="font-medium text-green-600">R{area.revenue.toLocaleString()}</span>
-                  </div>
-                </div>
+          <h3 className="text-lg font-semibold mb-4">Geographic Performance - Revenue Distribution</h3>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Pie Chart */}
+            <div className="flex flex-col items-center">
+              <div className="w-full max-w-md h-80">
+                <Doughnut
+                  data={{
+                    labels: geographicPerformance.map(area => area.area),
+                    datasets: [
+                      {
+                        data: geographicPerformance.map(area => area.revenue),
+                        backgroundColor: [
+                          '#3B82F6', // Blue
+                          '#10B981', // Green
+                          '#F59E0B', // Yellow
+                          '#EF4444', // Red
+                          '#8B5CF6', // Purple
+                        ],
+                        borderColor: '#ffffff',
+                        borderWidth: 2,
+                        hoverOffset: 8,
+                      }
+                    ]
+                  }}
+                  options={{
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                      legend: {
+                        position: 'right',
+                        labels: {
+                          boxWidth: 12,
+                          padding: 15,
+                          font: {
+                            size: 11
+                          }
+                        }
+                      },
+                      tooltip: {
+                        callbacks: {
+                          label: function(context: any) {
+                            const label = context.label || '';
+                            const value = context.parsed;
+                            const total = context.dataset.data.reduce((a: number, b: number) => a + b, 0);
+                            const percentage = ((value / total) * 100).toFixed(1);
+                            return `${label}: R${value.toLocaleString()} (${percentage}%)`;
+                          }
+                        }
+                      }
+                    }
+                  }}
+                />
               </div>
-            ))}
+            </div>
+
+            {/* Performance Details */}
+            <div className="space-y-4">
+              <h4 className="font-semibold text-gray-900 mb-3">Area Performance Details</h4>
+              {geographicPerformance.map((area, index) => {
+                const totalRevenue = geographicPerformance.reduce((sum, a) => sum + a.revenue, 0);
+                const percentage = ((area.revenue / totalRevenue) * 100).toFixed(1);
+                
+                return (
+                  <div key={index} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                    <div className="flex justify-between items-start mb-2">
+                      <h5 className="font-medium text-gray-900">{area.area}</h5>
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                        area.growth >= 10 ? 'bg-green-100 text-green-800' :
+                        area.growth >= 5 ? 'bg-yellow-100 text-yellow-800' :
+                        'bg-red-100 text-red-800'
+                      }`}>
+                        {area.growth > 0 ? '+' : ''}{area.growth}%
+                      </span>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-600">Revenue Share:</span>
+                        <span className="text-sm font-medium">{percentage}%</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-600">Revenue:</span>
+                        <span className="text-sm font-medium text-green-600">R{area.revenue.toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-600">Bookings:</span>
+                        <span className="text-sm font-medium">{area.bookings}</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
+                        <div
+                          className="h-2 rounded-full bg-blue-500"
+                          style={{ width: `${percentage}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       )}

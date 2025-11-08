@@ -14,7 +14,7 @@ const LoyaltyManagement = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-gray-900 mb-6">Loyalty & Incentives</h1>
+      <h1 className="text-3xl font-bold text-green-700 mb-6">Loyalty & Incentives</h1>
       
       {/* Tab Navigation */}
       <div className="border-b border-gray-200 mb-6">
@@ -40,7 +40,7 @@ const LoyaltyManagement = () => {
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-xl font-semibold">Loyalty Programs</h2>
-            <button className="bg-blue-600 text-white px-4 py-2 rounded-lg">
+            <button className="bg-green-600 text-white px-4 py-2 rounded-lg">
               Create New Program
             </button>
           </div>

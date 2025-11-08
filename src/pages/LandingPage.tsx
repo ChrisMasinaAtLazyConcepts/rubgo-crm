@@ -102,11 +102,12 @@ const LandingPage: React.FC = () => {
               {/* QR Code Placeholder */}
               <div className="bg-white rounded-lg p-6 flex items-center justify-center mb-6 border border-white/30">
                 <div className="text-center">
-                 <img
-                                  src={'./assets/images/Rubbgo2.png'}
-                                  alt={'Korporate Logo'}
-                                  className="mr-auto w-full h-full md:w-25 md:h-16 object-contain transition-all duration-200 hover:opacity-90"
-                                />
+             <div className="flex flex-col">
+                    <div className="flex items-baseline space-x-2">
+                      <span className="text-2xl font-bold text-green-600">RubGo <span className="pb-8 text-md text-white font-normal">CRM</span></span>
+                    </div>
+                    <p className="text-xs text-gray-400 mt-1">version 1.0.0 BETA</p>
+                  </div>
 
                               <div className="flex justify-center items-center gap-4">
                               <img
@@ -135,7 +136,9 @@ const LandingPage: React.FC = () => {
                   <div className="w-48 h-15 bg-white/30 border-2 border-white/40 rounded-lg flex items-center justify-center mx-auto mb-4">
                     <div className="text-center">
                           
-                      <div className="text-white text-lg font-semibold mb-2">RubGo</div>
+                        <div className="flex flex-col">
+   
+  </div>
                       <div className="text-white/80 text-sm">Scan to Download</div>
                     </div>
                   </div>
@@ -160,10 +163,12 @@ const LandingPage: React.FC = () => {
           {/* Right Side - Auth Forms */}
           <div className="bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 shadow-2xl p-8 max-w-md mx-auto lg:mx-0">
             {/* Tab Navigation */}
-               <div className="flex items-center space-x-2">
-              <span className="text-2xl font-bold text-green-600">RubGo</span>
-              <span className="text-sm text-gray-400">CRM</span>
-            </div>
+               <div className="flex flex-col">
+    <div className="flex items-baseline space-x-2">
+      <span className="text-2xl font-bold text-green-600">RubGo <span className="pb-8 text-md text-white font-normal">CRM</span></span>
+    </div>
+    <p className="text-xs text-gray-400 mt-1">version 1.0.0 BETA</p>
+  </div>
            <h1></h1>
             <div className="flex border-b border-white/20 mb-8">
               <button

@@ -1,6 +1,8 @@
 // frontend/src/pages/CommunicationCenter.tsx
 import React, { useState, useEffect } from 'react';
 import { useChat } from '../components/contexts/ChatContext';
+import { MdSpeakerPhone } from 'react-icons/md';
+import { BsTelephoneFill } from 'react-icons/bs';
 
 interface ChatParticipant {
   userId: string;
@@ -80,14 +82,16 @@ const CommunicationCenter: React.FC = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-gray-900 mb-6">Communication Center</h1>
-      
+    <div className="flex items-center gap-3 mb-6">
+    <BsTelephoneFill className="text-green-600 w-8 h-8" />
+    <h1 className="text-3xl font-bold text-green-700">Communication Center</h1>
+  </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[600px]">
         {/* Chat List */}
         <div className="lg:col-span-1 bg-white rounded-lg shadow-md flex flex-col">
-          <div className="p-4 border-b">
+          <div className="p-4 border-b bg-[#0B1F3D] text-white">
             <h2 className="text-lg font-semibold">Active Conversations</h2>
-            <p className="text-sm text-gray-600 mt-1">{activeChats.length} active chats</p>
+            <p className="text-sm text-white/40 mt-1">{activeChats.length} active chats</p>
           </div>
           <div className="flex-1 overflow-y-auto">
             {activeChats.map(chat => (
@@ -175,7 +179,7 @@ const CommunicationCenter: React.FC = () => {
                         <div
                           className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
                             message.senderId === '1'
-                              ? 'bg-blue-600 text-white'
+                              ? 'bg-green-600 text-white'
                               : 'bg-white text-gray-900 border border-gray-200'
                           }`}
                         >
