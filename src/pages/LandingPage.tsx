@@ -89,58 +89,52 @@ const LandingPage: React.FC = () => {
               Professional therapists, serene experiences, complete relaxation.
             </p>
 
-            {/* Features Grid */}
-            <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div className="flex items-center space-x-3 bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
-                <div className="h-12 w-12 bg-white/20 rounded-lg flex items-center justify-center">
-                  <span className="text-white text-xl">⏱️</span>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-white">Quick Booking</h3>
-                  <p className="text-white/80 text-sm">Book in 60 seconds</p>
-                </div>
-              </div>
-              <div className="flex items-center space-x-3 bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
-                <div className="h-12 w-12 bg-white/20 rounded-lg flex items-center justify-center">
-                  <span className="text-white text-xl">👨‍⚕️</span>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-white">Certified Therapists</h3>
-                  <p className="text-white/80 text-sm">Vetted professionals</p>
-                </div>
-              </div>
-              <div className="flex items-center space-x-3 bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
-                <div className="h-12 w-12 bg-white/20 rounded-lg flex items-center justify-center">
-                  <span className="text-white text-xl">📍</span>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-white">Any Location</h3>
-                  <p className="text-white/80 text-sm">Your home, office, hotel</p>
-                </div>
-              </div>
-              <div className="flex items-center space-x-3 bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
-                <div className="h-12 w-12 bg-white/20 rounded-lg flex items-center justify-center">
-                  <span className="text-white text-xl">🛡️</span>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-white">Safe & Secure</h3>
-                  <p className="text-white/80 text-sm">24/7 safety monitoring</p>
-                </div>
-              </div>
-            </div>
+  
 
             {/* QR Code & App Download */}
-            <div className="mt-12 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 p-8 max-w-md">
+            <div className="mt-8 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 p-8 max-w-md">
               <h3 className="text-2xl font-bold text-white mb-4">Download Our App</h3>
               <p className="text-white/90 mb-6">
                 Scan the QR code to download the RubGo app and book your first massage today.
               </p>
               
+              
               {/* QR Code Placeholder */}
-              <div className="bg-white/20 rounded-lg p-6 flex items-center justify-center mb-6 border border-white/30">
+              <div className="bg-white rounded-lg p-6 flex items-center justify-center mb-6 border border-white/30">
                 <div className="text-center">
-                  <div className="w-48 h-48 bg-white/30 border-2 border-white/40 rounded-lg flex items-center justify-center mx-auto mb-4">
+                 <img
+                                  src={'./assets/images/Rubbgo2.png'}
+                                  alt={'Korporate Logo'}
+                                  className="mr-auto w-full h-full md:w-25 md:h-16 object-contain transition-all duration-200 hover:opacity-90"
+                                />
+
+                              <div className="flex justify-center items-center gap-4">
+                              <img
+                                src={'./assets/images/android qr.png'}
+                                alt={'Android QR Code'}
+                                className="max-w-48 max-h-48 w-auto h-auto object-contain transition-all duration-200 hover:opacity-90 hover:scale-105"
+                              />
+                              <img
+                                src={'./assets/images/apple qr.png'}
+                                alt={'Apple QR Code'}
+                                className="max-w-48 max-h-48 w-auto h-auto object-contain transition-all duration-200 hover:opacity-90 hover:scale-105"
+                              />
+                            </div>
+                            <div className="flex justify-center items-center gap-4">
+                              <img
+                                src={'./assets/images/android.png'}
+                                alt={'Android QR Code'}
+                                className="max-w-48 max-h-48 w-auto h-auto object-contain transition-all duration-200 hover:opacity-90 hover:scale-105"
+                              />
+                              <img
+                                src={'./assets/images/apple.png'}
+                                alt={'Apple QR Code'}
+                                className="max-w-48 max-h-48 w-auto h-auto object-contain transition-all duration-200 hover:opacity-90 hover:scale-105"
+                              />
+                            </div>
+                  <div className="w-48 h-15 bg-white/30 border-2 border-white/40 rounded-lg flex items-center justify-center mx-auto mb-4">
                     <div className="text-center">
+                          
                       <div className="text-white text-lg font-semibold mb-2">RubGo</div>
                       <div className="text-white/80 text-sm">Scan to Download</div>
                     </div>
@@ -166,11 +160,11 @@ const LandingPage: React.FC = () => {
           {/* Right Side - Auth Forms */}
           <div className="bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 shadow-2xl p-8 max-w-md mx-auto lg:mx-0">
             {/* Tab Navigation */}
-             <img
-                    src={'./assets/images/Rubbgo3.png'}
-                    alt={'Korporate Logo'}
-                    className="w-full h-full md:w-25 md:h-16 object-contain transition-all duration-200 hover:opacity-90"
-                  />
+               <div className="flex items-center space-x-2">
+              <span className="text-2xl font-bold text-green-600">RubGo</span>
+              <span className="text-sm text-gray-400">CRM</span>
+            </div>
+           <h1></h1>
             <div className="flex border-b border-white/20 mb-8">
               <button
                 onClick={() => setActiveTab('signin')}

@@ -161,7 +161,7 @@ const SecurityDashboard: React.FC = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-gray-900 mb-6">Security Dashboard</h1>
+      <h1 className="text-3xl font-bold text-green-800 mb-6">Security Center</h1>
       
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
         <div className="bg-red-100 border border-red-300 rounded-lg p-6">

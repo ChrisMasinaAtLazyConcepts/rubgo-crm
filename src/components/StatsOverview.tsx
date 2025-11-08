@@ -5,8 +5,7 @@ const StatsOverview = () => {
   const stats = [
     { label: 'Active Sessions', value: '12', change: '+2', changeType: 'positive' },
     { label: 'Available Therapists', value: '23', change: '+5', changeType: 'positive' },
-    { label: 'Pending Payments', value: '8', change: '-3', changeType: 'negative' },
-    { label: 'Today\'s Revenue', value: '$2,847', change: '+12%', changeType: 'positive' }
+  
   ];
 
   return (

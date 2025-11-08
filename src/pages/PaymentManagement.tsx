@@ -1,4 +1,5 @@
 // frontend/src/pages/PaymentManagement.tsx
+import { Coins, Plus } from 'lucide-react'; // Fixed import names
 import React, { useState, useEffect } from 'react';
 
 interface Payment {
@@ -193,7 +194,7 @@ const PaymentManagement: React.FC = () => {
     await new Promise(resolve => setTimeout(resolve, 1000));
     
     // Update payment status
-    const updatedPayments = payments.map(payment =>
+    const updatedPayments:any = payments.map(payment =>
       selectedPayments.includes(payment.id)
         ? { ...payment, status: 'completed', payoutDate: new Date().toISOString().split('T')[0] }
         : payment
@@ -230,7 +231,7 @@ const PaymentManagement: React.FC = () => {
     await new Promise(resolve => setTimeout(resolve, 1000));
     
     // Update payment status
-    const updatedPayments = payments.map(payment =>
+    const updatedPayments:any = payments.map(payment =>
       payment.id === paymentId
         ? { ...payment, status: 'completed', payoutDate: new Date().toISOString().split('T')[0] }
         : payment
@@ -256,20 +257,26 @@ const PaymentManagement: React.FC = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      {/* Header Section */}
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">Payment Management</h1>
+        <div className="flex items-center gap-3">
+          <Coins className="w-8 h-8 text-green-900" />
+          <h1 className="text-3xl font-bold text-green-900">Billing</h1>
+        </div>
         <div className="flex space-x-3">
           <button
             onClick={() => setShowManualPaymentModal(true)}
-            className="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700"
+            className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 flex items-center gap-2"
           >
+            <Plus className="w-4 h-4" />
             Manual Payment
           </button>
           <button
             onClick={processSelectedPayments}
             disabled={selectedPayments.length === 0}
-            className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 disabled:bg-gray-400"
+            className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 disabled:bg-gray-400 flex items-center gap-2"
           >
+            <Coins className="w-4 h-4" />
             Process Selected ({selectedPayments.length})
           </button>
         </div>
@@ -304,6 +311,7 @@ const PaymentManagement: React.FC = () => {
         </div>
       </div>
 
+      {/* Rest of the component remains the same */}
       {/* Filters */}
       <div className="bg-white rounded-lg shadow-md p-6 mb-6">
         <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-6">
@@ -612,14 +620,37 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({ payment, onClose }) => {
         <div className="border rounded-lg p-6">
           {/* Invoice Header */}
           <div className="flex justify-between items-start mb-6">
-            <div>
-              <h3 className="text-2xl font-bold text-blue-600">RubGo Massage</h3>
-              <p className="text-gray-600">Payment Invoice</p>
+            <div className="flex items-center gap-4">
+              <img
+                src={'./assets/images/Rubbgo2.png'}
+                alt={'RubGo Logo'}
+                className="w-16 h-16 object-contain"
+              />
+              <div>
+                <div className="flex items-center space-x-2">
+                  <span className="text-2xl font-bold text-green-800">RubGo</span>
+                </div>
+                <p className="text-gray-600">Payment Invoice</p>
+              </div>
             </div>
             <div className="text-right">
               <p className="text-gray-600">Invoice #: {payment.requestId}</p>
               <p className="text-gray-600">Date: {payment.paymentDate}</p>
             </div>
+          </div>
+
+          {/* Payment Logos */}
+          <div className="flex justify-end items-center gap-4 mb-6">
+            <img
+              src={'./assets/images/ozow.jfif'}
+              alt={'Ozow Payment'}
+              className="w-16 h-16 object-contain"
+            />
+            <img
+              src={'./assets/images/payfast.png'}
+              alt={'PayFast Payment'}
+              className="w-16 h-16 object-contain"
+            />
           </div>
 
           {/* Therapist and Service Details */}

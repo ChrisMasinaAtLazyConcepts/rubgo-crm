@@ -6,10 +6,10 @@ import RecentRequests from '../components/RecentRequests';
 
 const HomePage: React.FC = () => {
   return (
-    <div className="pt-16">
-      <div className="container mx-auto px-4 py-3">
+    <div className="pt-5">
+      <div className="container mx-auto px-4 ">
       
-        
+
         {/* Stats Overview */}
         <StatsOverview />
         

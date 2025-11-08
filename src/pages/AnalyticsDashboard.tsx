@@ -192,7 +192,7 @@ const AnalyticsDashboard: React.FC = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">Analytics Dashboard</h1>
+        <h1 className="text-3xl font-bold text-green-800">Analytics Dashboard</h1>
         <div className="flex items-center space-x-4">
           <select
             value={timeRange}
@@ -204,14 +204,14 @@ const AnalyticsDashboard: React.FC = () => {
             <option value="90d">Last 90 Days</option>
             <option value="1y">Last Year</option>
           </select>
-          <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+          <button className="bg-green-400 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
             Export Report
           </button>
         </div>
       </div>
 
       {/* Time Period Summary */}
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg shadow-lg text-white p-6 mb-8">
+      <div className="bg-green-600 rounded-lg shadow-lg text-white p-6 mb-8">
         <div className="flex justify-between items-start">
           <div>
             <h2 className="text-2xl font-bold mb-2">Performance Overview</h2>
