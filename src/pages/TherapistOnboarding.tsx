@@ -199,7 +199,7 @@ const TherapistOnboarding: React.FC = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="bg-white rounded-lg shadow-md p-6">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Therapist Onboarding</h1>
+        <h1 className="text-3xl font-bold text-green-700 mb-2">Therapist Onboarding</h1>
         <p className="text-gray-600 mb-6">Complete your profile to start accepting clients</p>
         
         {/* Progress Steps */}
@@ -420,7 +420,7 @@ const TherapistOnboarding: React.FC = () => {
         {/* Step 6: Video Assessments */}
         {currentStep === 6 && (
           <div className="space-y-6">
-            <h2 className="text-2xl font-semibold text-gray-900">Video Assessments</h2>
+            <h2 className="text-2xl font-semibold text-green-700">Video Assessments</h2>
             <p className="text-gray-600">Technical assessment videos demonstrating your massage techniques</p>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -513,7 +513,7 @@ const TherapistOnboarding: React.FC = () => {
           </button>
          <button
             onClick={currentStep === steps.length ? () => window.location.href = '/therapists' : handleNextStep}
-            className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+            className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
           >
             {currentStep === steps.length ? 'Close' : 'Next Step'}
           </button>

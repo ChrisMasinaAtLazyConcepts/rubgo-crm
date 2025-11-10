@@ -56,10 +56,10 @@ const TherapistTargets = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">Therapist Targets</h1>
+        <h1 className="text-3xl font-bold text-green-700">Therapist Targets</h1>
         <button
           onClick={() => setShowCreateModal(true)}
-          className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
+          className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700"
         >
           Set New Target
         </button>
@@ -212,7 +212,7 @@ const TherapistTargets = () => {
               </button>
               <button
                 onClick={createTarget}
-                className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
+                className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
               >
                 Create Target
               </button>
