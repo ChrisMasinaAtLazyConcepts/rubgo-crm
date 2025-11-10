@@ -2,6 +2,9 @@
 import React, { useState, useEffect } from 'react';
 
 interface Therapist {
+  idNumber: string;
+  specialties: any;
+  licenseNumber: string;
   id: string;
   userId: string;
   firstName: string;
@@ -115,7 +118,10 @@ const TherapistManagement: React.FC = () => {
         incentivePoints: 450,
         freeMassagesEarned: 2,
         createdAt: '2024-01-01',
-        lastActive: '2024-01-20'
+        lastActive: '2024-01-20',
+        idNumber: '',
+        specialties: undefined,
+        licenseNumber: ''
       },
       {
         id: '2',
@@ -153,14 +159,17 @@ const TherapistManagement: React.FC = () => {
         incentivePoints: 320,
         freeMassagesEarned: 1,
         createdAt: '2024-01-02',
-        lastActive: '2024-01-19'
+        lastActive: '2024-01-19',
+        idNumber: '',
+        specialties: undefined,
+        licenseNumber: ''
       },
       {
         id: '3',
         userId: 'u3',
-        firstName: 'Emily',
-        lastName: 'Chen',
-        email: 'emily.chen@example.com',
+        firstName: 'Lerato',
+        lastName: 'Ndlovu',
+        email: 'lerato.ndlovu@gmail.com',
         phone: '+27 71 234 5678',
         bio: 'New therapist with fresh approach to traditional massage techniques. Eager to build client relationships.',
         specialization: ['swedish', 'reflexology'],
@@ -188,7 +197,10 @@ const TherapistManagement: React.FC = () => {
         incentivePoints: 150,
         freeMassagesEarned: 0,
         createdAt: '2024-01-15',
-        lastActive: '2024-01-20'
+        lastActive: '2024-01-20',
+        idNumber: '',
+        specialties: undefined,
+        licenseNumber: ''
       }
     ];
 
@@ -695,14 +707,30 @@ const VerificationModal: React.FC<VerificationModalProps> = ({ therapist, onClos
   const [reviewingVideo, setReviewingVideo] = useState(false);
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-        <h2 className="text-xl text-red font-semibold mb-4">Verify Therapist: {therapist.firstName} {therapist.lastName}</h2>
-        
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-          {/* Application Video */}
-          <div>
-          <h3 className="font-semibold mb-2">Application Video</h3>
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+  <div className="bg-white rounded-lg p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+    <div className="bg-green-800 text-white rounded-t-lg p-6">
+  <div className="flex items-center justify-between">
+    <div className="flex items-center gap-3">
+      <div className="w-8 h-8 bg-green-700 rounded-full flex items-center justify-center">
+        <span className="text-white font-bold text-sm">✓</span>
+      </div>
+      <div>
+        <h2 className="text-xl font-semibold text-white">Verify Therapist</h2>
+        <p className="text-green-100 text-sm">Review and approve therapist credentials</p>
+      </div>
+    </div>
+    <div className="text-right">
+      <p className="text-green-200 text-sm">Therapist ID: {therapist.id}</p>
+      <p className="text-green-100 font-medium">{therapist.firstName} {therapist.lastName}</p>
+    </div>
+  </div>
+</div>
+<br/>
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+      {/* Application Video */}
+      <div>
+        <h3 className="font-semibold mb-2">Application Video</h3>
         <div className="border rounded-lg p-4 bg-gray-50">
           {reviewingVideo ? (
             <div className="text-center">
@@ -734,67 +762,277 @@ const VerificationModal: React.FC<VerificationModalProps> = ({ therapist, onClos
             </div>
           )}
         </div>
-          </div>
+      </div>
 
-          {/* Background Check */}
-          <div>
-            <h3 className="font-semibold mb-2">Background Check</h3>
-            <div className="border rounded-lg p-4">
-              <img
-                  src={'./assets/images/lexis.png'}
-                  alt={'Apple QR C'}
-                  className="max-w-48 max-h-48 w-auto h-auto object-contain transition-all duration-200 hover:opacity-90 hover:scale-105"
-                />
-             
-              <p><strong>Status:</strong> <span className={`px-2 py-1 rounded text-xs ${therapist.backgroundCheck.status === 'passed' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
-                {therapist.backgroundCheck.status}
-              </span></p>
-              {therapist.backgroundCheck.provider && (
-                <p><strong>Provider:</strong> {therapist.backgroundCheck.provider}</p>
-              )}
-              {therapist.backgroundCheck.completedAt && (
-                <p><strong>Completed:</strong> {therapist.backgroundCheck.completedAt}</p>
-              )}
+      {/* Background Check */}
+      <div>
+        <h3 className="font-semibold mb-2">Background Check</h3>
+        <div className="border rounded-lg p-4 bg-white">
+          <div className="flex flex-col items-center justify-center p-4 bg-gray-50 rounded-lg border border-gray-200 mb-4">
+            <img
+              src={'./assets/images/lexis.png'}
+              alt={'LexisNexis Verification'}
+              className="max-w-48 max-h-48 w-auto h-auto object-contain transition-all duration-200 hover:opacity-90 hover:scale-105"
+            />
+            <p className="text-sm text-gray-600 mt-2 text-center">LexisNexis Identity Verification</p>
+          </div>
+          
+          <div className="space-y-3">
+            <div className="flex justify-between items-center">
+              <span className="text-gray-600 font-medium">Status:</span>
+              <span className={`px-2 py-1 rounded text-xs font-medium ${
+                therapist.backgroundCheck?.status === 'passed' 
+                  ? 'bg-green-100 text-green-800' 
+                  : 'bg-yellow-100 text-yellow-800'
+              }`}>
+                {therapist.backgroundCheck?.status || 'pending'}
+              </span>
+            </div>
+            
+            {therapist.backgroundCheck?.provider && (
+              <div className="flex justify-between items-center">
+                <span className="text-gray-600 font-medium">Provider:</span>
+                <span className="text-gray-800">{therapist.backgroundCheck.provider}</span>
+              </div>
+            )}
+            
+            {therapist.backgroundCheck?.completedAt && (
+              <div className="flex justify-between items-center">
+                <span className="text-gray-600 font-medium">Completed:</span>
+                <span className="text-gray-800">{therapist.backgroundCheck.completedAt}</span>
+              </div>
+            )}
+            
+            <div className="flex justify-between items-center">
+              <span className="text-gray-600 font-medium">Report ID:</span>
+              <span className="text-gray-800 font-mono text-xs">LNX-{therapist.id?.toUpperCase()}-BC2024</span>
             </div>
           </div>
         </div>
+      </div>
+    </div>
 
-        {/* Notes */}
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Verification Notes
-          </label>
-          <textarea
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            rows={4}
-            className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Add any notes about this verification decision..."
-          />
+    {/* Verification & Background Checks */}
+    <div className="space-y-6 mb-6">
+      <h3 className="font-semibold text-lg text-gray-800 mb-4">Verification & Background Checks</h3>
+      
+      {/* Qualifications Verification */}
+      <div className="border border-gray-200 rounded-lg p-5 bg-white shadow-sm">
+        <div className="flex items-start justify-between mb-4">
+          <h4 className="font-semibold text-gray-800 flex items-center gap-2">
+            <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
+            Qualifications & Certifications
+          </h4>
+          <span className="px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 border border-green-200">
+            Verified
+          </span>
         </div>
+        
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            <div>
+              <p className="text-gray-600 font-medium">Massage License</p>
+              <p className="text-gray-800">{therapist.licenseNumber || 'MT-123456'}</p>
+              <p className="text-green-600 text-xs font-medium">✓ Active</p>
+            </div>
+           <div className="flex items-start gap-4 p-4 bg-white rounded-lg border border-gray-200 shadow-sm">
+  <div className="flex-shrink-0">
+    <img
+      src={'./assets/images/aphsca.png'}
+      alt={'AHPCSA Logo'}
+      className="w-16 h-16 object-contain transition-all duration-200 hover:opacity-90 hover:scale-105"
+    />
+  </div>
+  
+  <div className="flex-1 min-w-0">
+    <p className="text-gray-600 font-medium text-sm mb-2">Issued By</p>
+    <p className="text-gray-800 font-semibold text-lg">
+      Allied Health Professions Council of South Africa (AHPCSA)
+    </p>
+    <div className="flex items-center gap-2 mt-2">
+      <span className="px-2 py-1 bg-green-100 text-green-800 rounded text-xs font-medium">
+        ✓ Accredited
+      </span>
+      <span className="text-gray-500 text-sm">Registration #: MT-{therapist.licenseNumber || '123456'}</span>
+    </div>
+  </div>
+           </div>
+            <div>
+              <p className="text-gray-600 font-medium">Expires</p>
+              <p className="text-gray-800">2025-12-31</p>
+            </div>
+            <div>
+              <p className="text-gray-600 font-medium">Specializations</p>
+              <div className="flex flex-wrap gap-1 mt-1">
+                {therapist.specialties?.map((specialty: string, index: number) => (
+                  <span key={index} className="px-2 py-1 bg-purple-100 text-purple-800 rounded text-xs">
+                    {specialty}
+                  </span>
+                )) || (
+                  <>
+                    <span className="px-2 py-1 bg-purple-100 text-purple-800 rounded text-xs">Deep Tissue</span>
+                    <span className="px-2 py-1 bg-purple-100 text-purple-800 rounded text-xs">Sports</span>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+          
+          <div className="border-t border-gray-200 pt-4">
+            <p className="text-sm font-medium text-gray-700 mb-2">Certifications</p>
+            <div className="space-y-2">
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-gray-600">Advanced Sports Massage</span>
+                <span className="text-green-600 text-xs font-medium">Verified</span>
+              </div>
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-gray-600">Myofascial Release</span>
+                <span className="text-green-600 text-xs font-medium">Verified</span>
+              </div>
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-gray-600">CPR & First Aid</span>
+                <span className="text-green-600 text-xs font-medium">Valid until 2024-12-01</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-        <div className="flex justify-end space-x-3">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 text-gray-600 hover:text-gray-800"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={() => onReject(notes)}
-            className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700"
-          >
-            Reject
-          </button>
-          <button
-            onClick={() => onApprove(notes)}
-            className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700"
-          >
-            Approve
-          </button>
+      {/* References Verification */}
+      <div className="border border-gray-200 rounded-lg p-5 bg-white shadow-sm">
+        <div className="flex items-start justify-between mb-4">
+          <h4 className="font-semibold text-gray-800 flex items-center gap-2">
+            <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
+            Professional References
+          </h4>
+          <span className="px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 border border-green-200">
+            Completed
+          </span>
+        </div>
+        
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
+            <div className="space-y-3">
+              <div className="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                <p className="font-medium text-gray-800">Dr. Sarah Johnson</p>
+                <p className="text-gray-600 text-xs">Medical Director, Sports Clinic</p>
+                <p className="text-gray-500 text-xs mt-1">Verified: 2024-01-10</p>
+                <div className="flex items-center gap-1 mt-2">
+                  <span className="text-yellow-500">★★★★★</span>
+                  <span className="text-gray-600 text-xs">(5.0)</span>
+                </div>
+              </div>
+            </div>
+            
+            <div className="space-y-3">
+              <div className="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                <p className="font-medium text-gray-800">Michael Chen</p>
+                <p className="text-gray-600 text-xs">Clinic Manager, Wellness Center</p>
+                <p className="text-gray-500 text-xs mt-1">Verified: 2024-01-12</p>
+                <div className="flex items-center gap-1 mt-2">
+                  <span className="text-yellow-500">★★★★☆</span>
+                  <span className="text-gray-600 text-xs">(4.8)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+            <p className="text-sm text-green-800 flex items-center gap-2">
+              <span className="text-green-500">✓</span>
+              All references confirmed positive professional standing and experience.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Additional Security Checks */}
+      <div className="border border-gray-200 rounded-lg p-5 bg-white shadow-sm">
+        <div className="flex items-start justify-between mb-4">
+          <h4 className="font-semibold text-gray-800 flex items-center gap-2">
+            <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+            Additional Security Checks
+          </h4>
+          <span className="px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 border border-green-200">
+            All Clear
+          </span>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+          <div className="space-y-3">
+            <div className="flex justify-between items-center">
+              <span className="text-gray-600">Identity Verification</span>
+              <span className="text-green-600 text-xs font-medium">✓ Passed</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-gray-600">Sex Offender Registry</span>
+              <span className="text-green-600 text-xs font-medium">✓ Clear</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-gray-600">Professional License</span>
+              <span className="text-green-600 text-xs font-medium">✓ Valid</span>
+            </div>
+          </div>
+          
+          <div className="space-y-3">
+          
+            <div className="flex justify-between items-center">
+              <span className="text-gray-600">Work History</span>
+              <span className="text-green-600 text-xs font-medium">✓ Verified</span>
+            </div>
+          </div>
+        </div>
+        
+        <div className="mt-4 pt-4 border-t border-gray-200">
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-gray-600">Overall Trust Score</span>
+            <div className="flex items-center gap-2">
+              <div className="w-24 bg-gray-200 rounded-full h-2">
+                <div className="bg-green-500 h-2 rounded-full" style={{ width: '94%' }}></div>
+              </div>
+              <span className="font-bold text-green-600">94%</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
+
+    {/* Notes */}
+    <div className="mb-6">
+      <label className="block text-sm font-medium text-gray-700 mb-2">
+        Verification Notes
+      </label>
+      <textarea
+        value={notes}
+        onChange={(e) => setNotes(e.target.value)}
+        rows={4}
+        className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        placeholder="Add any notes about this verification decision..."
+      />
+    </div>
+
+    <div className="flex justify-end space-x-3">
+      <button
+        onClick={onClose}
+        className="px-4 py-2 text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg hover:bg-gray-50"
+      >
+        Cancel
+      </button>
+      <button
+        onClick={() => onReject(notes)}
+        className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors"
+      >
+        Reject
+      </button>
+      <button
+        onClick={() => onApprove(notes)}
+        className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-colors"
+      >
+        Approve
+      </button>
+    </div>
+  </div>
+</div>
   );
 };
 

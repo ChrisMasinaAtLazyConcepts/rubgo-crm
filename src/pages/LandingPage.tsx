@@ -172,16 +172,7 @@ const LandingPage: React.FC = () => {
              
                 Sign In
               </button>
-              <button
-                onClick={() => setActiveTab('signup')}
-                className={`flex-1 py-4 font-medium text-center border-b-2 transition-colors ${
-                  activeTab === 'signup'
-                    ? 'border-blue-400 text-white'
-                    : 'border-transparent text-white/70 hover:text-white'
-                }`}
-              >
-                Sign Up
-              </button>
+            
             </div>
 
             {/* Sign In Form */}

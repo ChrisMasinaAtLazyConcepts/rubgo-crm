@@ -259,11 +259,58 @@ const PaymentManagement: React.FC = () => {
     <div className="container mx-auto px-4 py-8">
       {/* Header Section */}
       <div className="flex justify-between items-center mb-6">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 ">
           <Coins className="w-8 h-8 text-green-900" />
           <h1 className="text-3xl font-bold text-green-900">Billing & Payments</h1>
         </div>
-        
+        <br/>
+            {/* Right Side - Payment Mode */}
+           <div className="space-y-3">
+  <h4 className="font-bold mb-2 text-gray-900 text-sm flex items-center gap-2">
+    <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+    Payment Mode <span className="text-green-600">(active)</span>
+  </h4>
+  
+  <div className="flex bg-white/80 backdrop-blur-sm rounded-lg p-1 border border-gray-400/30 shadow-sm">
+    <label className="flex-1 relative group">
+      <input
+        type="radio"
+        name="paymentMode"
+        value="manual"
+        className="sr-only"
+      />
+      <span className="flex items-center justify-center py-2 px-3 rounded-md transition-all duration-200 ease-out cursor-pointer font-medium text-xs text-gray-500 group-hover:text-gray-700 group-hover:bg-white group-hover:shadow-sm peer-checked:bg-gradient-to-r peer-checked:from-blue-500 peer-checked:to-blue-600 peer-checked:text-white peer-checked:shadow-md">
+        <span className="relative z-10">Manual</span>
+      </span>
+    </label>
+    
+    <label className="flex-1 relative group">
+      <input
+        type="radio"
+        name="paymentMode"
+        value="monthly"
+        className="sr-only"
+      />
+      <span className="flex items-center justify-center py-2 px-3 rounded-md transition-all duration-200 ease-out cursor-pointer font-medium text-xs text-gray-500 group-hover:text-gray-700 group-hover:bg-white group-hover:shadow-sm peer-checked:bg-gradient-to-r peer-checked:from-purple-500 peer-checked:to-purple-600 peer-checked:text-white peer-checked:shadow-md">
+        <span className="relative z-10">Monthly</span>
+      </span>
+    </label>
+    
+    <label className="flex-1 relative group">
+      <input
+        type="radio"
+        name="paymentMode"
+        value="weekly"
+        className="sr-only"
+        defaultChecked
+      />
+      <span className="flex items-center justify-center py-2 px-3 rounded-md transition-all duration-200 ease-out cursor-pointer font-medium text-xs text-gray-500 bg-gradient-to-r from-green-500 to-green-600 text-white shadow-md">
+        <span className="relative z-10">Weekly</span>
+      </span>
+    </label>
+  </div>
+</div>
+<br/>
    
         <div className="flex space-x-3">
           <button
@@ -341,84 +388,44 @@ const PaymentManagement: React.FC = () => {
 
       {/* Rest of the component remains the same */}
       {/* Filters */}
-      <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-        <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="all">All Status</option>
-              <option value="pending">Pending</option>
-              <option value="processing">Processing</option>
-              <option value="completed">Completed</option>
-              <option value="failed">Failed</option>
-            </select>
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Date Range</label>
-            <select
-              value={dateFilter}
-              onChange={(e) => setDateFilter(e.target.value)}
-              className="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="all">All Time</option>
-              <option value="today">Today</option>
-              <option value="week">Last 7 Days</option>
-              <option value="month">Last 30 Days</option>
-            </select>
-          </div>
-              {/* Payment Mode Selection - Enhanced */}
-          <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-6 rounded-2xl border border-gray-300/50">
-            <h4 className="font-bold mb-4 text-gray-900 text-lg flex items-center gap-2">
-              <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
-              Payment Mode
-            </h4>
-            <div className="flex bg-white/80 backdrop-blur-sm rounded-xl p-1.5 border border-gray-400/30 shadow-lg">
-              <label className="flex-1 relative group">
-                <input
-                  type="radio"
-                  name="paymentMode"
-                  value="manual"
-                  className="sr-only"
-                />
-                <span className="flex items-center justify-center py-3 px-4 rounded-lg transition-all duration-300 ease-out cursor-pointer font-semibold text-gray-500 group-hover:text-gray-700 group-hover:bg-white group-hover:shadow-md peer-checked:bg-gradient-to-r peer-checked:from-blue-500 peer-checked:to-blue-600 peer-checked:text-white peer-checked:shadow-lg">
-                  <span className="relative z-10">Manual</span>
-                </span>
-              </label>
-              
-              <label className="flex-1 relative group">
-                <input
-                  type="radio"
-                  name="paymentMode"
-                  value="monthly"
-                  className="sr-only"
-                />
-                <span className="flex items-center justify-center py-3 px-4 rounded-lg transition-all duration-300 ease-out cursor-pointer font-semibold text-gray-500 group-hover:text-gray-700 group-hover:bg-white group-hover:shadow-md peer-checked:bg-gradient-to-r peer-checked:from-green-500 peer-checked:to-green-600 peer-checked:text-white peer-checked:shadow-lg">
-                  <span className="relative z-10">Monthly</span>
-                </span>
-              </label>
-              
-              <label className="flex-1 relative group">
-                <input
-                  type="radio"
-                  name="paymentMode"
-                  value="weekly"
-                  className="sr-only"
-                  defaultChecked
-                />
-                <span className="flex items-center justify-center py-3 px-4 rounded-lg transition-all duration-300 ease-out cursor-pointer font-semibold text-gray-500 group-hover:text-gray-700 group-hover:bg-white group-hover:shadow-md peer-checked:bg-gradient-to-r peer-checked:from-purple-500 peer-checked:to-purple-600 peer-checked:text-white peer-checked:shadow-lg">
-                  <span className="relative z-10">Weekly</span>
-                </span>
-              </label>
-            </div>
-          </div>
-        </div>
-        
+    {/* Filters */}
+<div className="bg-white rounded-lg shadow-md p-6 mb-6">
+  <div className="flex flex-col lg:flex-row gap-6">
+    {/* Left Side - Basic Filters */}
+    <div className="flex flex-col sm:flex-row gap-4 flex-1">
+      <div className="flex-1 min-w-[200px]">
+        <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
+        <select
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+          className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+        >
+          <option value="all">All Status</option>
+          <option value="pending">Pending</option>
+          <option value="processing">Processing</option>
+          <option value="completed">Completed</option>
+          <option value="failed">Failed</option>
+        </select>
       </div>
+      
+      <div className="flex-1 min-w-[200px]">
+        <label className="block text-sm font-medium text-gray-700 mb-2">Date Range</label>
+        <select
+          value={dateFilter}
+          onChange={(e) => setDateFilter(e.target.value)}
+          className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+        >
+          <option value="all">All Time</option>
+          <option value="today">Today</option>
+          <option value="week">Last 7 Days</option>
+          <option value="month">Last 30 Days</option>
+        </select>
+      </div>
+    </div>
+
+
+  </div>
+</div>
         
       {/* Payments Table */}
       <div className="bg-white rounded-lg shadow-md overflow-hidden">

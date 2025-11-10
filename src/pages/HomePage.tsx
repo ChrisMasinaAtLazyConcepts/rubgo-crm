@@ -177,7 +177,7 @@ const HomePage: React.FC = () => {
           {/* Live Map or No Services Component */}
           <div className="lg:col-span-2">
             <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-semibold mb-4">Live Massage Sessions</h2>
+              <h2 className="text-xl font-semibold mb-4">Live Activity</h2>
               {hasLiveServices() ? (
                <LiveMap province={selectedProvince} town={selectedTown} />
               ) : (

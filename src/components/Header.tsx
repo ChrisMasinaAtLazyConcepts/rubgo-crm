@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { CreditCard, Coins, Trophy, Megaphone } from 'lucide-react';
 import { BiNotification } from 'react-icons/bi';
+import { FaLocationPin } from 'react-icons/fa6';
+import { GrLocationPin } from 'react-icons/gr';
 
 // Define types for menu items
 interface MenuItem {
@@ -54,8 +56,7 @@ const Header: React.FC = () => {
             { path: "/therapists/onboarding", label: "Therapist Onboarding" },
             { path: "/targets", label: "Therapist Targets" },
             { path: "/services", label: "Service Management" },
-            { path: "/bookings", label: "Booking Management" },
-            { path: "/live-tracking", label: "Live Tracking" },
+            { path: "/bookings", label: "Booking Management" }
           ]
         },
         { 
@@ -69,7 +70,7 @@ const Header: React.FC = () => {
         },
         { 
           label: "Geofencing", 
-          icon: <Users className="w-5 h-5" />,
+          icon: <GrLocationPin className="w-5 h-5" />,
           submenu: [
             { path: "/geofencing", label: "Service Area Management" }
           ]
@@ -236,9 +237,7 @@ const Header: React.FC = () => {
         : 'border-transparent text-gray-700 hover:border-gray-300 hover:text-gray-900'
     }`}
   >
-     <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-      </svg>
+     <Shield className="w-5 h-5 mr-2" />
       
     Security Centre
   </Link>

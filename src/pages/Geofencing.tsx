@@ -1,11 +1,13 @@
 // frontend/src/pages/GeofencingPage.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { FaLocationPin } from 'react-icons/fa6';
+import { GrLocationPin } from 'react-icons/gr';
 
 interface Geofence {
   id: string;
   name: string;
   type: 'no-service' | 'high-risk' | 'premium';
-  coordinates: Array<[number, number]>;
+  coordinates: Array<{ lat: number; lng: number }>;
   radius?: number;
   description: string;
 }
@@ -14,179 +16,314 @@ const GeofencingPage: React.FC = () => {
   const [geofences, setGeofences] = useState<Geofence[]>([]);
   const [showGeofenceModal, setShowGeofenceModal] = useState(false);
   const [selectedGeofence, setSelectedGeofence] = useState<Geofence | null>(null);
+  const [isGoogleLoaded, setIsGoogleLoaded] = useState(false);
+  const mapRef = useRef<HTMLDivElement>(null);
+  const [map, setMap] = useState<google.maps.Map | null>(null);
+  const [polygons, setPolygons] = useState<google.maps.Polygon[]>([]);
+
+  const GOOGLE_MAPS_API_KEY = 'AIzaSyBgtmDrI8g4cW1Tf9nxnwp1Si8KqEdD-XM';
+
+  // Load Google Maps script
+  useEffect(() => {
+    if (window.google) {
+      setIsGoogleLoaded(true);
+      return;
+    }
+
+    const script = document.createElement('script');
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=drawing,geometry`;
+    script.async = true;
+    script.defer = true;
+    
+    script.onload = () => {
+      setIsGoogleLoaded(true);
+      console.log('Google Maps API loaded');
+    };
+
+    script.onerror = () => {
+      console.error('Failed to load Google Maps API');
+    };
+
+    document.head.appendChild(script);
+
+    return () => {
+      if (script.parentNode) {
+        script.parentNode.removeChild(script);
+      }
+    };
+  }, [GOOGLE_MAPS_API_KEY]);
+
+  // Initialize Google Map
+  useEffect(() => {
+    if (!mapRef.current || !isGoogleLoaded) return;
+
+    const mapInstance = new google.maps.Map(mapRef.current, {
+      center: { lat: -26.2041, lng: 28.0473 }, // Johannesburg
+      zoom: 12,
+      styles: [
+        {
+          featureType: 'poi',
+          elementType: 'labels',
+          stylers: [{ visibility: 'on' }]
+        },
+        {
+          featureType: 'transit',
+          elementType: 'labels',
+          stylers: [{ visibility: 'off' }]
+        }
+      ]
+    });
+
+    setMap(mapInstance);
+  }, [isGoogleLoaded]);
 
   useEffect(() => {
     loadGeofences();
   }, []);
 
   const loadGeofences = () => {
-    // Mock geofence data
-const mockGeofences: Geofence[] = [
-  {
-    id: '1',
-    name: 'High Crime Area - Hillbrow',
-    type: 'no-service',
-    coordinates: [
-      // Hillbrow area boundary points (approx 2km radius)
-      [-26.1889, 28.0485], // Start: Kotze St & Smit St
-      [-26.1892, 28.0498], // Smit St & Claim St
-      [-26.1901, 28.0512], // Claim St & Wolmarans St
-      [-26.1913, 28.0524], // Wolmarans St & Pretoria St
-      [-26.1928, 28.0531], // Pretoria St & O'Reilly Rd
-      [-26.1942, 28.0536], // O'Reilly Rd & Edith Cavell St
-      [-26.1956, 28.0541], // Edith Cavell St & Quartz St
-      [-26.1968, 28.0549], // Quartz St & Soper Rd
-      [-26.1975, 28.0563], // Soper Rd & Berea Rd
-      [-26.1972, 28.0578], // Berea Rd & Empire Rd
-      [-26.1961, 28.0589], // Empire Rd & Yeoville
-      [-26.1947, 28.0595], // Yeoville & Rockey St
-      [-26.1932, 28.0598], // Rockey St & Raleigh St
-      [-26.1916, 28.0594], // Raleigh St & Tudhope Ave
-      [-26.1903, 28.0586], // Tudhope Ave & Pretoria St
-      [-26.1891, 28.0572], // Pretoria St & O'Reilly Rd
-      [-26.1885, 28.0557], // O'Reilly Rd & Edith Cavell St
-      [-26.1883, 28.0541], // Edith Cavell St & Quartz St
-      [-26.1884, 28.0524], // Quartz St & Soper Rd
-      [-26.1887, 28.0508], // Soper Rd & Berea Rd
-      [-26.1889, 28.0485]  // Close loop: Back to Kotze St & Smit St
-    ],
-    description: 'High crime rate area - no service allowed after 6 PM. Known for high risk incidents.'
-  },
-  {
-    id: '2',
-    name: 'Premium Service Area - Sandton CBD',
-    type: 'premium',
-    coordinates: [
-      // Sandton CBD core area
-      [-26.1052, 28.0518], // Start: Rivonia Rd & 5th St
-      [-26.1048, 28.0532], // 5th St & West St
-      [-26.1045, 28.0547], // West St & Maude St
-      [-26.1049, 28.0561], // Maude St & Gwen Ln
-      [-26.1056, 28.0573], // Gwen Ln & Fredman Dr
-      [-26.1068, 28.0582], // Fredman Dr & 7th St
-      [-26.1081, 28.0588], // 7th St & 8th St
-      [-26.1094, 28.0591], // 8th St & 9th St
-      [-26.1107, 28.0589], // 9th St & 10th St
-      [-26.1118, 28.0582], // 10th St & 11th St
-      [-26.1124, 28.0569], // 11th St & 12th St
-      [-26.1126, 28.0554], // 12th St & 13th St
-      [-26.1123, 28.0539], // 13th St & 14th St
-      [-26.1115, 28.0526], // 14th St & Alice Ln
-      [-26.1103, 28.0517], // Alice Ln & 5th St
-      [-26.1089, 28.0513], // 5th St & West St
-      [-26.1075, 28.0514], // West St & Maude St
-      [-26.1063, 28.0519], // Maude St & Gwen Ln
-      [-26.1056, 28.0527], // Gwen Ln & Fredman Dr
-      [-26.1052, 28.0518]  // Close loop: Back to Rivonia Rd & 5th St
-    ],
-    description: 'Premium service area with 50% additional fees. Includes Sandton City, Nelson Mandela Square, and financial district.'
-  },
-  {
-    id: '3',
-    name: 'High Risk - Johannesburg CBD Night Zone',
-    type: 'high-risk',
-    coordinates: [
-      // Johannesburg CBD core - high risk at night
-      [-26.2047, 28.0362], // Start: Commissioner St & Von Wielligh St
-      [-26.2039, 28.0378], // Von Wielligh St & Rissik St
-      [-26.2032, 28.0394], // Rissik St & President St
-      [-26.2028, 28.0411], // President St & Market St
-      [-26.2029, 28.0428], // Market St & Main St
-      [-26.2034, 28.0443], // Main St & Pritchard St
-      [-26.2042, 28.0456], // Pritchard St & Jeppe St
-      [-26.2053, 28.0465], // Jeppe St & Eloff St
-      [-26.2066, 28.0469], // Eloff St & Bree St
-      [-26.2079, 28.0467], // Bree St & Simmonds St
-      [-26.2090, 28.0459], // Simmonds St & Harrison St
-      [-26.2097, 28.0446], // Harrison St & Commissioner St
-      [-26.2099, 28.0430], // Commissioner St & Fraser St
-      [-26.2096, 28.0414], // Fraser St & Goud St
-      [-26.2088, 28.0400], // Goud St & Kerk St
-      [-26.2076, 28.0391], // Kerk St & Von Brandis St
-      [-26.2062, 28.0387], // Von Brandis St & Loveday St
-      [-26.2048, 28.0389], // Loveday St & Wolmarans St
-      [-26.2038, 28.0397], // Wolmarans St & Noord St
-      [-26.2033, 28.0410], // Noord St & Quartz St
-      [-26.2034, 28.0425], // Quartz St & Soper Rd
-      [-26.2041, 28.0438], // Soper Rd & Berea Rd
-      [-26.2052, 28.0446], // Berea Rd & Empire Rd
-      [-26.2065, 28.0448], // Empire Rd & Yeoville
-      [-26.2077, 28.0443], // Yeoville & Rockey St
-      [-26.2085, 28.0432], // Rockey St & Raleigh St
-      [-26.2087, 28.0417], // Raleigh St & Tudhope Ave
-      [-26.2083, 28.0403], // Tudhope Ave & Pretoria St
-      [-26.2073, 28.0393], // Pretoria St & O'Reilly Rd
-      [-26.2060, 28.0389], // O'Reilly Rd & Edith Cavell St
-      [-26.2047, 28.0392], // Edith Cavell St & Quartz St
-      [-26.2037, 28.0401], // Quartz St & Soper Rd
-      [-26.2033, 28.0415], // Soper Rd & Berea Rd
-      [-26.2035, 28.0430], // Berea Rd & Empire Rd
-      [-26.2042, 28.0442], // Empire Rd & Yeoville
-      [-26.2053, 28.0449], // Yeoville & Rockey St
-      [-26.2066, 28.0450], // Rockey St & Raleigh St
-      [-26.2078, 28.0445], // Raleigh St & Tudhope Ave
-      [-26.2085, 28.0434], // Tudhope Ave & Pretoria St
-      [-26.2087, 28.0419]  // Close loop: Pretoria St & O'Reilly Rd
-    ],
-    description: 'High risk area requiring additional safety measures and dual therapist verification. Limited service hours: 8 AM - 6 PM only.'
-  },
-  {
-    id: '4',
-    name: 'University District - Braamfontein',
-    type: 'premium',
-    coordinates: [
-      // Braamfontein area around Wits University
-      [-26.1912, 28.0378], // Start: Jorissen St & Bertha St
-      [-26.1905, 28.0392], // Bertha St & Stiemens St
-      [-26.1901, 28.0407], // Stiemens St & De Beer St
-      [-26.1903, 28.0423], // De Beer St & Melle St
-      [-26.1910, 28.0436], // Melle St & Juta St
-      [-26.1922, 28.0445], // Juta St & De Korte St
-      [-26.1936, 28.0448], // De Korte St & Biccard St
-      [-26.1950, 28.0445], // Biccard St & Wolmarans St
-      [-26.1961, 28.0436], // Wolmarans St & Ameshoff St
-      [-26.1967, 28.0422], // Ameshoff St & Esselen St
-      [-26.1968, 28.0406], // Esselen St & Smit St
-      [-26.1963, 28.0392], // Smit St & Buiten St
-      [-26.1953, 28.0383], // Buiten St & Jan Smuts Ave
-      [-26.1940, 28.0381], // Jan Smuts Ave & Empire Rd
-      [-26.1927, 28.0385], // Empire Rd & York Rd
-      [-26.1918, 28.0394], // York Rd & Rissik St
-      [-26.1914, 28.0408], // Rissik St & Bree St
-      [-26.1912, 28.0378]  // Close loop: Back to Jorissen St & Bertha St
-    ],
-    description: 'University district with premium student pricing. High demand during semester periods.'
-  },
-  {
-    id: '5',
-    name: 'Industrial Zone - City Deep',
-    type: 'no-service',
-    coordinates: [
-      // City Deep industrial area
-      [-26.2512, 28.0856], // Start: Main Reef Rd & Nasrec Rd
-      [-26.2503, 28.0871], // Nasrec Rd & Doornfontein Rd
-      [-26.2498, 28.0887], // Doornfontein Rd & City Deep Rd
-      [-26.2497, 28.0904], // City Deep Rd & Industria Rd
-      [-26.2501, 28.0920], // Industria Rd & Booysens Rd
-      [-26.2510, 28.0933], // Booysens Rd & Rosettenville Rd
-      [-26.2523, 28.0941], // Rosettenville Rd & Ormonde Rd
-      [-26.2538, 28.0943], // Ormonde Rd & Turffontein Rd
-      [-26.2552, 28.0938], // Turffontein Rd & Oakdene Rd
-      [-26.2563, 28.0927], // Oakdene Rd & Southdale Rd
-      [-26.2569, 28.0912], // Southdale Rd & Lawley Rd
-      [-26.2568, 28.0895], // Lawley Rd & Mayfair Rd
-      [-26.2562, 28.0880], // Mayfair Rd & Westbury Rd
-      [-26.2551, 28.0869], // Westbury Rd & Coronationville Rd
-      [-26.2536, 28.0864], // Coronationville Rd & New Canada Rd
-      [-26.2521, 28.0865], // New Canada Rd & Main Reef Rd
-      [-26.2512, 28.0856]  // Close loop: Back to Main Reef Rd & Nasrec Rd
-    ],
-    description: 'Industrial area - no service due to safety concerns and limited accessibility. Heavy vehicle traffic and restricted zones.'
-  }
-];
+    const mockGeofences: Geofence[] = [
+      {
+        id: '1',
+        name: 'High Crime Area - Hillbrow',
+        type: 'no-service',
+        coordinates: [
+          { lat: -26.1889, lng: 28.0485 },
+          { lat: -26.1892, lng: 28.0498 },
+          { lat: -26.1901, lng: 28.0512 },
+          { lat: -26.1913, lng: 28.0524 },
+          { lat: -26.1928, lng: 28.0531 },
+          { lat: -26.1942, lng: 28.0536 },
+          { lat: -26.1956, lng: 28.0541 },
+          { lat: -26.1968, lng: 28.0549 },
+          { lat: -26.1975, lng: 28.0563 },
+          { lat: -26.1972, lng: 28.0578 },
+          { lat: -26.1961, lng: 28.0589 },
+          { lat: -26.1947, lng: 28.0595 },
+          { lat: -26.1932, lng: 28.0598 },
+          { lat: -26.1916, lng: 28.0594 },
+          { lat: -26.1903, lng: 28.0586 },
+          { lat: -26.1891, lng: 28.0572 },
+          { lat: -26.1885, lng: 28.0557 },
+          { lat: -26.1883, lng: 28.0541 },
+          { lat: -26.1884, lng: 28.0524 },
+          { lat: -26.1887, lng: 28.0508 },
+          { lat: -26.1889, lng: 28.0485 }
+        ],
+        description: 'High crime rate area - no service allowed after 6 PM. Known for high risk incidents.'
+      },
+      {
+        id: '2',
+        name: 'Premium Service Area - Sandton CBD',
+        type: 'premium',
+        coordinates: [
+          { lat: -26.1052, lng: 28.0518 },
+          { lat: -26.1048, lng: 28.0532 },
+          { lat: -26.1045, lng: 28.0547 },
+          { lat: -26.1049, lng: 28.0561 },
+          { lat: -26.1056, lng: 28.0573 },
+          { lat: -26.1068, lng: 28.0582 },
+          { lat: -26.1081, lng: 28.0588 },
+          { lat: -26.1094, lng: 28.0591 },
+          { lat: -26.1107, lng: 28.0589 },
+          { lat: -26.1118, lng: 28.0582 },
+          { lat: -26.1124, lng: 28.0569 },
+          { lat: -26.1126, lng: 28.0554 },
+          { lat: -26.1123, lng: 28.0539 },
+          { lat: -26.1115, lng: 28.0526 },
+          { lat: -26.1103, lng: 28.0517 },
+          { lat: -26.1089, lng: 28.0513 },
+          { lat: -26.1075, lng: 28.0514 },
+          { lat: -26.1063, lng: 28.0519 },
+          { lat: -26.1056, lng: 28.0527 },
+          { lat: -26.1052, lng: 28.0518 }
+        ],
+        description: 'Premium service area with 50% additional fees. Includes Sandton City, Nelson Mandela Square, and financial district.'
+      },
+      {
+        id: '3',
+        name: 'High Risk - Johannesburg CBD Night Zone',
+        type: 'high-risk',
+        coordinates: [
+          { lat: -26.2047, lng: 28.0362 },
+          { lat: -26.2039, lng: 28.0378 },
+          { lat: -26.2032, lng: 28.0394 },
+          { lat: -26.2028, lng: 28.0411 },
+          { lat: -26.2029, lng: 28.0428 },
+          { lat: -26.2034, lng: 28.0443 },
+          { lat: -26.2042, lng: 28.0456 },
+          { lat: -26.2053, lng: 28.0465 },
+          { lat: -26.2066, lng: 28.0469 },
+          { lat: -26.2079, lng: 28.0467 },
+          { lat: -26.2090, lng: 28.0459 },
+          { lat: -26.2097, lng: 28.0446 },
+          { lat: -26.2099, lng: 28.0430 },
+          { lat: -26.2096, lng: 28.0414 },
+          { lat: -26.2088, lng: 28.0400 },
+          { lat: -26.2076, lng: 28.0391 },
+          { lat: -26.2062, lng: 28.0387 },
+          { lat: -26.2048, lng: 28.0389 },
+          { lat: -26.2038, lng: 28.0397 },
+          { lat: -26.2033, lng: 28.0410 },
+          { lat: -26.2034, lng: 28.0425 },
+          { lat: -26.2041, lng: 28.0438 },
+          { lat: -26.2052, lng: 28.0446 },
+          { lat: -26.2065, lng: 28.0448 },
+          { lat: -26.2077, lng: 28.0443 },
+          { lat: -26.2085, lng: 28.0432 },
+          { lat: -26.2087, lng: 28.0417 },
+          { lat: -26.2083, lng: 28.0403 },
+          { lat: -26.2073, lng: 28.0393 },
+          { lat: -26.2060, lng: 28.0389 },
+          { lat: -26.2047, lng: 28.0392 },
+          { lat: -26.2037, lng: 28.0401 },
+          { lat: -26.2033, lng: 28.0415 },
+          { lat: -26.2035, lng: 28.0430 },
+          { lat: -26.2042, lng: 28.0442 },
+          { lat: -26.2053, lng: 28.0449 },
+          { lat: -26.2066, lng: 28.0450 },
+          { lat: -26.2078, lng: 28.0445 },
+          { lat: -26.2085, lng: 28.0434 },
+          { lat: -26.2087, lng: 28.0419 }
+        ],
+        description: 'High risk area requiring additional safety measures and dual therapist verification. Limited service hours: 8 AM - 6 PM only.'
+      },
+      {
+        id: '4',
+        name: 'University District - Braamfontein',
+        type: 'premium',
+        coordinates: [
+          { lat: -26.1912, lng: 28.0378 },
+          { lat: -26.1905, lng: 28.0392 },
+          { lat: -26.1901, lng: 28.0407 },
+          { lat: -26.1903, lng: 28.0423 },
+          { lat: -26.1910, lng: 28.0436 },
+          { lat: -26.1922, lng: 28.0445 },
+          { lat: -26.1936, lng: 28.0448 },
+          { lat: -26.1950, lng: 28.0445 },
+          { lat: -26.1961, lng: 28.0436 },
+          { lat: -26.1967, lng: 28.0422 },
+          { lat: -26.1968, lng: 28.0406 },
+          { lat: -26.1963, lng: 28.0392 },
+          { lat: -26.1953, lng: 28.0383 },
+          { lat: -26.1940, lng: 28.0381 },
+          { lat: -26.1927, lng: 28.0385 },
+          { lat: -26.1918, lng: 28.0394 },
+          { lat: -26.1914, lng: 28.0408 },
+          { lat: -26.1912, lng: 28.0378 }
+        ],
+        description: 'University district with premium student pricing. High demand during semester periods.'
+      },
+      {
+        id: '5',
+        name: 'Industrial Zone - City Deep',
+        type: 'no-service',
+        coordinates: [
+          { lat: -26.2512, lng: 28.0856 },
+          { lat: -26.2503, lng: 28.0871 },
+          { lat: -26.2498, lng: 28.0887 },
+          { lat: -26.2497, lng: 28.0904 },
+          { lat: -26.2501, lng: 28.0920 },
+          { lat: -26.2510, lng: 28.0933 },
+          { lat: -26.2523, lng: 28.0941 },
+          { lat: -26.2538, lng: 28.0943 },
+          { lat: -26.2552, lng: 28.0938 },
+          { lat: -26.2563, lng: 28.0927 },
+          { lat: -26.2569, lng: 28.0912 },
+          { lat: -26.2568, lng: 28.0895 },
+          { lat: -26.2562, lng: 28.0880 },
+          { lat: -26.2551, lng: 28.0869 },
+          { lat: -26.2536, lng: 28.0864 },
+          { lat: -26.2521, lng: 28.0865 },
+          { lat: -26.2512, lng: 28.0856 }
+        ],
+        description: 'Industrial area - no service due to safety concerns and limited accessibility. Heavy vehicle traffic and restricted zones.'
+      }
+    ];
 
     setGeofences(mockGeofences);
   };
+
+  // Draw geofences on map
+  useEffect(() => {
+    if (!map || !isGoogleLoaded) return;
+
+    // Clear existing polygons
+    polygons.forEach(polygon => polygon.setMap(null));
+    const newPolygons: google.maps.Polygon[] = [];
+
+    geofences.forEach(geofence => {
+      const getPolygonStyles = () => {
+        switch (geofence.type) {
+          case 'no-service':
+            return {
+              fillColor: '#ef4444',
+              fillOpacity: 0.3,
+              strokeColor: '#dc2626',
+              strokeWeight: 3,
+              strokeOpacity: 0.8
+            };
+          case 'high-risk':
+            return {
+              fillColor: '#f97316',
+              fillOpacity: 0.3,
+              strokeColor: '#ea580c',
+              strokeWeight: 3,
+              strokeOpacity: 0.8
+            };
+          case 'premium':
+            return {
+              fillColor: '#3b82f6',
+              fillOpacity: 0.3,
+              strokeColor: '#1d4ed8',
+              strokeWeight: 3,
+              strokeOpacity: 0.8
+            };
+          default:
+            return {
+              fillColor: '#6b7280',
+              fillOpacity: 0.3,
+              strokeColor: '#4b5563',
+              strokeWeight: 3,
+              strokeOpacity: 0.8
+            };
+        }
+      };
+
+      const polygon = new google.maps.Polygon({
+        paths: geofence.coordinates,
+        ...getPolygonStyles(),
+        map: map
+      });
+
+      // Add click event to show info window
+      const infoWindow = new google.maps.InfoWindow({
+        content: `
+          <div class="p-2 min-w-48">
+            <h3 class="font-semibold text-lg mb-1">${geofence.name}</h3>
+            <div class="flex items-center mb-2">
+              <span class="px-2 py-1 rounded-full text-xs font-medium ${getGeofenceColor(geofence.type)}">
+                ${geofence.type.replace('-', ' ').toUpperCase()}
+              </span>
+            </div>
+            <p class="text-sm text-gray-600 mb-2">${geofence.description}</p>
+            <div class="text-xs text-gray-500">
+              ${geofence.coordinates.length} boundary points
+            </div>
+          </div>
+        `
+      });
+
+      polygon.addListener('click', (event: google.maps.PolyMouseEvent) => {
+        infoWindow.setPosition(event.latLng);
+        infoWindow.open(map);
+      });
+
+      newPolygons.push(polygon);
+    });
+
+    setPolygons(newPolygons);
+  }, [map, geofences, isGoogleLoaded]);
 
   const getGeofenceColor = (type: string) => {
     switch (type) {
@@ -210,19 +347,82 @@ const mockGeofences: Geofence[] = [
     setShowGeofenceModal(false);
   };
 
+  const enableDrawing = () => {
+    if (!map || !isGoogleLoaded) return;
+
+    const drawingManager = new google.maps.drawing.DrawingManager({
+      drawingMode: google.maps.drawing.OverlayType.POLYGON,
+      drawingControl: true,
+      drawingControlOptions: {
+        position: google.maps.ControlPosition.TOP_CENTER,
+        drawingModes: [google.maps.drawing.OverlayType.POLYGON]
+      },
+      polygonOptions: {
+        fillColor: '#3b82f6',
+        fillOpacity: 0.3,
+        strokeWeight: 3,
+        strokeColor: '#1d4ed8',
+        editable: true,
+        draggable: false
+      }
+    });
+
+    drawingManager.setMap(map);
+
+    google.maps.event.addListener(drawingManager, 'polygoncomplete', (polygon: google.maps.Polygon) => {
+      const path = polygon.getPath();
+      const coordinates: Array<{ lat: number; lng: number }> = [];
+      
+      for (let i = 0; i < path.getLength(); i++) {
+        const point = path.getAt(i);
+        coordinates.push({
+          lat: point.lat(),
+          lng: point.lng()
+        });
+      }
+
+      // Prompt user to save the new geofence
+      setSelectedGeofence({
+        id: 'new',
+        name: 'New Geofence Area',
+        type: 'premium',
+        coordinates,
+        description: 'New geofence area created from map drawing'
+      });
+      setShowGeofenceModal(true);
+
+      // Remove the temporary polygon
+      polygon.setMap(null);
+      drawingManager.setMap(null);
+    });
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-3xl font-bold text-green-700">Geofencing Management</h1>
+          <div className="flex items-center gap-3">
+            <GrLocationPin className="w-8 h-8 text-green-600" />
+            <h1 className="text-3xl font-bold text-green-700">Service Area Management</h1>
+          </div>
           <p className="text-gray-600 mt-2">Manage service areas and restrictions</p>
         </div>
-        <button
-          onClick={() => setShowGeofenceModal(true)}
-          className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors font-semibold"
-        >
-          Add New Geofence
-        </button>
+        <div className="flex gap-3">
+         <button
+            onClick={() => setShowGeofenceModal(true)}
+            className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors font-semibold flex items-center gap-2 shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200"
+          >
+            <GrLocationPin className="w-5 h-5" />
+             Plot on map 
+          </button>
+         <button
+            onClick={() => setShowGeofenceModal(true)}
+            className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors font-semibold flex items-center gap-2 shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200"
+          >
+            <GrLocationPin className="w-5 h-5" />
+             New Geofence
+          </button>
+        </div>
       </div>
 
       {/* Geofence Cards Grid */}
@@ -290,91 +490,19 @@ const mockGeofences: Geofence[] = [
         </div>
 
         <div className="relative h-96 bg-gray-100 rounded-lg border-2 border-gray-300 overflow-hidden">
-          {/* Base Map Background */}
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-green-50">
-            {/* Simulated city layout */}
-            <div className="absolute inset-0 opacity-20">
-              {/* Major highways */}
-              <div className="absolute top-1/4 left-0 right-0 h-3 bg-gray-400 transform -rotate-6"></div>
-              <div className="absolute left-1/3 top-0 bottom-0 w-3 bg-gray-400 transform rotate-3"></div>
-              
-              {/* Main roads */}
-              <div className="absolute top-2/3 left-0 right-0 h-2 bg-gray-300"></div>
-              <div className="absolute left-2/3 top-0 bottom-0 w-2 bg-gray-300"></div>
-              
-              {/* Residential streets */}
-              <div className="absolute top-1/5 left-10 right-10 h-1 bg-gray-200"></div>
-              <div className="absolute top-3/5 left-20 right-20 h-1 bg-gray-200"></div>
+          {!isGoogleLoaded && (
+            <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+                <p className="mt-4 text-gray-600">Loading Google Maps...</p>
+              </div>
             </div>
-
-            {/* Landmarks */}
-            <div className="absolute top-1/5 left-1/4 w-8 h-8 bg-yellow-300 rounded-full opacity-40"></div>
-            <div className="absolute top-3/4 right-1/4 w-12 h-12 bg-yellow-300 rounded-full opacity-40"></div>
-            <div className="absolute bottom-1/4 left-1/2 w-10 h-10 bg-yellow-300 rounded-full opacity-40"></div>
-          </div>
-
-          {/* Geofence Polygons */}
-          {geofences.map(geofence => {
-            const isNoService = geofence.type === 'no-service';
-            const isPremium = geofence.type === 'premium';
-            
-            // Convert coordinates to SVG polygon points with proper scaling
-            const polygonPoints = geofence.coordinates.map(coord => {
-              const x = 20 + (coord[1] - 28.04) * 150; // Scale for better visualization
-              const y = 20 + (coord[0] + 26.20) * 150;
-              return `${x},${y}`;
-            }).join(' ');
-
-            return (
-              <svg
-                key={geofence.id}
-                className="absolute inset-0 w-full h-full"
-              >
-                <polygon
-                  points={polygonPoints}
-                  className={`${
-                    isNoService 
-                      ? 'fill-red-500/30 stroke-red-600' 
-                      : isPremium
-                      ? 'fill-green-500/30 stroke-green-600'
-                      : 'fill-orange-500/30 stroke-orange-600'
-                  } stroke-2 hover:stroke-3 transition-all cursor-pointer`}
-                  style={{ 
-                    filter: isNoService ? 'drop-shadow(0 0 8px rgba(239, 68, 68, 0.3))' :
-                            isPremium ? 'drop-shadow(0 0 8px rgba(34, 197, 94, 0.3))' :
-                            'drop-shadow(0 0 8px rgba(249, 115, 22, 0.3))'
-                  }}
-                  onClick={() => setSelectedGeofence(geofence)}
-                >
-                  <title>{geofence.name} - {geofence.description}</title>
-                </polygon>
-                
-                {/* Pattern overlay */}
-                <pattern
-                  id={`pattern-${geofence.id}`}
-                  width="10"
-                  height="10"
-                  patternUnits="userSpaceOnUse"
-                >
-                  <path
-                    d={isNoService ? "M0,0 L10,10 M10,0 L0,10" : 
-                       isPremium ? "M0,5 L10,5 M5,0 L5,10" : 
-                       "M0,0 L10,10"}
-                    stroke={isNoService ? "#dc2626" : isPremium ? "#16a34a" : "#ea580c"}
-                    strokeWidth="1"
-                    opacity="0.3"
-                  />
-                </pattern>
-                
-                <polygon
-                  points={polygonPoints}
-                  fill={`url(#pattern-${geofence.id})`}
-                  opacity="0.2"
-                />
-              </svg>
-            );
-          })}
-
+          )}
+          <div 
+            ref={mapRef} 
+            className="w-full h-full"
+          />
+          
           {/* Map Legend */}
           <div className="absolute bottom-4 left-4 bg-white/95 backdrop-blur-sm rounded-lg p-4 shadow-lg border min-w-52">
             <h4 className="font-semibold text-sm mb-3 text-gray-800">Service Areas Legend</h4>
@@ -390,10 +518,10 @@ const mockGeofences: Geofence[] = [
               </div>
               <div className="flex items-center justify-between space-x-2">
                 <div className="flex items-center space-x-2">
-                  <div className="w-4 h-4 bg-green-500/30 border border-green-600 rounded-sm"></div>
+                  <div className="w-4 h-4 bg-blue-500/30 border border-blue-600 rounded-sm"></div>
                   <span>Premium Service Area</span>
                 </div>
-                <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-medium">
+                <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-medium">
                   {geofences.filter(g => g.type === 'premium').length}
                 </span>
               </div>
@@ -406,38 +534,6 @@ const mockGeofences: Geofence[] = [
                   {geofences.filter(g => g.type === 'high-risk').length}
                 </span>
               </div>
-            </div>
-          </div>
-
-          {/* Map Controls */}
-          <div className="absolute top-4 right-4 flex flex-col space-y-2">
-            <button className="bg-white/95 backdrop-blur-sm w-8 h-8 rounded shadow border flex items-center justify-center hover:bg-gray-50 transition-colors">
-              <span className="text-lg font-semibold text-gray-700">+</span>
-            </button>
-            <button className="bg-white/95 backdrop-blur-sm w-8 h-8 rounded shadow border flex items-center justify-center hover:bg-gray-50 transition-colors">
-              <span className="text-lg font-semibold text-gray-700">-</span>
-            </button>
-            <button className="bg-white/95 backdrop-blur-sm w-8 h-8 rounded shadow border flex items-center justify-center hover:bg-gray-50 transition-colors">
-              <span className="text-xs">📍</span>
-            </button>
-          </div>
-
-          {/* Area Labels */}
-          <div className="absolute top-20 left-32">
-            <div className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full border border-gray-300 shadow-sm">
-              <span className="text-xs font-medium text-gray-700">Hillbrow</span>
-            </div>
-          </div>
-          
-          <div className="absolute bottom-32 right-40">
-            <div className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full border border-gray-300 shadow-sm">
-              <span className="text-xs font-medium text-gray-700">Sandton</span>
-            </div>
-          </div>
-
-          <div className="absolute top-40 left-60">
-            <div className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full border border-gray-300 shadow-sm">
-              <span className="text-xs font-medium text-gray-700">CBD</span>
             </div>
           </div>
         </div>
@@ -481,7 +577,7 @@ const mockGeofences: Geofence[] = [
   );
 };
 
-// Geofence Modal Component (same as before, but enhanced)
+// Geofence Modal Component
 interface GeofenceModalProps {
   onClose: () => void;
   onSave: (geofence: Omit<Geofence, 'id'>) => void;
@@ -499,20 +595,17 @@ const GeofenceModal: React.FC<GeofenceModalProps> = ({ onClose, onSave, existing
       return;
     }
 
-    // Mock coordinates - in real app, these would come from map drawing
-    const mockCoordinates: Array<[number, number]> = existingGeofence?.coordinates || [
-      [-26.1945, 28.0547],
-      [-26.1940, 28.0580],
-      [-26.1910, 28.0575],
-      [-26.1915, 28.0542],
-      [-26.1930, 28.0530]
-    ];
-
     onSave({
       name,
       type,
       description,
-      coordinates: mockCoordinates
+      coordinates: existingGeofence?.coordinates || [
+        { lat: -26.1945, lng: 28.0547 },
+        { lat: -26.1940, lng: 28.0580 },
+        { lat: -26.1910, lng: 28.0575 },
+        { lat: -26.1915, lng: 28.0542 },
+        { lat: -26.1930, lng: 28.0530 }
+      ]
     });
   };
 
@@ -567,20 +660,22 @@ const GeofenceModal: React.FC<GeofenceModalProps> = ({ onClose, onSave, existing
         </div>
 
         <div className="bg-gray-50 border rounded-lg p-4 mb-6">
-          <h3 className="font-semibold mb-2">Map Drawing Interface</h3>
+          <h3 className="font-semibold mb-2">Area Information</h3>
           <p className="text-gray-600 text-sm mb-3">
-            Draw the geofence boundary on the map below. Click to add points and complete the polygon.
+            This area has {existingGeofence?.coordinates.length || 0} boundary points defined.
           </p>
-          <div className="h-48 bg-gray-100 rounded border-2 border-dashed border-gray-300 flex items-center justify-center">
-            <div className="text-center text-gray-500">
-              <div className="text-2xl mb-2">🗺️</div>
-              <p>Interactive Map Drawing Area</p>
-              <p className="text-xs mt-1">Click to add boundary points</p>
+          {existingGeofence && (
+            <div className="text-xs text-gray-500 space-y-1">
+              <div>Coordinates:</div>
+              <div className="max-h-20 overflow-y-auto bg-white p-2 rounded border">
+                {existingGeofence.coordinates.map((coord, index) => (
+                  <div key={index} className="font-mono">
+                    {coord.lat.toFixed(4)}, {coord.lng.toFixed(4)}
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-          <div className="mt-3 text-xs text-gray-500">
-            Current boundary points: {existingGeofence?.coordinates.length || 5}
-          </div>
+          )}
         </div>
 
         <div className="flex justify-end space-x-3">

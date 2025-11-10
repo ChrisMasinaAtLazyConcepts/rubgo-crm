@@ -218,10 +218,10 @@ const BookingManagement: React.FC = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">Booking Management</h1>
+        <h1 className="text-3xl font-bold text-green-700">Booking Management</h1>
         <button
           onClick={() => setShowBookingModal(true)}
-          className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
+          className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
         >
           Create New Booking
         </button>
@@ -229,29 +229,29 @@ const BookingManagement: React.FC = () => {
 
       {/* Stats Overview */}
       <div className="grid grid-cols-1 md:grid-cols-6 gap-4 mb-6">
-        <div className="bg-white rounded-lg shadow-md p-4 text-center">
-          <div className="text-2xl font-bold text-gray-900">{bookings.length}</div>
-          <div className="text-sm text-gray-600">Total</div>
+        <div className="bg-[#2D5B7C] rounded-lg shadow-md p-4 text-center">
+          <div className="text-2xl font-bold text-white">{bookings.length}</div>
+          <div className="text-sm text-white">Total</div>
         </div>
-        <div className="bg-white rounded-lg shadow-md p-4 text-center">
-          <div className="text-2xl font-bold text-yellow-600">{bookings.filter(b => b.status === 'pending').length}</div>
-          <div className="text-sm text-gray-600">Pending</div>
+        <div className="bg-yellow-600 rounded-lg shadow-md p-4 text-center">
+          <div className="text-2xl font-bold text-white">{bookings.filter(b => b.status === 'pending').length}</div>
+          <div className="text-sm text-white">Pending</div>
         </div>
-        <div className="bg-white rounded-lg shadow-md p-4 text-center">
-          <div className="text-2xl font-bold text-blue-600">{bookings.filter(b => b.status === 'confirmed').length}</div>
-          <div className="text-sm text-gray-600">Confirmed</div>
+        <div className="bg-gray-100 rounded-lg shadow-md p-4 text-center">
+          <div className="text-2xl font-bold text-blue-700">{bookings.filter(b => b.status === 'confirmed').length}</div>
+          <div className="text-sm text-blue-700">Confirmed</div>
         </div>
-        <div className="bg-white rounded-lg shadow-md p-4 text-center">
-          <div className="text-2xl font-bold text-green-600">{bookings.filter(b => b.status === 'in-progress').length}</div>
-          <div className="text-sm text-gray-600">In Progress</div>
+        <div className="bg-[#2D5B7C] rounded-lg shadow-md p-4 text-center">
+          <div className="text-2xl font-bold text-blue-600">{bookings.filter(b => b.status === 'in-progress').length}</div>
+          <div className="text-sm text-white">In Progress</div>
         </div>
-        <div className="bg-white rounded-lg shadow-md p-4 text-center">
-          <div className="text-2xl font-bold text-gray-600">{bookings.filter(b => b.status === 'completed').length}</div>
-          <div className="text-sm text-gray-600">Completed</div>
+        <div className="bg-green-700 rounded-lg shadow-md p-4 text-center">
+          <div className="text-2xl font-bold text-white">{bookings.filter(b => b.status === 'completed').length}</div>
+          <div className="text-sm text-white">Completed</div>
         </div>
-        <div className="bg-white rounded-lg shadow-md p-4 text-center">
-          <div className="text-2xl font-bold text-red-600">{bookings.filter(b => b.status === 'cancelled' || b.status === 'no-show').length}</div>
-          <div className="text-sm text-gray-600">Cancelled</div>
+        <div className="bg-red-600 rounded-lg shadow-md p-4 text-center">
+          <div className="text-2xl font-bold text-white">{bookings.filter(b => b.status === 'cancelled' || b.status === 'no-show').length}</div>
+          <div className="text-sm text-white">Cancelled</div>
         </div>
       </div>
 
