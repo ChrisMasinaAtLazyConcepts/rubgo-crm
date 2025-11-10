@@ -697,41 +697,55 @@ const VerificationModal: React.FC<VerificationModalProps> = ({ therapist, onClos
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-lg p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-        <h2 className="text-xl font-semibold mb-4">Verify Therapist: {therapist.firstName} {therapist.lastName}</h2>
+        <h2 className="text-xl text-red font-semibold mb-4">Verify Therapist: {therapist.firstName} {therapist.lastName}</h2>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
           {/* Application Video */}
           <div>
-            <h3 className="font-semibold mb-2">Application Video</h3>
-            <div className="border rounded-lg p-4 bg-gray-50">
-              {reviewingVideo ? (
-                <div className="text-center">
-                  <p className="text-gray-600 mb-4">Video would be displayed here</p>
-                  <button
-                    onClick={() => setReviewingVideo(false)}
-                    className="bg-gray-300 text-gray-700 px-4 py-2 rounded"
-                  >
-                    Close Video
-                  </button>
-                </div>
-              ) : (
-                <div className="text-center">
-                  <p className="text-gray-600 mb-4">Video submission available for review</p>
-                  <button
-                    onClick={() => setReviewingVideo(true)}
-                    className="bg-blue-600 text-white px-4 py-2 rounded"
-                  >
-                    Watch Application Video
-                  </button>
-                </div>
-              )}
+          <h3 className="font-semibold mb-2">Application Video</h3>
+        <div className="border rounded-lg p-4 bg-gray-50">
+          {reviewingVideo ? (
+            <div className="text-center">
+              {/* Video Player */}
+              <video 
+                controls 
+                className="w-full max-w-2xl mx-auto mb-4 rounded"
+                onEnded={() => setReviewingVideo(false)}
+              >
+                <source src="/assets/therapist.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+              <button
+                onClick={() => setReviewingVideo(false)}
+                className="bg-gray-300 text-gray-700 px-4 py-2 rounded"
+              >
+                Close Video
+              </button>
             </div>
+          ) : (
+            <div className="text-center">
+              <p className="text-gray-600 mb-4">Video submission available for review</p>
+              <button
+                onClick={() => setReviewingVideo(true)}
+                className="bg-blue-600 text-white px-4 py-2 rounded"
+              >
+                Watch Application Video
+              </button>
+            </div>
+          )}
+        </div>
           </div>
 
           {/* Background Check */}
           <div>
             <h3 className="font-semibold mb-2">Background Check</h3>
             <div className="border rounded-lg p-4">
+              <img
+                  src={'./assets/images/lexis.png'}
+                  alt={'Apple QR C'}
+                  className="max-w-48 max-h-48 w-auto h-auto object-contain transition-all duration-200 hover:opacity-90 hover:scale-105"
+                />
+             
               <p><strong>Status:</strong> <span className={`px-2 py-1 rounded text-xs ${therapist.backgroundCheck.status === 'passed' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
                 {therapist.backgroundCheck.status}
               </span></p>

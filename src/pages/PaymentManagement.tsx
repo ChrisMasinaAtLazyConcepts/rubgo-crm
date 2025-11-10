@@ -282,51 +282,7 @@ const PaymentManagement: React.FC = () => {
             Process Selected ({selectedPayments.length})
           </button>
         </div>
-          {/* Payment Mode Selection - Enhanced */}
-          <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-6 rounded-2xl border border-gray-300/50">
-            <h4 className="font-bold mb-4 text-gray-900 text-lg flex items-center gap-2">
-              <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
-              Payment Mode
-            </h4>
-            <div className="flex bg-white/80 backdrop-blur-sm rounded-xl p-1.5 border border-gray-400/30 shadow-lg">
-              <label className="flex-1 relative group">
-                <input
-                  type="radio"
-                  name="paymentMode"
-                  value="manual"
-                  className="sr-only"
-                />
-                <span className="flex items-center justify-center py-3 px-4 rounded-lg transition-all duration-300 ease-out cursor-pointer font-semibold text-gray-500 group-hover:text-gray-700 group-hover:bg-white group-hover:shadow-md peer-checked:bg-gradient-to-r peer-checked:from-blue-500 peer-checked:to-blue-600 peer-checked:text-white peer-checked:shadow-lg">
-                  <span className="relative z-10">Manual</span>
-                </span>
-              </label>
-              
-              <label className="flex-1 relative group">
-                <input
-                  type="radio"
-                  name="paymentMode"
-                  value="monthly"
-                  className="sr-only"
-                />
-                <span className="flex items-center justify-center py-3 px-4 rounded-lg transition-all duration-300 ease-out cursor-pointer font-semibold text-gray-500 group-hover:text-gray-700 group-hover:bg-white group-hover:shadow-md peer-checked:bg-gradient-to-r peer-checked:from-green-500 peer-checked:to-green-600 peer-checked:text-white peer-checked:shadow-lg">
-                  <span className="relative z-10">Monthly</span>
-                </span>
-              </label>
-              
-              <label className="flex-1 relative group">
-                <input
-                  type="radio"
-                  name="paymentMode"
-                  value="weekly"
-                  className="sr-only"
-                  defaultChecked
-                />
-                <span className="flex items-center justify-center py-3 px-4 rounded-lg transition-all duration-300 ease-out cursor-pointer font-semibold text-gray-500 group-hover:text-gray-700 group-hover:bg-white group-hover:shadow-md peer-checked:bg-gradient-to-r peer-checked:from-purple-500 peer-checked:to-purple-600 peer-checked:text-white peer-checked:shadow-lg">
-                  <span className="relative z-10">Weekly</span>
-                </span>
-              </label>
-            </div>
-          </div>
+       
       </div>
 
       {/* Payout Summary */}
@@ -415,9 +371,55 @@ const PaymentManagement: React.FC = () => {
               <option value="month">Last 30 Days</option>
             </select>
           </div>
+              {/* Payment Mode Selection - Enhanced */}
+          <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-6 rounded-2xl border border-gray-300/50">
+            <h4 className="font-bold mb-4 text-gray-900 text-lg flex items-center gap-2">
+              <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+              Payment Mode
+            </h4>
+            <div className="flex bg-white/80 backdrop-blur-sm rounded-xl p-1.5 border border-gray-400/30 shadow-lg">
+              <label className="flex-1 relative group">
+                <input
+                  type="radio"
+                  name="paymentMode"
+                  value="manual"
+                  className="sr-only"
+                />
+                <span className="flex items-center justify-center py-3 px-4 rounded-lg transition-all duration-300 ease-out cursor-pointer font-semibold text-gray-500 group-hover:text-gray-700 group-hover:bg-white group-hover:shadow-md peer-checked:bg-gradient-to-r peer-checked:from-blue-500 peer-checked:to-blue-600 peer-checked:text-white peer-checked:shadow-lg">
+                  <span className="relative z-10">Manual</span>
+                </span>
+              </label>
+              
+              <label className="flex-1 relative group">
+                <input
+                  type="radio"
+                  name="paymentMode"
+                  value="monthly"
+                  className="sr-only"
+                />
+                <span className="flex items-center justify-center py-3 px-4 rounded-lg transition-all duration-300 ease-out cursor-pointer font-semibold text-gray-500 group-hover:text-gray-700 group-hover:bg-white group-hover:shadow-md peer-checked:bg-gradient-to-r peer-checked:from-green-500 peer-checked:to-green-600 peer-checked:text-white peer-checked:shadow-lg">
+                  <span className="relative z-10">Monthly</span>
+                </span>
+              </label>
+              
+              <label className="flex-1 relative group">
+                <input
+                  type="radio"
+                  name="paymentMode"
+                  value="weekly"
+                  className="sr-only"
+                  defaultChecked
+                />
+                <span className="flex items-center justify-center py-3 px-4 rounded-lg transition-all duration-300 ease-out cursor-pointer font-semibold text-gray-500 group-hover:text-gray-700 group-hover:bg-white group-hover:shadow-md peer-checked:bg-gradient-to-r peer-checked:from-purple-500 peer-checked:to-purple-600 peer-checked:text-white peer-checked:shadow-lg">
+                  <span className="relative z-10">Weekly</span>
+                </span>
+              </label>
+            </div>
+          </div>
         </div>
+        
       </div>
-
+        
       {/* Payments Table */}
       <div className="bg-white rounded-lg shadow-md overflow-hidden">
         <table className="min-w-full">

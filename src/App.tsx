@@ -24,6 +24,7 @@ import LoyaltyManagement from './pages/LoyaltyManagement';
 import SecurityDashboard from './pages/SecurityDashboard';                                                                                                  
 import TherapistTargets from './components/therapist-targets';
 import LandingPage from './pages/LandingPage';
+import GeofencingPage from './pages/Geofencing';
 
 const App: React.FC = () => {
   return (                   
@@ -43,6 +44,7 @@ const App: React.FC = () => {
                       <Route path="/admin" element={<AdminDashboard />} />
                       <Route path="/analytics" element={<AnalyticsDashboard />} />
                       
+                       <Route path="/geofencing" element={<GeofencingPage />} /> 
                       {/* Therapy Operations */}
                       <Route path="/therapists" element={<TherapistManagement />} />
                       <Route path="/therapists/onboarding" element={<TherapistOnboarding />} />

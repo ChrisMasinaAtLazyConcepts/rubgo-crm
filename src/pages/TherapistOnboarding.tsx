@@ -17,10 +17,11 @@ const TherapistOnboarding = () => {
     { number: 3, title: 'Certifications' },
     { number: 4, title: 'Availability' },
     { number: 5, title: 'Video Introduction' },
-    { number: 6, title: 'Review & Submit' }
+    { number: 6, title: 'Video Assesments' },
+    { number: 7, title: 'Review & Submit' }
   ];
 
-  const handleVideoUpload = (event) => {
+  const handleVideoUpload = (event: { target: { files: any[]; }; }) => {
     const file = event.target.files[0];
     // Handle video upload logic
     setApplication(prev => ({
@@ -61,13 +62,7 @@ const TherapistOnboarding = () => {
           <div className="space-y-4">
             <h2 className="text-xl font-semibold">Video Introduction</h2>
             <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-              <input
-                type="file"
-                accept="video/*"
-                onChange={handleVideoUpload}
-                className="hidden"
-                id="video-upload"
-              />
+           
               <label htmlFor="video-upload" className="cursor-pointer">
                 <div className="text-gray-500">
                   <svg className="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">

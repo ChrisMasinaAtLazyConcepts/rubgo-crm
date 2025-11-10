@@ -132,6 +132,7 @@ const LandingPage: React.FC = () => {
                                 alt={'Apple QR Code'}
                                 className="max-w-48 max-h-48 w-auto h-auto object-contain transition-all duration-200 hover:opacity-90 hover:scale-105"
                               />
+
                             </div>
                   <div className="w-48 h-15 bg-white/30 border-2 border-white/40 rounded-lg flex items-center justify-center mx-auto mb-4">
                     <div className="text-center">
@@ -146,17 +147,6 @@ const LandingPage: React.FC = () => {
                 </div>
               </div>
 
-              {/* App Store Links */}
-              <div className="flex space-x-4 justify-center">
-                <button className="flex items-center justify-center bg-white text-gray-900 px-6 py-3 rounded-lg hover:bg-gray-100 transition-colors font-medium">
-                  <span className="mr-2">📱</span>
-                  App Store
-                </button>
-                <button className="flex items-center justify-center bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition-colors font-medium">
-                  <span className="mr-2">🤖</span>
-                  Play Store
-                </button>
-              </div>
             </div>
           </div>
 
@@ -164,11 +154,10 @@ const LandingPage: React.FC = () => {
           <div className="bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 shadow-2xl p-8 max-w-md mx-auto lg:mx-0">
             {/* Tab Navigation */}
                <div className="flex flex-col">
-    <div className="flex items-baseline space-x-2">
-      <span className="text-2xl font-bold text-green-600">RubGo <span className="pb-8 text-md text-white font-normal">CRM</span></span>
-    </div>
-    <p className="text-xs text-gray-400 mt-1">version 1.0.0 BETA</p>
-  </div>
+              <div className="flex items-baseline space-x-2">
+                <span className="text-2xl font-bold text-green-600">RubGo <span className="pb-8 text-md text-white font-normal">CRM</span></span>
+              </div>
+            </div>
            <h1></h1>
             <div className="flex border-b border-white/20 mb-8">
               <button

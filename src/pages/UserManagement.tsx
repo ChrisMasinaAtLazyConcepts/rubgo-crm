@@ -291,7 +291,7 @@ const UserManagement: React.FC = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-green-700">Patient Management</h1>
+        <h1 className="text-3xl font-bold text-green-700">User Management</h1>
         <div className="flex space-x-3">
           <button
             onClick={() => setShowGeofenceModal(true)}
@@ -315,16 +315,7 @@ const UserManagement: React.FC = () => {
           >
             Users ({users.length})
           </button>
-          <button
-            onClick={() => setActiveTab('geofencing')}
-            className={`pb-4 px-1 border-b-2 font-medium text-sm ${
-              activeTab === 'geofencing'
-                ? 'border-blue-500 text-blue-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
-            }`}
-          >
-            Geofencing ({geofences.length})
-          </button>
+        
         </div>
       </div>
 
@@ -503,34 +494,11 @@ const UserManagement: React.FC = () => {
         /* Geofencing Tab */
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-semibold">Service Area Management</h2>
-            <button
-              onClick={() => setShowGeofenceModal(true)}
-              className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-            >
-              Add New Geofence
-            </button>
+            <h2 className="text-xl font-semibold">Geofence Management</h2>
+          
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {geofences.map(geofence => (
-              <div key={geofence.id} className="border rounded-lg p-4">
-                <div className="flex justify-between items-start mb-3">
-                  <h3 className="font-semibold text-lg">{geofence.name}</h3>
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${getGeofenceColor(geofence.type)}`}>
-                    {geofence.type.replace('-', ' ')}
-                  </span>
-                </div>
-                <p className="text-gray-600 text-sm mb-4">{geofence.description}</p>
-                <div className="flex justify-between text-sm text-gray-500">
-                  <span>Coordinates: {geofence.coordinates.length} points</span>
-                  <button className="text-red-600 hover:text-red-800">
-                    Remove
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
+
 
           {geofences.length === 0 && (
             <div className="text-center py-8">
@@ -543,7 +511,41 @@ const UserManagement: React.FC = () => {
               </button>
             </div>
           )}
+
+          {geofences.length > 3 && (
+            <div className="text-center mt-4">
+              <button
+                onClick={() => window.location.href = '/geofencing'}
+                className="text-blue-600 hover:text-blue-800 font-medium"
+              >
+                View all {geofences.length} geofences on full page →
+              </button>
+            </div>
+          )}
+
+          {/* Simplified Map Preview */}
+          <div className="mt-6 bg-gray-50 rounded-lg p-4">
+            <h3 className="text-lg font-semibold mb-4">Service Area Map Preview</h3>
+            <div className="relative h-48 bg-white rounded-lg border-2 border-gray-300 overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-green-50 flex items-center justify-center">
+                <div className="text-center text-gray-500">
+                  <div className="text-2xl mb-2">🗺️</div>
+                  <p>Interactive Map</p>
+                  <p className="text-xs mt-1">{geofences.length} geofence zones configured</p>
+                </div>
+              </div>
+            </div>
+            <div className="mt-4 text-center">
+              <button
+                onClick={() => window.location.href = '/geofencing'}
+                className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-colors"
+              >
+                Open Full Map View
+              </button>
+            </div>
+          </div>
         </div>
+
       )}
 
       {/* User Details Modal */}

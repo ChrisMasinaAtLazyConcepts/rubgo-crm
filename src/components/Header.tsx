@@ -44,7 +44,7 @@ const Header: React.FC = () => {
       ]
     },
     {
-      category: "Therapy Management",
+      category: "Therapy Operations",
       items: [
         { 
           label: "Therapy Operations", 
@@ -59,7 +59,7 @@ const Header: React.FC = () => {
           ]
         },
         { 
-          label: "Patient Management", 
+          label: "User Management", 
           icon: <Users className="w-5 h-5" />,
           submenu: [
             { path: "/users", label: "User Management" },
@@ -67,6 +67,13 @@ const Header: React.FC = () => {
             { path: "/support", label: "Support Center" },
           ]
         },
+        { 
+          label: "Geofencing", 
+          icon: <Users className="w-5 h-5" />,
+          submenu: [
+            { path: "/geofencing", label: "Service Area Management" }
+          ]
+        }
       ]
     },
     {
