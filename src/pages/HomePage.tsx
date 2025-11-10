@@ -111,6 +111,9 @@ const HomePage: React.FC = () => {
         {/* Stats Overview */}
         <StatsOverview />
 
+ {/* Add larger cityy or town or surburb search ba
+ r to Filter */}
+
         {/* Province and Town Filter */}
         <div className="bg-white rounded-lg shadow-md p-6 mt-6">
           <h2 className="text-xl font-semibold mb-4">Location Filter</h2>
