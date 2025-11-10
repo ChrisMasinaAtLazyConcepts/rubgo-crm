@@ -5,13 +5,15 @@ const StatsOverview = () => {
   const stats = [
     { label: 'Active Sessions', value: '12', change: '+2', changeType: 'positive' },
     { label: 'Available Therapists', value: '23', change: '+5', changeType: 'positive' },
+    { label: 'Sessions in Progress', value: '8', change: '+2', changeType: 'positive' },
+    { label: 'Active Users', value: '150', change: '+50', changeType: 'positive' },
   
   ];
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       {stats.map((stat, index) => (
-        <div key={index} className="bg-[#0B1F3D] text-white rounded-lg shadow-md p-6">
+        <div key={index} className="bg-[#2D5B7C] text-white rounded-lg shadow-md p-6">
           <div className="flex justify-between items-start">
             <div>
               <p className="text-sm font-medium text-white">{stat.label}</p>

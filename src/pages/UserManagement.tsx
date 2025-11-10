@@ -80,9 +80,9 @@ const UserManagement: React.FC = () => {
     const mockUsers: User[] = [
       {
         id: '1',
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'john.doe@example.com',
+        firstName: 'Chris',
+        lastName: 'Masina',
+        email: 'thato.don@gmail.com',
         phone: '+27 72 123 4567',
         dateOfBirth: '1985-06-15',
         profileImage: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
@@ -291,11 +291,11 @@ const UserManagement: React.FC = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">User Management</h1>
+        <h1 className="text-3xl font-bold text-green-700">Patient Management</h1>
         <div className="flex space-x-3">
           <button
             onClick={() => setShowGeofenceModal(true)}
-            className="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700"
+            className="bg-green-800 text-white px-6 py-2 rounded-lg hover:bg-purple-700"
           >
             Manage Geofences
           </button>
@@ -506,7 +506,7 @@ const UserManagement: React.FC = () => {
             <h2 className="text-xl font-semibold">Service Area Management</h2>
             <button
               onClick={() => setShowGeofenceModal(true)}
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+              className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
             >
               Add New Geofence
             </button>
@@ -945,7 +945,7 @@ const GeofenceModal: React.FC<GeofenceModalProps> = ({ onClose, onSave }) => {
           </button>
           <button
             onClick={handleSave}
-            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
+            className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
           >
             Save Geofence
           </button>

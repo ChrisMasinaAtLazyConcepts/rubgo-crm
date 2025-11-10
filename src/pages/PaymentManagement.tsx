@@ -61,7 +61,7 @@ const PaymentManagement: React.FC = () => {
         therapistId: 't1',
         therapistName: 'Sarah Wilson',
         requestId: 'req-001',
-        customerName: 'John Doe',
+        customerName: 'Chris Masina',
         serviceType: 'Deep Tissue Massage',
         basePrice: 400,
         travelFee: 50,
@@ -264,40 +264,7 @@ const PaymentManagement: React.FC = () => {
           <h1 className="text-3xl font-bold text-green-900">Billing & Payments</h1>
         </div>
         
-      {/* Payment Mode Selection */}
-      <div className="bg-gray-50 p-4 rounded-lg">
-        <h4 className="font-semibold mb-3 text-gray-800">Payment Mode</h4>
-        <div className="flex flex-col sm:flex-row gap-3">
-          <label className="flex items-center space-x-2 cursor-pointer">
-            <input
-              type="radio"
-              name="paymentMode"
-              value="automated"
-              className="w-4 h-4 text-blue-600 focus:ring-blue-500"
-              defaultChecked
-            />
-            <span className="text-gray-700">Manual</span>
-          </label>
-          <label className="flex items-center space-x-2 cursor-pointer">
-            <input
-              type="radio"
-              name="paymentMode"
-              value="monthly"
-              className="w-4 h-4 text-blue-600 focus:ring-blue-500"
-            />
-            <span className="text-gray-700">Auto Monthly</span>
-          </label>
-          <label className="flex items-center space-x-2 cursor-pointer">
-            <input
-              type="radio"
-              name="paymentMode"
-              value="weekly"
-              className="w-4 h-4 text-blue-600 focus:ring-blue-500"
-            />
-            <span className="text-gray-700">Auto Weekly</span>
-          </label>
-        </div>
-      </div>
+   
         <div className="flex space-x-3">
           <button
             onClick={() => setShowManualPaymentModal(true)}
@@ -315,36 +282,106 @@ const PaymentManagement: React.FC = () => {
             Process Selected ({selectedPayments.length})
           </button>
         </div>
+          {/* Payment Mode Selection - Enhanced */}
+          <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-6 rounded-2xl border border-gray-300/50">
+            <h4 className="font-bold mb-4 text-gray-900 text-lg flex items-center gap-2">
+              <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+              Payment Mode
+            </h4>
+            <div className="flex bg-white/80 backdrop-blur-sm rounded-xl p-1.5 border border-gray-400/30 shadow-lg">
+              <label className="flex-1 relative group">
+                <input
+                  type="radio"
+                  name="paymentMode"
+                  value="manual"
+                  className="sr-only"
+                />
+                <span className="flex items-center justify-center py-3 px-4 rounded-lg transition-all duration-300 ease-out cursor-pointer font-semibold text-gray-500 group-hover:text-gray-700 group-hover:bg-white group-hover:shadow-md peer-checked:bg-gradient-to-r peer-checked:from-blue-500 peer-checked:to-blue-600 peer-checked:text-white peer-checked:shadow-lg">
+                  <span className="relative z-10">Manual</span>
+                </span>
+              </label>
+              
+              <label className="flex-1 relative group">
+                <input
+                  type="radio"
+                  name="paymentMode"
+                  value="monthly"
+                  className="sr-only"
+                />
+                <span className="flex items-center justify-center py-3 px-4 rounded-lg transition-all duration-300 ease-out cursor-pointer font-semibold text-gray-500 group-hover:text-gray-700 group-hover:bg-white group-hover:shadow-md peer-checked:bg-gradient-to-r peer-checked:from-green-500 peer-checked:to-green-600 peer-checked:text-white peer-checked:shadow-lg">
+                  <span className="relative z-10">Monthly</span>
+                </span>
+              </label>
+              
+              <label className="flex-1 relative group">
+                <input
+                  type="radio"
+                  name="paymentMode"
+                  value="weekly"
+                  className="sr-only"
+                  defaultChecked
+                />
+                <span className="flex items-center justify-center py-3 px-4 rounded-lg transition-all duration-300 ease-out cursor-pointer font-semibold text-gray-500 group-hover:text-gray-700 group-hover:bg-white group-hover:shadow-md peer-checked:bg-gradient-to-r peer-checked:from-purple-500 peer-checked:to-purple-600 peer-checked:text-white peer-checked:shadow-lg">
+                  <span className="relative z-10">Weekly</span>
+                </span>
+              </label>
+            </div>
+          </div>
       </div>
 
       {/* Payout Summary */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h3 className="text-lg font-semibold text-gray-700">Total Revenue</h3>
-          <p className="text-2xl font-bold text-gray-900">R{payoutSummary.totalRevenue}</p>
-        </div>
-        
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h3 className="text-lg font-semibold text-gray-700">RubGo Fees</h3>
-          <p className="text-2xl font-bold text-blue-600">R{payoutSummary.totalServiceFees}</p>
-          <p className="text-sm text-gray-600">(12% Service Fee)</p>
-        </div>
-        
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h3 className="text-lg font-semibold text-gray-700">Therapist Earnings</h3>
-          <p className="text-2xl font-bold text-green-600">R{payoutSummary.totalTherapistEarnings}</p>
-        </div>
-        
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h3 className="text-lg font-semibold text-gray-700">Pending Payouts</h3>
-          <p className="text-2xl font-bold text-yellow-600">R{payoutSummary.pendingPayouts}</p>
-        </div>
-        
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h3 className="text-lg font-semibold text-gray-700">Completed Payouts</h3>
-          <p className="text-2xl font-bold text-purple-600">R{payoutSummary.completedPayouts}</p>
-        </div>
-      </div>
+  {/* Payout Summary */}
+<div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
+  {/* Total Revenue - Slate */}
+  <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-lg shadow-md p-6 border-l-4 border-slate-500">
+    <h3 className="text-lg font-semibold text-slate-800">Total Revenue</h3>
+    <p className="text-2xl font-bold text-slate-700">R{payoutSummary.totalRevenue}</p>
+    <div className="flex items-center mt-2">
+      <div className="w-3 h-3 bg-slate-500 rounded-full mr-2"></div>
+      <p className="text-xs text-slate-600">Gross income</p>
+    </div>
+  </div>
+  
+  {/* RubGo Fees - Blue */}
+  <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg shadow-md p-6 border-l-4 border-blue-500">
+    <h3 className="text-lg font-semibold text-blue-800">RubGo Fees</h3>
+    <p className="text-2xl font-bold text-blue-700">R{payoutSummary.totalServiceFees}</p>
+    <div className="flex items-center mt-2">
+      <div className="w-3 h-3 bg-blue-500 rounded-full mr-2"></div>
+      <p className="text-xs text-blue-600">12% Service Fee</p>
+    </div>
+  </div>
+  
+  {/* Therapist Earnings - Emerald */}
+  <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-lg shadow-md p-6 border-l-4 border-emerald-500">
+    <h3 className="text-lg font-semibold text-emerald-800">Therapist Earnings</h3>
+    <p className="text-2xl font-bold text-emerald-700">R{payoutSummary.totalTherapistEarnings}</p>
+    <div className="flex items-center mt-2">
+      <div className="w-3 h-3 bg-emerald-500 rounded-full mr-2"></div>
+      <p className="text-xs text-emerald-600">Net to therapists</p>
+    </div>
+  </div>
+  
+  {/* Pending Payouts - Amber */}
+  <div className="bg-gradient-to-br from-amber-50 to-amber-100 rounded-lg shadow-md p-6 border-l-4 border-amber-500">
+    <h3 className="text-lg font-semibold text-amber-800">Pending Payouts</h3>
+    <p className="text-2xl font-bold text-amber-700">R{payoutSummary.pendingPayouts}</p>
+    <div className="flex items-center mt-2">
+      <div className="w-3 h-3 bg-amber-500 rounded-full mr-2"></div>
+      <p className="text-xs text-amber-600">Awaiting processing</p>
+    </div>
+  </div>
+  
+  {/* Completed Payouts - Violet */}
+  <div className="bg-gradient-to-br from-violet-50 to-violet-100 rounded-lg shadow-md p-6 border-l-4 border-violet-500">
+    <h3 className="text-lg font-semibold text-violet-800">Completed Payouts</h3>
+    <p className="text-2xl font-bold text-violet-700">R{payoutSummary.completedPayouts}</p>
+    <div className="flex items-center mt-2">
+      <div className="w-3 h-3 bg-violet-500 rounded-full mr-2"></div>
+      <p className="text-xs text-violet-600">Successfully paid</p>
+    </div>
+  </div>
+</div>
 
       {/* Rest of the component remains the same */}
       {/* Filters */}
@@ -639,7 +676,7 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({ payment, onClose }) => {
       <div className="flex space-x-2">
         <button
           onClick={printInvoice}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700"
+          className="bg-green-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700"
         >
           Print
         </button>

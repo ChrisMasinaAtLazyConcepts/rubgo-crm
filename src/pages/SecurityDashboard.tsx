@@ -64,7 +64,7 @@ const SecurityDashboard: React.FC = () => {
         },
         request: {
           id: 'req-001',
-          customer: 'John Doe',
+          customer: 'Chris Masina',
           address: '123 Main St, Johannesburg',
           scheduledTime: new Date()
         },

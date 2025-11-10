@@ -26,8 +26,11 @@ interface Therapist {
   lng: number;
   available: boolean;
 }
-
-const LiveMap: React.FC = () => {
+interface LiveMapProps {
+  province?: string;
+  town?: string;
+}
+const LiveMap: React.FC<LiveMapProps> = ({ province = '', town = '' }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<any>(null);
   const [mapLoaded, setMapLoaded] = useState(false);
@@ -41,7 +44,7 @@ const LiveMap: React.FC = () => {
       {
         id: '1',
         customer: { 
-          name: 'John Doe', 
+          name: 'Chris Masina', 
           lat: -26.2041, 
           lng: 28.0473 
         },
@@ -349,45 +352,26 @@ const LiveMap: React.FC = () => {
   }, [activeSessions, therapists, mapLoaded]);
 
   return (
-    <div className="w-full">
-      <div 
-        ref={mapContainerRef} 
-        style={{ 
-          height: '500px', 
-          width: '100%', 
-          borderRadius: '8px',
-        }}
-        className="shadow-md bg-gray-100"
-      />
-      
-      {!mapLoaded && (
-        <div className="absolute inset-0 flex items-center justify-center bg-gray-100 rounded-lg">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-            <p className="mt-2 text-gray-600">Loading map...</p>
-          </div>
+    <div className="h-96 bg-gray-100 rounded-lg flex items-center justify-center relative">
+      <div className="text-center">
+        <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
         </div>
-      )}
-
-      {/* Legend */}
-      <div className="mt-4 p-4 bg-white rounded-lg shadow-md">
-        <h3 className="text-sm font-semibold text-gray-900 mb-2">Map Legend</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
-          <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 rounded-full bg-green-500 border-2 border-white shadow"></div>
-            <span>Available Therapist</span>
+        <h3 className="text-lg font-semibold text-gray-800">Live Massage Sessions</h3>
+        <p className="text-gray-600 mt-2">
+          {province || town ? `Showing sessions in ${town || province}` : 'Showing all active sessions'}
+        </p>
+        <div className="mt-4 flex justify-center space-x-2">
+          <div className="flex items-center">
+            <div className="w-3 h-3 bg-green-500 rounded-full mr-1"></div>
+            <span className="text-xs text-gray-600">Active</span>
           </div>
-          <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 rounded-full bg-red-500 border-2 border-white shadow"></div>
-            <span>Busy Therapist</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <div className="w-3 h-3 rounded-full bg-blue-500 border-2 border-white shadow"></div>
-            <span>Customer</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <div className="w-3 h-3 rounded-full bg-purple-500 border-2 border-white shadow"></div>
-            <span>Therapist in Session</span>
+          <div className="flex items-center">
+            <div className="w-3 h-3 bg-blue-500 rounded-full mr-1"></div>
+            <span className="text-xs text-gray-600">Available</span>
           </div>
         </div>
       </div>

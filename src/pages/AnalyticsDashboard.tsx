@@ -195,14 +195,14 @@ const AnalyticsDashboard: React.FC = () => {
             <option value="90d">Last 90 Days</option>
             <option value="1y">Last Year</option>
           </select>
-          <button className="bg-green-400 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+          <button className="bg-green-800 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
             Export Report
           </button>
         </div>
       </div>
 
       {/* Time Period Summary */}
-      <div className="bg-[#0B1F3D] rounded-lg shadow-lg text-white p-6 mb-8">
+      <div className="bg-[#2D5B7C] rounded-lg shadow-lg text-white p-6 mb-8">
         <div className="flex justify-between items-start">
           <div>
             <h2 className="text-2xl font-bold mb-2">Performance Overview</h2>
@@ -249,7 +249,7 @@ const AnalyticsDashboard: React.FC = () => {
       {(activeTab === 'overview' || activeTab === 'revenue') && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {kpis.map((kpi, index) => (
-            <div key={index} className="bg-[#0B1F3D] rounded-lg shadow-lg p-6 hover:shadow-xl transition-all duration-300 border border-blue-700/30 hover:border-blue-500/50">
+            <div key={index} className="bg-[#2D5B7C] rounded-lg shadow-lg p-6 hover:shadow-xl transition-all duration-300 border border-blue-700/30 hover:border-blue-500/50">
               <div className="flex justify-between items-start mb-4">
                 <div className="text-2xl text-white bg-blue-600/20 p-2 rounded-lg">
                   {kpi.icon}
@@ -290,7 +290,7 @@ const AnalyticsDashboard: React.FC = () => {
                     {
                       label: 'Number of Bookings',
                       data: revenueData.map(day => day.bookings),
-                      backgroundColor: '#3B82F6',
+                      backgroundColor: '#0B1F3D',
                       borderColor: '#1D4ED8',
                       borderWidth: 1,
                       borderRadius: 6,

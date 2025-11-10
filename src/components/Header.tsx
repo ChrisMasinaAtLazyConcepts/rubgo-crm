@@ -1,8 +1,9 @@
 // frontend/src/components/Header.tsx
-import { BarChart3, Home, LayoutDashboard, Shield, Stethoscope, Users } from 'lucide-react';
+import { BarChart3, Bell, BellDotIcon, BellIcon, Home, LayoutDashboard, Shield, Stethoscope, Users } from 'lucide-react';
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { CreditCard, Coins, Trophy, Megaphone } from 'lucide-react';
+import { BiNotification } from 'react-icons/bi';
 
 // Define types for menu items
 interface MenuItem {
@@ -58,7 +59,7 @@ const Header: React.FC = () => {
           ]
         },
         { 
-          label: "Patient Care", 
+          label: "Patient Management", 
           icon: <Users className="w-5 h-5" />,
           submenu: [
             { path: "/users", label: "User Management" },
@@ -187,45 +188,62 @@ const Header: React.FC = () => {
                 </div>
               </Link>
             </div>
+{/* Center - Navigation (hidden on mobile) */}
+<nav className="hidden md:flex space-x-8">
+  {/* Home */}
+  <Link
+    to="/"
+    className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
+      location.pathname === '/'
+        ? 'border-green-500 text-green-500'
+        : 'border-transparent text-gray-700 hover:border-gray-300 hover:text-gray-900'
+    }`}
+  >
+    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+    </svg>
+    Home
+  </Link>
 
-            {/* Center - Navigation (hidden on mobile) */}
-            <nav className="hidden md:flex space-x-8">
-              {menuItems.map(category => 
-                category.items.map(item => (
-                  item.path ? ( // Only render items with paths in header
-                    <Link
-                      key={item.path}
-                      to={item.path}
-                      className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                        isActiveLink(item.path)
-                          ? 'border-white text-gray-900'
-                          : 'border-transparent text-gray-700 hover:border-gray-300 hover:text-gray-900'
-                      }`}
-                    >
-                      <span className="mr-2">{item.icon}</span>
-                      {item.label}
-                    </Link>
-                  ) : (
-                    // For submenu items, show first subitem as main nav
-                    item.submenu && item.submenu[0] && (
-                      <Link
-                        key={item.submenu[0].path}
-                        to={item.submenu[0].path}
-                        className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                          isActiveLink(item.submenu[0].path)
-                            ? 'border-white text-gray-900'
-                            : 'border-transparent text-gray-700 hover:border-gray-300 hover:text-gray-900'
-                        }`}
-                      >
-                        <span className="mr-2">{item.icon}</span>
-                        {item.label}
-                      </Link>
-                    )
-                  )
-                ))
-              )}
-            </nav>
+  {/* Analytics */}
+  <Link
+    to="/analytics"
+    className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
+      location.pathname === '/analytics'
+        ? 'border-green-500 text-green-500'
+        : 'border-transparent text-gray-700 hover:border-gray-300 hover:text-gray-900'
+    }`}
+  >
+    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+    </svg>
+    Analytics
+  </Link>
 
+  {/* Security Centre */}
+  <Link
+    to="/security-centre"
+    className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
+      location.pathname === '/security'
+        ? 'border-green-500 text-green-500'
+        : 'border-transparent text-gray-700 hover:border-gray-300 hover:text-gray-900'
+    }`}
+  >
+     <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+      </svg>
+      
+    Security Centre
+  </Link>
+</nav>
+
+        {/* Right - Notifications with Counter */}
+        <div className="flex items-center space-x-4">
+          {/* Notifications Bell with Counter */}
+        
+
+          
+        </div>
             {/* Right side - User menu */}
             <div className="flex items-center space-x-4">
               {/* Notifications */}
@@ -233,6 +251,10 @@ const Header: React.FC = () => {
                 <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5zM10.5 3.75a6 6 0 0 0-6 6v2.25l-2.47 2.47a.75.75 0 0 0 .53 1.28h15.88a.75.75 0 0 0 .53-1.28L16.5 12V9.75a6 6 0 0 0-6-6z" />
                 </svg>
+                  {/* Notification Counter */}
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-semibold">
+                    3
+                  </span>
               </button>
 
               {/* User profile */}
@@ -277,7 +299,10 @@ const Header: React.FC = () => {
   {/* Brand Name and Details */}
   <div className="flex flex-col">
     <div className="flex items-baseline space-x-2">
-      <span className="pt-4 text-xl font-bold text-green-400">Rubgo Admin</span>
+      <div className="flex items-center space-x-2">
+              <span className="text-2xl font-bold text-green-600">RubGo</span>
+              <span className="text-sm text-white">CRM</span>
+            </div>
     </div>
   </div>
 </div>
