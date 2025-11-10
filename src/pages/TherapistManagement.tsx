@@ -635,7 +635,10 @@ const TherapistManagement: React.FC = () => {
                     >
                       Regenerate Code
                     </button>
-                    <button className="text-green-600 hover:text-green-900 text-left">
+                   <button 
+                      onClick={() => window.location.href = '/therapists/onboarding'}
+                      className="text-green-600 hover:text-green-900 text-left transition-colors duration-200"
+                    >
                       View Profile
                     </button>
                     <button className="text-purple-600 hover:text-purple-900 text-left">
@@ -727,10 +730,102 @@ const VerificationModal: React.FC<VerificationModalProps> = ({ therapist, onClos
   </div>
 </div>
 <br/>
+<div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+  <h3 className="font-semibold text-gray-900 mb-6 flex items-center gap-2">
+    <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+    Verification Progress
+  </h3>
+  
+  <div className="flex items-center justify-between">
+    {/* Step 1 - Profile Completed */}
+    <div className="flex flex-col items-center text-center flex-1">
+      <div className="relative mb-3">
+        <div className="w-12 h-12 rounded-full bg-green-300 flex items-center justify-center text-white text-lg font-semibold shadow-md">
+          1
+        </div>
+        <div className="absolute -top-1 -right-1 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+          <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+      </div>
+      <span className="font-medium text-gray-900 text-sm">Profile Completed</span>
+      <p className="text-xs text-gray-500 mt-1">All information provided</p>
+      <span className="inline-flex items-center gap-1 text-green-600 text-xs font-medium mt-2">
+        Done
+      </span>
+    </div>
+
+    {/* Connector Line 1 */}
+    <div className="flex-1 relative">
+      <div className="h-0.5 bg-green-500 mx-4"></div>
+      <div className="absolute inset-0 flex items-center justify-center">
+        <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+          <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
+        </svg>
+      </div>
+    </div>
+
+    {/* Step 2 - Documents Uploaded */}
+    <div className="flex flex-col items-center text-center flex-1">
+      <div className="relative mb-3">
+        <div className="w-12 h-12 rounded-full bg-green-300 flex items-center justify-center text-white text-lg font-semibold shadow-md">
+          2
+        </div>
+        <div className="absolute -top-1 -right-1 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+          <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+      </div>
+      <span className="font-medium text-gray-900 text-sm">Documents Uploaded</span>
+      <p className="text-xs text-gray-500 mt-1">ID & certification files</p>
+      <span className="inline-flex items-center gap-1 text-green-600 text-xs font-medium mt-2">
+        Done
+      </span>
+    </div>
+
+    {/* Connector Line 2 */}
+    <div className="flex-1 relative">
+      <div className="h-0.5 bg-green-500 mx-4"></div>
+      <div className="absolute inset-0 flex items-center justify-center">
+        <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+          <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
+        </svg>
+      </div>
+    </div>
+
+    {/* Step 3 - Verification Pending */}
+    <div className="flex flex-col items-center text-center flex-1">
+      <div className="relative mb-3">
+        <div className="w-12 h-12 rounded-full bg-yellow-200 flex items-center justify-center text-white text-lg font-semibold shadow-md">
+          3
+        </div>
+        <div className="absolute -top-1 -right-1 w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center">
+          <svg className="w-3 h-3 text-blue-500 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
+        </div>
+      </div>
+      <span className="font-medium text-gray-900 text-sm">Verification</span>
+      <p className="text-xs text-gray-500 mt-1">Under review</p>
+      <span className="inline-flex items-center gap-1 text-blue-600 text-xs font-medium mt-2">
+  <svg className="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24">
+    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+  </svg>
+  Pending
+</span>
+    </div>
+  </div>
+</div>
+<br/>
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
       {/* Application Video */}
       <div>
-        <h3 className="font-semibold mb-2">Application Video</h3>
+        <h3 className="font-semibold mb-2">Introduction Video</h3>
         <div className="border rounded-lg p-4 bg-gray-50">
           {reviewingVideo ? (
             <div className="text-center">
@@ -768,7 +863,7 @@ const VerificationModal: React.FC<VerificationModalProps> = ({ therapist, onClos
       <div>
         <h3 className="font-semibold mb-2">Background Check</h3>
         <div className="border rounded-lg p-4 bg-white">
-          <div className="flex flex-col items-center justify-center p-4 bg-gray-50 rounded-lg border border-gray-200 mb-4">
+          <div className="flex flex-col items-center justify-center p-4 bg-white rounded-lg border border-gray-200 mb-4">
             <img
               src={'./assets/images/lexis.png'}
               alt={'LexisNexis Verification'}

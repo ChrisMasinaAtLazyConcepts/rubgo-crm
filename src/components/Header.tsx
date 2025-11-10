@@ -56,7 +56,7 @@ const Header: React.FC = () => {
             { path: "/therapists/onboarding", label: "Therapist Onboarding" },
             { path: "/targets", label: "Therapist Targets" },
             { path: "/services", label: "Service Management" },
-            { path: "/bookings", label: "Booking Management" }
+            { path: "/bookings", label: "Booking Management" },
           ]
         },
         { 

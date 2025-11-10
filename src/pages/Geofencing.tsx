@@ -142,7 +142,7 @@ const GeofencingPage: React.FC = () => {
       },
       {
         id: '3',
-        name: 'High Risk - Johannesburg CBD Night Zone',
+        name: 'High Risk - Johannesburg CBD',
         type: 'high-risk',
         coordinates: [
           { lat: -26.2047, lng: 28.0362 },
@@ -188,57 +188,8 @@ const GeofencingPage: React.FC = () => {
         ],
         description: 'High risk area requiring additional safety measures and dual therapist verification. Limited service hours: 8 AM - 6 PM only.'
       },
-      {
-        id: '4',
-        name: 'University District - Braamfontein',
-        type: 'premium',
-        coordinates: [
-          { lat: -26.1912, lng: 28.0378 },
-          { lat: -26.1905, lng: 28.0392 },
-          { lat: -26.1901, lng: 28.0407 },
-          { lat: -26.1903, lng: 28.0423 },
-          { lat: -26.1910, lng: 28.0436 },
-          { lat: -26.1922, lng: 28.0445 },
-          { lat: -26.1936, lng: 28.0448 },
-          { lat: -26.1950, lng: 28.0445 },
-          { lat: -26.1961, lng: 28.0436 },
-          { lat: -26.1967, lng: 28.0422 },
-          { lat: -26.1968, lng: 28.0406 },
-          { lat: -26.1963, lng: 28.0392 },
-          { lat: -26.1953, lng: 28.0383 },
-          { lat: -26.1940, lng: 28.0381 },
-          { lat: -26.1927, lng: 28.0385 },
-          { lat: -26.1918, lng: 28.0394 },
-          { lat: -26.1914, lng: 28.0408 },
-          { lat: -26.1912, lng: 28.0378 }
-        ],
-        description: 'University district with premium student pricing. High demand during semester periods.'
-      },
-      {
-        id: '5',
-        name: 'Industrial Zone - City Deep',
-        type: 'no-service',
-        coordinates: [
-          { lat: -26.2512, lng: 28.0856 },
-          { lat: -26.2503, lng: 28.0871 },
-          { lat: -26.2498, lng: 28.0887 },
-          { lat: -26.2497, lng: 28.0904 },
-          { lat: -26.2501, lng: 28.0920 },
-          { lat: -26.2510, lng: 28.0933 },
-          { lat: -26.2523, lng: 28.0941 },
-          { lat: -26.2538, lng: 28.0943 },
-          { lat: -26.2552, lng: 28.0938 },
-          { lat: -26.2563, lng: 28.0927 },
-          { lat: -26.2569, lng: 28.0912 },
-          { lat: -26.2568, lng: 28.0895 },
-          { lat: -26.2562, lng: 28.0880 },
-          { lat: -26.2551, lng: 28.0869 },
-          { lat: -26.2536, lng: 28.0864 },
-          { lat: -26.2521, lng: 28.0865 },
-          { lat: -26.2512, lng: 28.0856 }
-        ],
-        description: 'Industrial area - no service due to safety concerns and limited accessibility. Heavy vehicle traffic and restricted zones.'
-      }
+     
+     
     ];
 
     setGeofences(mockGeofences);
