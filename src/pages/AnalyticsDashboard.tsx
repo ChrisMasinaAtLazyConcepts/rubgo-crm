@@ -22,6 +22,7 @@ import {
   BarElement,
   Title
 } from 'chart.js';
+import Breadcrumbs from '../components/BreadCrumbs';
 
 // Register Chart.js components
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title);
@@ -194,10 +195,11 @@ const AnalyticsDashboard: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 py-8">
+            <Breadcrumbs />
         {/* Header */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Analytics Dashboard</h1>
+            {/* <h1 className="text-3xl font-bold text-gray-900 mb-2">Analytics Dashboard</h1> */}
             <p className="text-gray-600">
               {timeRange === '7d' && 'Last 7 Days'}
               {timeRange === '30d' && 'Last 30 Days'}
@@ -223,25 +225,19 @@ const AnalyticsDashboard: React.FC = () => {
           </div>
         </div>
 
-        {/* KPI Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {kpis.map((kpi, index) => (
-            <div key={index} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-2 bg-green-50 rounded-lg">
-                  <div className="text-green-600">{kpi.icon}</div>
-                </div>
-                <span className={`px-2 py-1 rounded-full text-xs font-medium ${getChangeColor(kpi.changeType)}`}>
-                  {getChangeIcon(kpi.changeType)}{Math.abs(kpi.change)}%
-                </span>
-              </div>
-              <div className="text-2xl font-bold text-gray-900 mb-1">
-                {formatValue(kpi.value, kpi.format)}
-              </div>
-              <div className="text-sm text-gray-600">{kpi.label}</div>
-            </div>
-          ))}
-        </div>
+     {/* KPI Grid */}
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+  {kpis.map((kpi, index) => (
+    <div key={index} className="bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-lg shadow-md p-6 border-l-4 border-indigo-500">
+      <h3 className="text-lg font-semibold text-indigo-800">{kpi.label}</h3>
+      <p className="text-2xl font-bold text-indigo-700">{formatValue(kpi.value, kpi.format)}</p>
+      <div className="flex items-center mt-2">
+        <div className="w-3 h-3 bg-indigo-500 rounded-full mr-2"></div>
+        <p className="text-xs text-indigo-600">Performance metric</p>
+      </div>
+    </div>
+  ))}
+</div>
 
         {/* Navigation Tabs */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-1 mb-6">

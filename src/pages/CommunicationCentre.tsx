@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useChat } from '../components/contexts/ChatContext';
 import { MdSpeakerPhone } from 'react-icons/md';
 import { BsTelephoneFill } from 'react-icons/bs';
+import Breadcrumbs from '../components/BreadCrumbs';
 
 // Remove the local Chat interface and use the one from context
 // Or create a compatible interface
@@ -87,8 +88,9 @@ const CommunicationCenter: React.FC = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
+            <Breadcrumbs />
       <div className="flex items-center gap-3">
-          <h1 className="text-3xl font-bold text-green-700">Communication Center</h1>
+          {/* <h1 className="text-3xl font-bold text-green-700">Communication Center</h1> */}
         </div>
         
       {/* Header with Quick Actions */}

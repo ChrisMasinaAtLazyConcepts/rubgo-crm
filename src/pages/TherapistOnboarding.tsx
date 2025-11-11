@@ -1,5 +1,6 @@
 // frontend/src/pages/TherapistOnboarding.tsx
 import React, { useState } from 'react';
+import Breadcrumbs from '../components/BreadCrumbs';
 
 // Type definitions
 interface PersonalInfo {
@@ -219,8 +220,9 @@ const TherapistOnboarding: React.FC = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
+            <Breadcrumbs />
       <div className="bg-white rounded-lg shadow-md p-6">
-        <h1 className="text-3xl font-bold text-green-700 mb-2">Therapist Onboarding</h1>
+        {/* <h1 className="text-3xl font-bold text-green-700 mb-2">Therapist Onboarding</h1> */}
         <p className="text-gray-600 mb-6">Complete your profile to start accepting clients</p>
         
         {/* Progress Steps */}
@@ -405,7 +407,14 @@ const TherapistOnboarding: React.FC = () => {
         {/* Step 5: Banking Details */}
         {currentStep === 5 && (
           <div className="space-y-6">
+           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-semibold text-gray-900">Banking Details</h2>
+            <img
+              src={'/assets/images/banks.png'}
+              alt={'Supported Banks'}
+              className="max-w-58 max-h-68 w-auto h-auto object-contain transition-all duration-200 hover:opacity-90 hover:scale-105"
+            />
+          </div>
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
               <div className="flex items-center gap-3 mb-4">
                 <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">

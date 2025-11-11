@@ -340,36 +340,8 @@ const GeofencingPage: React.FC = () => {
     <div className="container mx-auto px-4 py-8">
       
       <Breadcrumbs />
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <div className="flex items-center gap-3">
-            <GrLocationPin className="w-8 h-8 text-green-600" />
-            <h1 className="text-3xl font-bold text-gray-700">Service Area Management</h1>
-          </div>
-          <p className="text-gray-600 mt-2">Manage service areas and restrictions</p>
-        </div>
-        <div className="flex gap-3">
-          <button
-            onClick={handlePlotOnMap}
-            className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold flex items-center gap-2 shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200"
-          >
-            <GrLocationPin className="w-5 h-5" />
-            Plot on map 
-          </button>
-          <button
-            onClick={() => {
-              setSelectedGeofence(null);
-              setShowGeofenceModal(true);
-            }}
-            className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors font-semibold flex items-center gap-2 shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200"
-          >
-            <GrLocationPin className="w-5 h-5" />
-            New Geofence
-          </button>
-        </div>
-      </div>
 
-      {/* Geofence Cards Grid */}
+         {/* Geofence Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         {geofences.map(geofence => (
           <div key={geofence.id} className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-shadow">
@@ -401,6 +373,36 @@ const GeofencingPage: React.FC = () => {
         ))}
       </div>
 
+      <div className="flex justify-between items-center mb-6">
+        <div>
+          {/* <div className="flex items-center gap-3">
+            <GrLocationPin className="w-8 h-8 text-green-600" />
+            <h1 className="text-3xl font-bold text-gray-700">Service Area Management</h1>
+          </div> */}
+          <p className="text-gray-600 mt-2">Manage service areas and restrictions</p>
+        </div>
+        <div className="flex gap-3">
+          <button
+            onClick={handlePlotOnMap}
+            className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold flex items-center gap-2 shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200"
+          >
+            <GrLocationPin className="w-5 h-5" />
+            Plot on map 
+          </button>
+          <button
+            onClick={() => {
+              setSelectedGeofence(null);
+              setShowGeofenceModal(true);
+            }}
+            className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors font-semibold flex items-center gap-2 shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200"
+          >
+            <GrLocationPin className="w-5 h-5" />
+            New Geofence
+          </button>
+        </div>
+      </div>
+
+   
       {geofences.length === 0 && (
         <div className="text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
           <div className="max-w-md mx-auto">

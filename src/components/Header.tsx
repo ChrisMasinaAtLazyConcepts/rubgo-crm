@@ -474,11 +474,11 @@ const Header: React.FC = () => {
         ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'}
       `}>
         {/* Menu Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-white">
+        <div className="bg-gray-100  flex items-center justify-between p-6 border-b border-gray-200">
           <div className="flex items-center space-x-3">
             <div className="flex items-center space-x-2">
               <span className="text-2xl font-bold text-green-600">RubHub</span>
-              <span className="text-sm text-gray-500">CRM</span>
+              <span className="text-sm">CRM</span>
             </div>
           </div>
           <button

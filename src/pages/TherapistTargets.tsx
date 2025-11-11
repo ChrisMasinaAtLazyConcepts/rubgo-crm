@@ -1,5 +1,6 @@
 // frontend/src/pages/TherapistTargets.tsx
 import React, { useState, useEffect } from 'react';
+import Breadcrumbs from '../components/BreadCrumbs';
 
 interface TherapistTarget {
   id: string;
@@ -456,6 +457,8 @@ const TargetModal: React.FC<TargetModalProps> = ({ target, therapists, onClose, 
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+      
+            <Breadcrumbs />
       <div className="bg-white rounded-lg p-6 w-full max-w-md">
         <h2 className="text-xl font-semibold mb-6">
           {target ? 'Edit Target' : 'Set New Target'}

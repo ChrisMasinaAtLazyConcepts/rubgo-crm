@@ -1,6 +1,7 @@
 // frontend/src/pages/LiveTracking.tsx
 import React, { useState, useEffect } from 'react';
 import LiveMap from '../components/LiveMap';
+import Breadcrumbs from '../components/BreadCrumbs';
 
 interface LiveSession {
   id: string;
@@ -129,9 +130,10 @@ const LiveTracking: React.FC = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
+            <Breadcrumbs />
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Live Session Tracking</h1>
+          {/* <h1 className="text-3xl font-bold text-gray-900">Live Session Tracking</h1> */}
           <p className="text-gray-600 mt-2">Real-time monitoring of all active massage sessions</p>
         </div>
         <div className="flex items-center space-x-4">

@@ -1,5 +1,6 @@
 // frontend/src/pages/UserManagement.tsx
 import React, { useState, useEffect } from 'react';
+import Breadcrumbs from '../components/BreadCrumbs';
 
 interface User {
   id: string;
@@ -290,16 +291,10 @@ const UserManagement: React.FC = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      <Breadcrumbs />
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-800">User Management</h1>
-        <div className="flex space-x-3">
-          <button
-            onClick={() => setShowGeofenceModal(true)}
-            className="bg-green-800 text-white px-6 py-2 rounded-lg hover:bg-purple-700"
-          >
-            Manage Geofences
-          </button>
-        </div>
+        {/* <h1 className="text-3xl font-bold text-gray-800">User Management</h1> */}
+        
       </div>
 
       {/* Tabs */}
@@ -598,172 +593,298 @@ interface UserDetailsModalProps {
 const UserDetailsModal: React.FC<UserDetailsModalProps> = ({ user, bookings, onClose, onUpdateStatus }) => {
   const [activeSection, setActiveSection] = useState<'details' | 'bookings' | 'id'>('details');
 
+  // Generate user avatar based on name
+  const getUserAvatar = (name: string) => {
+    return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=2D5B7C&color=fff&size=128&bold=true`;
+  };
+
+  // Mock South African ID images
+  const idFrontImage = "https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=400&h=250&fit=crop&crop=center";
+  const idBackImage = "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=400&h=250&fit=crop&crop=center";
+
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-        <div className="flex justify-between items-start mb-6">
-          <h2 className="text-xl font-semibold">
-            {user.firstName} {user.lastName} - User Details
-          </h2>
-          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
-            ✕
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-6xl max-h-[95vh] overflow-hidden">
+        {/* Header */}
+        <div className="flex items-center justify-between p-6 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white">
+          <div className="flex items-center space-x-4">
+            <div className="relative">
+              <img 
+                src={getUserAvatar(`${user.firstName} ${user.lastName}`)}
+                alt={`${user.firstName} ${user.lastName}`}
+                className="w-16 h-16 rounded-full border-4 border-white shadow-lg"
+              />
+              <div className={`absolute -bottom-1 -right-1 w-5 h-5 rounded-full border-2 border-white ${
+                user.isVerified ? 'bg-green-500' : 'bg-yellow-500'
+              }`} />
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900">
+                {user.firstName} {user.lastName}
+              </h2>
+              <p className="text-gray-600">User ID: {user.id}</p>
+            </div>
+          </div>
+          <button 
+            onClick={onClose}
+            className="p-2 hover:bg-gray-100 rounded-xl transition-all duration-200 hover:scale-110"
+          >
+            <svg className="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
           </button>
         </div>
 
         {/* Tabs */}
-        <div className="flex space-x-4 border-b mb-6">
+        <div className="flex space-x-1 px-6 pt-4 border-b border-gray-200">
           {[
-            { id: 'details', name: 'Personal Details' },
-            { id: 'bookings', name: 'Booking History' },
-            { id: 'id', name: 'ID Verification' }
+            { id: 'details', name: 'Personal Details', icon: '👤' },
+            { id: 'bookings', name: 'Booking History', icon: '📅' },
+            { id: 'id', name: 'ID Verification', icon: '🆔' }
           ].map(tab => (
             <button
               key={tab.id}
               onClick={() => setActiveSection(tab.id as any)}
-              className={`pb-2 px-1 border-b-2 font-medium text-sm ${
+              className={`flex items-center space-x-2 pb-4 px-4 border-b-2 font-medium text-sm transition-all duration-200 ${
                 activeSection === tab.id
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700'
+                  ? 'border-blue-500 text-blue-600 bg-blue-50 rounded-t-lg'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50 rounded-t-lg'
               }`}
             >
-              {tab.name}
+              <span>{tab.icon}</span>
+              <span>{tab.name}</span>
             </button>
           ))}
         </div>
 
-        {activeSection === 'details' && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Personal Information */}
-            <div>
-              <h3 className="font-semibold mb-4">Personal Information</h3>
-              <div className="space-y-3">
-                <div>
-                  <label className="text-sm font-medium text-gray-700">Full Name</label>
-                  <p className="text-gray-900">{user.firstName} {user.lastName}</p>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-gray-700">Email</label>
-                  <p className="text-gray-900">{user.email}</p>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-gray-700">Phone</label>
-                  <p className="text-gray-900">{user.phone}</p>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-gray-700">Date of Birth</label>
-                  <p className="text-gray-900">{new Date(user.dateOfBirth).toLocaleDateString()}</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Address Information */}
-            <div>
-              <h3 className="font-semibold mb-4">Address</h3>
-              <div className="space-y-3">
-                <div>
-                  <label className="text-sm font-medium text-gray-700">Street</label>
-                  <p className="text-gray-900">{user.address.street}</p>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-gray-700">City</label>
-                  <p className="text-gray-900">{user.address.city}</p>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-gray-700">State/Province</label>
-                  <p className="text-gray-900">{user.address.state}</p>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-gray-700">ZIP Code</label>
-                  <p className="text-gray-900">{user.address.zipCode}</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Account Stats */}
-            <div className="lg:col-span-2">
-              <h3 className="font-semibold mb-4">Account Statistics</h3>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="bg-gray-50 p-4 rounded-lg text-center">
-                  <div className="text-2xl font-bold text-blue-600">{user.totalBookings}</div>
-                  <div className="text-sm text-gray-600">Total Bookings</div>
-                </div>
-                <div className="bg-gray-50 p-4 rounded-lg text-center">
-                  <div className="text-2xl font-bold text-green-600">R{user.totalSpent}</div>
-                  <div className="text-sm text-gray-600">Total Spent</div>
-                </div>
-                <div className="bg-gray-50 p-4 rounded-lg text-center">
-                  <div className="text-2xl font-bold text-purple-600">{user.loyaltyPoints}</div>
-                  <div className="text-sm text-gray-600">Loyalty Points</div>
-                </div>
-                <div className="bg-gray-50 p-4 rounded-lg text-center">
-                  <div className="text-2xl font-bold text-orange-600">{user.freeMassagesAvailable}</div>
-                  <div className="text-sm text-gray-600">Free Massages</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {activeSection === 'bookings' && (
-          <div>
-            <h3 className="font-semibold mb-4">Booking History ({bookings.length})</h3>
-            <div className="space-y-3">
-              {bookings.map(booking => (
-                <div key={booking.id} className="border rounded-lg p-4">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <div className="font-medium">{booking.serviceType}</div>
-                      <div className="text-sm text-gray-600">With {booking.therapistName}</div>
-                      <div className="text-sm text-gray-500">
-                        {new Date(booking.date).toLocaleDateString()} • {booking.duration} mins
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="font-bold text-lg">R{booking.price}</div>
-                      <div className={`text-sm ${
-                        booking.status === 'completed' ? 'text-green-600' :
-                        booking.status === 'cancelled' ? 'text-red-600' : 'text-yellow-600'
-                      }`}>
-                        {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
-                      </div>
-                      {booking.rating && (
-                        <div className="text-sm text-yellow-600">⭐ {booking.rating}/5</div>
-                      )}
-                    </div>
+        {/* Content */}
+        <div className="p-6 overflow-y-auto max-h-[calc(95vh-180px)]">
+          {activeSection === 'details' && (
+            <div className="space-y-6">
+              {/* Personal Information Cards */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Personal Information */}
+                <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-100">
+                  <div className="flex items-center space-x-2 mb-4">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                    <h3 className="font-semibold text-gray-900 text-lg">Personal Information</h3>
+                  </div>
+                  <div className="space-y-4">
+                    <InfoField label="Full Name" value={`${user.firstName} ${user.lastName}`} />
+                    <InfoField label="Email" value={user.email} />
+                    <InfoField label="Phone" value={user.phone} />
+                    <InfoField label="Date of Birth" value={new Date(user.dateOfBirth).toLocaleDateString('en-ZA', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })} />
                   </div>
                 </div>
-              ))}
-            </div>
-          </div>
-        )}
 
-        {activeSection === 'id' && (
-          <div>
-            <h3 className="font-semibold mb-4">ID Verification</h3>
-            {user.idImage ? (
-              <div className="text-center">
-                <img 
-                  src={user.idImage} 
-                  alt="ID Document" 
-                  className="max-w-full h-auto mx-auto border rounded-lg"
-                />
-                <p className="text-sm text-gray-600 mt-2">Submitted ID Document</p>
-                <div className="mt-4">
-                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                    user.isVerified ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
-                  }`}>
-                    {user.isVerified ? 'Verified' : 'Pending Verification'}
-                  </span>
+                {/* Address Information */}
+                <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6 border border-green-100">
+                  <div className="flex items-center space-x-2 mb-4">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <h3 className="font-semibold text-gray-900 text-lg">Address Information</h3>
+                  </div>
+                  <div className="space-y-4">
+                    <InfoField label="Street" value={user.address.street} />
+                    <InfoField label="City" value={user.address.city} />
+                    <InfoField label="Province" value={user.address.state} />
+                    <InfoField label="Postal Code" value={user.address.zipCode} />
+                  </div>
                 </div>
               </div>
-            ) : (
-              <div className="text-center py-8">
-                <p className="text-gray-500">No ID document uploaded by user.</p>
+
+              {/* Account Stats */}
+              <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-6 border border-purple-100">
+                <div className="flex items-center space-x-2 mb-6">
+                  <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                  <h3 className="font-semibold text-gray-900 text-lg">Account Statistics</h3>
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <StatCard 
+                    value={user.totalBookings} 
+                    label="Total Bookings" 
+                    color="blue"
+                    icon="📊"
+                  />
+                  <StatCard 
+                    value={`R${user.totalSpent}`} 
+                    label="Total Spent" 
+                    color="green"
+                    icon="💰"
+                  />
+                  <StatCard 
+                    value={user.loyaltyPoints} 
+                    label="Loyalty Points" 
+                    color="purple"
+                    icon="⭐"
+                  />
+                  <StatCard 
+                    value={user.freeMassagesAvailable} 
+                    label="Free Massages" 
+                    color="orange"
+                    icon="🎁"
+                  />
+                </div>
               </div>
-            )}
-          </div>
-        )}
+            </div>
+          )}
+
+          {activeSection === 'bookings' && (
+            <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <h3 className="font-semibold text-gray-900 text-lg">
+                  Booking History <span className="text-blue-600">({bookings.length})</span>
+                </h3>
+                <div className="text-sm text-gray-500">
+                  Sorted by most recent
+                </div>
+              </div>
+              
+              <div className="space-y-4">
+                {bookings.map((booking, index) => (
+                  <div key={booking.id} className="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-lg transition-all duration-200 hover:border-blue-200">
+                    <div className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-3 mb-2">
+                          <div className="text-lg font-semibold text-gray-900">{booking.serviceType}</div>
+                          <div className={`px-2 py-1 rounded-full text-xs font-medium ${
+                            booking.status === 'completed' ? 'bg-green-100 text-green-800' :
+                            booking.status === 'cancelled' ? 'bg-red-100 text-red-800' : 
+                            'bg-yellow-100 text-yellow-800'
+                          }`}>
+                            {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
+                          </div>
+                        </div>
+                        <div className="text-sm text-gray-600 mb-1">With {booking.therapistName}</div>
+                        <div className="text-sm text-gray-500 flex items-center space-x-4">
+                          <span>📅 {new Date(booking.date).toLocaleDateString('en-ZA')}</span>
+                          <span>⏱️ {booking.duration} mins</span>
+                          {booking.rating && (
+                            <span className="flex items-center space-x-1">
+                              <span>⭐</span>
+                              <span>{booking.rating}/5</span>
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-xl font-bold text-gray-900 mb-1">R{booking.price}</div>
+                        <div className="text-xs text-gray-500">#{String(index + 1).padStart(3, '0')}</div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {activeSection === 'id' && (
+            <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <h3 className="font-semibold text-gray-900 text-lg">ID Verification</h3>
+                <div className={`px-3 py-1 rounded-full text-sm font-medium ${
+                  user.isVerified ? 'bg-green-100 text-green-800 border border-green-200' : 
+                  'bg-yellow-100 text-yellow-800 border border-yellow-200'
+                }`}>
+                  {user.isVerified ? '✅ Verified' : '⏳ Pending Verification'}
+                </div>
+              </div>
+
+              {user.idImage ? (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {/* ID Front */}
+                  <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl p-6 border border-blue-200">
+                    <div className="flex items-center space-x-2 mb-4">
+                      <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                      <h4 className="font-semibold text-gray-900">South African ID - Front</h4>
+                    </div>
+                    <div className="relative group">
+                      <img 
+                        src='./assets/images/id-front.jfif'
+                        alt="SA ID Front"
+                        className="w-full h-full object-cover rounded-lg border-2 border-blue-300 shadow-md group-hover:scale-105 transition-transform duration-200"
+                      />
+                      <div className="absolute inset-0 bg-blue-500/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                    </div>
+                    <p className="text-sm text-gray-600 mt-3 text-center">Official ID Document - Front Side</p>
+                  </div>
+
+                  {/* ID Back */}
+                  <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6 border border-green-200">
+                    <div className="flex items-center space-x-2 mb-4">
+                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                      <h4 className="font-semibold text-gray-900">South African ID - Back</h4>
+                    </div>
+                    <div className="relative group">
+                      <img 
+                        src='./assets/images/id-back.jfif'
+                        alt="SA ID Back"
+                        className="w-full h-full object-cover rounded-lg border-2 border-green-300 shadow-md group-hover:scale-105 transition-transform duration-200"
+                      />
+                      <div className="absolute inset-0 bg-green-500/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                    </div>
+                    <p className="text-sm text-gray-600 mt-3 text-center">Official ID Document - Back Side</p>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center py-12 bg-gray-50 rounded-xl border-2 border-dashed border-gray-300">
+                  <div className="text-6xl mb-4">🆔</div>
+                  <p className="text-gray-500 text-lg font-medium">No ID document uploaded</p>
+                  <p className="text-gray-400 text-sm mt-1">User has not submitted ID verification documents</p>
+                </div>
+              )}
+
+              {/* Verification Actions */}
+              <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
+                <h4 className="font-semibold text-gray-900 mb-4">Verification Actions</h4>
+                <div className="flex flex-wrap gap-3">
+                  <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium">
+                    Verify ID
+                  </button>
+                  <button className="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors duration-200 font-medium">
+                    Request New Photos
+                  </button>
+                  <button className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors duration-200 font-medium">
+                    Reject Verification
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
+    </div>
+  );
+};
+
+// Helper Components
+const InfoField: React.FC<{ label: string; value: string }> = ({ label, value }) => (
+  <div>
+    <label className="text-sm font-medium text-gray-600 block mb-1">{label}</label>
+    <p className="text-gray-900 font-medium">{value}</p>
+  </div>
+);
+
+const StatCard: React.FC<{ value: string | number; label: string; color: 'blue' | 'green' | 'purple' | 'orange'; icon: string }> = ({ 
+  value, label, color, icon 
+}) => {
+  const colorClasses = {
+    blue: 'bg-blue-500',
+    green: 'bg-green-500',
+    purple: 'bg-purple-500',
+    orange: 'bg-orange-500'
+  };
+
+  return (
+    <div className="bg-white rounded-lg p-4 text-center border border-gray-200 hover:shadow-md transition-shadow duration-200">
+      <div className="text-2xl mb-2">{icon}</div>
+      <div className={`text-2xl font-bold ${colorClasses[color]} text-transparent bg-clip-text`}>
+        {value}
+      </div>
+      <div className="text-sm text-gray-600">{label}</div>
     </div>
   );
 };

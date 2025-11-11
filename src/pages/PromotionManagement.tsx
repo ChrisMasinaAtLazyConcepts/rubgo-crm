@@ -1,5 +1,6 @@
 // frontend/src/pages/PromotionManagement.tsx
 import React, { useState, useEffect } from 'react';
+import Breadcrumbs from '../components/BreadCrumbs';
 
 interface Promotion {
   id: string;
@@ -817,8 +818,10 @@ const LoyaltyProgramModal: React.FC<LoyaltyProgramModalProps> = ({ onClose, onSa
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+      
+                  <Breadcrumbs />
       <div className="bg-white rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-        <h2 className="text-xl font-semibold mb-6">Create Loyalty Program</h2>
+        {/* <h2 className="text-xl font-semibold mb-6">Create Loyalty Program</h2> */}
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -1,5 +1,6 @@
 // frontend/src/pages/TherapistManagement.tsx
 import React, { useState, useEffect } from 'react';
+import Breadcrumbs from '../components/BreadCrumbs';
 
 interface Therapist {
   idNumber: string;
@@ -375,8 +376,9 @@ const TherapistManagement: React.FC = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
+                <Breadcrumbs />
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold ">Therapist Management</h1>
+        {/* <h1 className="text-3xl font-bold ">Therapist Management</h1> */}
         <button
           onClick={() => window.location.href = '/therapists/onboarding'}
           className="bg-green-800 text-white px-6 py-2 rounded-lg hover:bg-blue-700"

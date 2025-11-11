@@ -1,5 +1,6 @@
 // frontend/src/pages/SecurityDashboard.tsx
 import React, { useState, useEffect, useRef } from 'react';
+import Breadcrumbs from '../components/BreadCrumbs';
 
 
 // Define TypeScript interfaces
@@ -55,7 +56,7 @@ interface StreamStatus {
 type PanicAction = 'call_saps' | 'notify_security' | 'send_saps_email' | 'resolve' | 'start_stream' | 'stop_stream';
 
 
-const SecurityDashboard: React.FC = () => {
+const Security: React.FC = () => {
    const [securityAlerts, setSecurityAlerts] = useState<SecurityAlert[]>([]);
   const [selectedAlert, setSelectedAlert] = useState<SecurityAlert | null>(null);
   const [showActionModal, setShowActionModal] = useState<boolean>(false);
@@ -318,29 +319,50 @@ const SecurityDashboard: React.FC = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
+                    <Breadcrumbs />
       <h1 className="text-3xl font-bold text-green-800 mb-6">Security Center</h1>
       
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
-        <div className="bg-red-100 border border-red-300 rounded-lg p-6">
-          <h3 className="text-lg font-semibold text-red-800">Active Panic Alerts</h3>
-          <p className="text-3xl font-bold text-red-800">{securityAlerts.length}</p>
-        </div>
-        
-        <div className="bg-yellow-100 border border-yellow-300 rounded-lg p-6">
-          <h3 className="text-lg font-semibold text-yellow-800">Pending Selfie Checks</h3>
-          <p className="text-3xl font-bold text-yellow-800">3</p>
-        </div>
-        
-        <div className="bg-blue-100 border border-blue-300 rounded-lg p-6">
-          <h3 className="text-lg font-semibold text-blue-800">SAPS Calls Today</h3>
-          <p className="text-3xl font-bold text-blue-800">2</p>
-        </div>
-        
-        <div className="bg-green-100 border border-green-300 rounded-lg p-6">
-          <h3 className="text-lg font-semibold text-green-800">Resolved Today</h3>
-          <p className="text-3xl font-bold text-green-800">12</p>
-        </div>
-      </div>
+ <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
+  {/* Active Panic Alerts - Red */}
+  <div className="bg-gradient-to-br from-red-50 to-red-100 rounded-lg shadow-md p-6 border-l-4 border-red-500">
+    <h3 className="text-lg font-semibold text-red-800">Active Panic Alerts</h3>
+    <p className="text-3xl font-bold text-red-800">{securityAlerts.length}</p>
+    <div className="flex items-center mt-2">
+      <div className="w-3 h-3 bg-red-500 rounded-full mr-2"></div>
+      <p className="text-xs text-red-600">Urgent attention required</p>
+    </div>
+  </div>
+  
+  {/* Pending Selfie Checks - Yellow */}
+  <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-lg shadow-md p-6 border-l-4 border-yellow-500">
+    <h3 className="text-lg font-semibold text-yellow-800">Pending Selfie Checks</h3>
+    <p className="text-3xl font-bold text-yellow-800">3</p>
+    <div className="flex items-center mt-2">
+      <div className="w-3 h-3 bg-yellow-500 rounded-full mr-2"></div>
+      <p className="text-xs text-yellow-600">Awaiting verification</p>
+    </div>
+  </div>
+  
+  {/* SAPS Calls Today - Blue */}
+  <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg shadow-md p-6 border-l-4 border-blue-500">
+    <h3 className="text-lg font-semibold text-blue-800">SAPS Calls Today</h3>
+    <p className="text-3xl font-bold text-blue-800">2</p>
+    <div className="flex items-center mt-2">
+      <div className="w-3 h-3 bg-blue-500 rounded-full mr-2"></div>
+      <p className="text-xs text-blue-600">Police notifications</p>
+    </div>
+  </div>
+  
+  {/* Resolved Today - Green */}
+  <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg shadow-md p-6 border-l-4 border-green-500">
+    <h3 className="text-lg font-semibold text-green-800">Resolved Today</h3>
+    <p className="text-3xl font-bold text-green-800">12</p>
+    <div className="flex items-center mt-2">
+      <div className="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
+      <p className="text-xs text-green-600">Successfully handled</p>
+    </div>
+  </div>
+</div>
 
       {/* Active Panic Alerts */}
       <div className="bg-white rounded-lg shadow-md p-6 mb-6">
@@ -529,6 +551,7 @@ const SecurityDashboard: React.FC = () => {
       {/* Live Stream Modal */}
       {showStreamModal && selectedAlert && (
         <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center p-4 z-50">
+        
           <div className="bg-gray-900 rounded-lg p-6 w-full max-w-4xl">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-semibold text-white">
@@ -647,4 +670,4 @@ const SecurityDashboard: React.FC = () => {
   );
 };
 
-export default SecurityDashboard;
+export default Security;

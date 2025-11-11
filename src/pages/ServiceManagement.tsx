@@ -1,6 +1,7 @@
 // frontend/src/pages/ServiceManagement.tsx
 import React, { useState, useEffect } from 'react';
 import { Plus, Edit2, Settings, Search, Filter, Download } from 'lucide-react';
+import Breadcrumbs from '../components/BreadCrumbs';
 
 interface Service {
   id: string;
@@ -220,6 +221,8 @@ const ServiceManagement: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      
+                 <Breadcrumbs />
       <div className="container mx-auto px-4 py-8">
         {/* Header Section */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
@@ -228,7 +231,7 @@ const ServiceManagement: React.FC = () => {
               <Settings className="w-8 h-8 text-white" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Service Management</h1>
+              {/* <h1 className="text-3xl font-bold text-gray-900">Service Management</h1> */}
               <p className="text-gray-600">Manage therapy services and add-ons</p>
             </div>
           </div>
@@ -542,6 +545,7 @@ const ServiceModal: React.FC<ServiceModalProps> = ({ service, onClose, onSave })
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+     
       <div className="bg-white rounded-xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         <h2 className="text-xl font-semibold text-gray-900 mb-6">
           {service ? 'Edit Service' : 'Create New Service'}
@@ -729,6 +733,7 @@ const AddOnModal: React.FC<AddOnModalProps> = ({ service, onClose, onUpdate }) =
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+     
       <div className="bg-white rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         <h2 className="text-xl font-semibold mb-6">
           Manage Add-ons for {service.name}

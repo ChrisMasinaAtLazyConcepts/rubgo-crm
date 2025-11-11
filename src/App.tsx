@@ -21,10 +21,10 @@ import PromotionManagement from './pages/PromotionManagement';
 import SupportCenter from './pages/SupportCenter';
 import TherapistOnboarding from './pages/TherapistOnboarding';
 import LoyaltyManagement from './pages/LoyaltyManagement';
-import SecurityDashboard from './pages/SecurityDashboard';                                                                                                  
 import TherapistTargets from './components/therapist-targets';
 import LandingPage from './pages/LandingPage';
 import GeofencingPage from './pages/Geofencing';
+import Security from './pages/Security';
 
 const App: React.FC = () => {
   return (                   
@@ -64,7 +64,7 @@ const App: React.FC = () => {
                       <Route path="/promotions" element={<PromotionManagement />} />
                       
                       {/* Security */}
-                      <Route path="/security" element={<SecurityDashboard />} />
+                      <Route path="/security" element={<Security  />} />
                       
                       {/* Catch all route */}
                       <Route path="*" element={<Navigate to="/" replace />} />

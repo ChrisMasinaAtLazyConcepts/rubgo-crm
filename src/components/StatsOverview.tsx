@@ -1,5 +1,6 @@
 // frontend/src/components/StatsOverview.js
 import React from 'react';
+import Breadcrumbs from './BreadCrumbs';
 
 const StatsOverview = () => {
   const stats = [
@@ -12,22 +13,16 @@ const StatsOverview = () => {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <Breadcrumbs />
       {stats.map((stat, index) => (
-        <div key={index} className="bg-[#2D5B7C] text-white rounded-lg shadow-md p-6">
-          <div className="flex justify-between items-start">
-            <div>
-              <p className="text-sm font-medium text-white">{stat.label}</p>
-              <p className="text-2xl font-bold text-green-600 mt-2">{stat.value}</p>
-            </div>
-            <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-              stat.changeType === 'positive' 
-                ? 'bg-green-100 text-green-800' 
-                : 'bg-red-100 text-red-800'
-            }`}>
-              {stat.change}
-            </span>
-          </div>
-        </div>
+     <div key={index} className="bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-lg shadow-md p-6 border-l-4 border-indigo-500">
+  <h3 className="text-lg font-semibold text-indigo-800">{stat.label}</h3>
+  <p className="text-2xl font-bold text-indigo-700">{stat.value}</p>
+  <div className="flex items-center mt-2">
+    <div className="w-3 h-3 bg-indigo-500 rounded-full mr-2"></div>
+    <p className="text-xs text-indigo-600">All registered therapists</p>
+  </div>
+</div>
       ))}
     </div>
   );

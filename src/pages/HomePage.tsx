@@ -4,6 +4,7 @@ import LiveMap from '../components/LiveMap';
 import StatsOverview from '../components/StatsOverview';
 import RecentRequests from '../components/RecentRequests';
 import NoServices from '../components/NoServices';
+import Breadcrumbs from '../components/BreadCrumbs';
 
 // Define the type for province keys
 type ProvinceKey = '' | 'gauteng' | 'western-cape' | 'kzn' | 'eastern-cape' | 'free-state' | 'limpopo' | 'mpumalanga' | 'north-west' | 'northern-cape';
@@ -115,7 +116,6 @@ const HomePage: React.FC = () => {
     <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 py-6">
         {/* Stats Overview */}
-        <StatsOverview />
 
         {/* Location Filter Section */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mt-6">

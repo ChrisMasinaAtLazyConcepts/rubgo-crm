@@ -1,6 +1,7 @@
 // frontend/src/pages/PaymentManagement.tsx
 import { Coins, Plus, Filter, Download } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
+import Breadcrumbs from '../components/BreadCrumbs';
 
 interface Payment {
   id: string;
@@ -294,6 +295,7 @@ const PaymentManagement: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 py-8">
+            <Breadcrumbs />
         {/* Header Section */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
           <div className="flex items-center space-x-4 mb-4 lg:mb-0">
@@ -301,7 +303,7 @@ const PaymentManagement: React.FC = () => {
               <Coins className="w-8 h-8 text-white" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Payment Management</h1>
+              {/* <h1 className="text-3xl font-bold text-gray-900">Payment Management</h1> */}
               <p className="text-gray-600">Manage therapist payments and payouts</p>
             </div>
           </div>
