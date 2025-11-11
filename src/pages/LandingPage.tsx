@@ -1,6 +1,8 @@
 // frontend/src/pages/LandingPage.tsx
+import { Apple, Play } from 'lucide-react';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import DownloadSection from '../components/DownloadSection';
 
 const LandingPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'signin' | 'signup'>('signin');
@@ -105,31 +107,9 @@ const LandingPage: React.FC = () => {
                     <p className="text-xs text-gray-400 mt-1">version 1.0.0 BETA</p>
                   </div>
 
-                  <div className="flex justify-center items-center gap-4 mb-4">
-                    <img
-                      src="./assets/images/android qr.png"
-                      alt="Android QR Code"
-                      className="max-w-32 max-h-32 w-auto h-auto object-contain transition-all duration-200 hover:opacity-90 hover:scale-105"
-                    />
-                    <img
-                      src="./assets/images/apple qr.png"
-                      alt="Apple QR Code"
-                      className="max-w-32 max-h-32 w-auto h-auto object-contain transition-all duration-200 hover:opacity-90 hover:scale-105"
-                    />
-                  </div>
+                    <DownloadSection />
 
-                  <div className="flex justify-center items-center gap-4">
-                    <img
-                      src="./assets/images/android.png"
-                      alt="Get it on Google Play"
-                      className="h-12 w-auto object-contain transition-all duration-200 hover:opacity-90 hover:scale-105"
-                    />
-                    <img
-                      src="./assets/images/apple.png"
-                      alt="Download on App Store"
-                      className="h-12 w-auto object-contain transition-all duration-200 hover:opacity-90 hover:scale-105"
-                    />
-                  </div>
+                
 
                   <p className="text-sm text-white/80 mt-4">Scan with your phone camera</p>
                 </div>

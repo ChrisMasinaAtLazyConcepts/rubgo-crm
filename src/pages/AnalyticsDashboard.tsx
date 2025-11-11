@@ -193,7 +193,6 @@ const AnalyticsDashboard: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 py-8">
             <Breadcrumbs />
         {/* Header */}
@@ -536,7 +535,6 @@ const AnalyticsDashboard: React.FC = () => {
             </div>
           )}
         </div>
-      </div>
     </div>
   );
 };

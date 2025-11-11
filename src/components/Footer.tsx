@@ -10,12 +10,14 @@ const Footer: React.FC = () => {
           {/* Brand Section */}
           <div className="mb-4 md:mb-0">
             <div className="flex items-center space-x-2">
-              <span className="text-2xl font-bold text-green-600">RubHub</span>
-              <span className="text-sm text-white">CRM</span>
-            </div>
-            <p className="text-gray-400 text-sm mt-2">
+           <h1 className="text-left text-4l font-bold  text-green-700">
+			  RubHub™
+			</h1>
+         <p className="text-gray-400 text-sm ">
               Professional Massage Therapy Management
             </p>
+            </div>
+         
           </div>
 
           {/* Links Section */}
@@ -49,7 +51,7 @@ const Footer: React.FC = () => {
           {/* Copyright Section */}
           <div className="text-center md:text-right">
             <p className="text-gray-400 text-sm">
-              © {currentYear} RubHuub Massage. All rights reserved.
+              © {currentYear} RubHub South Africa. All rights reserved.
             </p>
             <p className="text-gray-500 text-xs mt-1">
               Designed by Next Group (Pty) Ltd

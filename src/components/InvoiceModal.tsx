@@ -1,4 +1,18 @@
-// Invoice Modal Component - Fixed version
+interface Payment {
+  requestId: string;
+  paymentDate: string;
+  therapistEarnings: number;
+  therapistName: string;
+  therapistId: string;
+  serviceType: string;
+  customerName: string;
+  basePrice: number;
+  travelFee: number;
+  rubgoServiceFee: number;
+  status: 'completed' | 'pending' | 'failed';
+  payoutDate?: string;
+}
+
 interface InvoiceModalProps {
   payment: Payment;
   onClose: () => void;
@@ -9,14 +23,17 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({ payment, onClose }) => {
     window.print();
   };
 
+  // Calculate subtotal safely
+  const subtotal = (payment.basePrice || 0) + (payment.travelFee || 0);
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         {/* Header with Branding */}
-        <div className="bg-[#0B1F3D] text-white p-6 rounded-t-xl">
+        <div className="bg-gray-100 text-green-700 p-6 rounded-t-xl">
           <div className="flex justify-between items-start">
             <div className="flex items-center space-x-4">
-              <div className=" p-2 rounded-lg">
+              <div className="p-2 bg-white bg-opacity-20 rounded-lg">
                 <span className="text-2xl font-bold text-white">RubHub</span>
               </div>
               <div>
@@ -36,7 +53,9 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({ payment, onClose }) => {
           <div className="flex justify-between items-center">
             <div>
               <p className="text-gray-500 text-sm">Issued Date</p>
-              <p className="font-semibold text-gray-700">{payment.paymentDate}</p>
+              <p className="font-semibold text-gray-700">
+                {payment.paymentDate || new Date().toLocaleDateString()}
+              </p>
             </div>
             <div className="flex space-x-3">
               <button
@@ -75,7 +94,9 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({ payment, onClose }) => {
                 </div>
               </div>
               <div className="text-right">
-                <p className="text-blue-900 font-bold text-lg">R{payment.therapistEarnings}</p>
+                <p className="text-blue-900 font-bold text-lg">
+                  R{payment.therapistEarnings?.toFixed(2) || '0.00'}
+                </p>
                 <p className="text-blue-700 text-sm">Therapist Earnings</p>
               </div>
             </div>
@@ -96,11 +117,11 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({ payment, onClose }) => {
               <div className="space-y-2">
                 <div>
                   <p className="text-sm text-gray-600">Therapist Name</p>
-                  <p className="font-medium text-gray-900">{payment.therapistName}</p>
+                  <p className="font-medium text-gray-900">{payment.therapistName || 'N/A'}</p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-600">Therapist ID</p>
-                  <p className="font-mono text-gray-700">{payment.therapistId}</p>
+                  <p className="font-mono text-gray-700">{payment.therapistId || 'N/A'}</p>
                 </div>
               </div>
             </div>
@@ -118,11 +139,11 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({ payment, onClose }) => {
               <div className="space-y-2">
                 <div>
                   <p className="text-sm text-gray-600">Service Type</p>
-                  <p className="font-medium text-gray-900">{payment.serviceType}</p>
+                  <p className="font-medium text-gray-900">{payment.serviceType || 'N/A'}</p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-600">Customer</p>
-                  <p className="font-medium text-gray-900">{payment.customerName}</p>
+                  <p className="font-medium text-gray-900">{payment.customerName || 'N/A'}</p>
                 </div>
               </div>
             </div>
@@ -139,21 +160,27 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({ payment, onClose }) => {
                   <div>
                     <span className="text-gray-700 font-medium">Base Service Price</span>
                   </div>
-                  <span className="font-medium text-gray-900">R{payment.basePrice}</span>
+                  <span className="font-medium text-gray-900">
+                    R{(payment.basePrice || 0).toFixed(2)}
+                  </span>
                 </div>
                 
                 <div className="flex justify-between items-center py-2">
                   <div>
                     <span className="text-gray-700 font-medium">Travel Fee</span>
                   </div>
-                  <span className="font-medium text-gray-900">R{payment.travelFee}</span>
+                  <span className="font-medium text-gray-900">
+                    R{(payment.travelFee || 0).toFixed(2)}
+                  </span>
                 </div>
                 
                 <div className="flex justify-between items-center py-3 border-t border-gray-200">
                   <div>
                     <span className="text-gray-900 font-semibold">Subtotal</span>
                   </div>
-                  <span className="font-bold text-gray-900">R{payment.basePrice + payment.travelFee}</span>
+                  <span className="font-bold text-gray-900">
+                    R{subtotal.toFixed(2)}
+                  </span>
                 </div>
                 
                 <div className="flex justify-between items-center py-2 bg-red-50 -mx-2 px-2 rounded">
@@ -161,7 +188,9 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({ payment, onClose }) => {
                     <span className="text-red-700 font-medium">RubGo Service Fee (12%)</span>
                     <p className="text-red-600 text-xs">Platform & processing fees</p>
                   </div>
-                  <span className="font-medium text-red-700">- R{payment.rubgoServiceFee}</span>
+                  <span className="font-medium text-red-700">
+                    - R{(payment.rubgoServiceFee || 0).toFixed(2)}
+                  </span>
                 </div>
                 
                 <div className="flex justify-between items-center py-4 border-t border-gray-200 bg-green-50 -mx-6 px-6 mt-4">
@@ -169,7 +198,9 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({ payment, onClose }) => {
                     <span className="text-green-900 font-bold text-lg">Therapist Earnings</span>
                     <p className="text-green-700 text-sm">Amount transferred to therapist</p>
                   </div>
-                  <span className="font-bold text-green-600 text-xl">R{payment.therapistEarnings}</span>
+                  <span className="font-bold text-green-600 text-xl">
+                    R{(payment.therapistEarnings || 0).toFixed(2)}
+                  </span>
                 </div>
               </div>
             </div>
@@ -183,26 +214,40 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({ payment, onClose }) => {
                 <div className={`p-2 rounded-full ${
                   payment.status === 'completed' 
                     ? 'bg-green-100 text-green-600' 
-                    : 'bg-yellow-100 text-yellow-600'
+                    : payment.status === 'pending'
+                    ? 'bg-yellow-100 text-yellow-600'
+                    : 'bg-red-100 text-red-600'
                 }`}>
                   {payment.status === 'completed' ? (
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
-                  ) : (
+                  ) : payment.status === 'pending' ? (
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  ) : (
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                     </svg>
                   )}
                 </div>
                 <div>
                   <span className={`font-semibold ${
-                    payment.status === 'completed' ? 'text-green-700' : 'text-yellow-700'
+                    payment.status === 'completed' 
+                      ? 'text-green-700' 
+                      : payment.status === 'pending'
+                      ? 'text-yellow-700'
+                      : 'text-red-700'
                   }`}>
-                    {payment.status.charAt(0).toUpperCase() + payment.status.slice(1)}
+                    {payment.status ? payment.status.charAt(0).toUpperCase() + payment.status.slice(1) : 'Unknown'}
                   </span>
                   <p className="text-gray-600 text-sm">
-                    {payment.status === 'completed' ? 'Payment completed successfully' : 'Payment processing'}
+                    {payment.status === 'completed' 
+                      ? 'Payment completed successfully' 
+                      : payment.status === 'pending'
+                      ? 'Payment processing'
+                      : 'Payment failed'}
                   </p>
                 </div>
               </div>
@@ -248,3 +293,5 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({ payment, onClose }) => {
     </div>
   );
 };
+
+export default InvoiceModal;

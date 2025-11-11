@@ -695,11 +695,11 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({ payment, onClose }) => {
    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         {/* Header with Branding */}
-        <div className="bg-[#0B1F3D]  text-white p-6 rounded-t-xl">
+        <div className="bg-gray-100 text-green p-6 rounded-t-xl">
           <div className="flex justify-between items-start">
             <div className="flex items-center space-x-4">
               <div className=" p-2 rounded-lg">
-                <span className="text-2xl font-bold text-white">RubHub</span>
+               <span className="text-2xl font-bold text-green-600">RubHub</span>
               </div>
               
             </div>
@@ -716,8 +716,8 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({ payment, onClose }) => {
                 <p className="text-green-700 text-sm">Professional Therapy Services</p>
               </div>
 
-               <div className="text-right">
-              <p className=" font-medium">Invoice #</p>
+               <div className="text-left">
+              <p className=" font-medium text-green-700 ">Invoice #</p>
               <p className="font-mono font-bold text-lg">{payment.requestId}</p>
             </div>
           {/* Action Buttons */}
@@ -912,10 +912,10 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({ payment, onClose }) => {
               <p className="text-gray-600 text-sm mb-4">Secured by trusted payment partners</p>
               <div className="flex justify-center items-center space-x-8">
                 <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center">
-                  <span className="text-gray-600 font-semibold text-sm">OZOW</span>
+                <img src="./assets/images/ozow.jfif" alt="PayPal" className="w-20 h-16" />
                 </div>
                 <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center">
-                  <span className="text-gray-600 font-semibold text-sm">PayFast</span>
+                <img src="./assets/images/payfast.png" alt="PayPal" className="w-20 h-16" />
                 </div>
               </div>
               <p className="text-gray-500 text-xs mt-4">
