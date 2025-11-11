@@ -291,7 +291,7 @@ const UserManagement: React.FC = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-green-700">User Management</h1>
+        <h1 className="text-3xl font-bold text-gray-800">User Management</h1>
         <div className="flex space-x-3">
           <button
             onClick={() => setShowGeofenceModal(true)}

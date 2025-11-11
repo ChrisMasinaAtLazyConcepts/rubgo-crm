@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FaLocationPin } from 'react-icons/fa6';
 import { GrLocationPin } from 'react-icons/gr';
+import Breadcrumbs from '../components/BreadCrumbs';
 
 interface Geofence {
   id: string;
@@ -20,6 +21,7 @@ const GeofencingPage: React.FC = () => {
   const mapRef = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [polygons, setPolygons] = useState<google.maps.Polygon[]>([]);
+  const [drawingManager, setDrawingManager] = useState<google.maps.drawing.DrawingManager | null>(null);
 
   const GOOGLE_MAPS_API_KEY = 'AIzaSyBgtmDrI8g4cW1Tf9nxnwp1Si8KqEdD-XM';
 
@@ -99,16 +101,7 @@ const GeofencingPage: React.FC = () => {
           { lat: -26.1975, lng: 28.0563 },
           { lat: -26.1972, lng: 28.0578 },
           { lat: -26.1961, lng: 28.0589 },
-          { lat: -26.1947, lng: 28.0595 },
-          { lat: -26.1932, lng: 28.0598 },
-          { lat: -26.1916, lng: 28.0594 },
-          { lat: -26.1903, lng: 28.0586 },
-          { lat: -26.1891, lng: 28.0572 },
-          { lat: -26.1885, lng: 28.0557 },
-          { lat: -26.1883, lng: 28.0541 },
-          { lat: -26.1884, lng: 28.0524 },
-          { lat: -26.1887, lng: 28.0508 },
-          { lat: -26.1889, lng: 28.0485 }
+          { lat: -26.1947, lng: 28.0595 }
         ],
         description: 'High crime rate area - no service allowed after 6 PM. Known for high risk incidents.'
       },
@@ -128,15 +121,7 @@ const GeofencingPage: React.FC = () => {
           { lat: -26.1107, lng: 28.0589 },
           { lat: -26.1118, lng: 28.0582 },
           { lat: -26.1124, lng: 28.0569 },
-          { lat: -26.1126, lng: 28.0554 },
-          { lat: -26.1123, lng: 28.0539 },
-          { lat: -26.1115, lng: 28.0526 },
-          { lat: -26.1103, lng: 28.0517 },
-          { lat: -26.1089, lng: 28.0513 },
-          { lat: -26.1075, lng: 28.0514 },
-          { lat: -26.1063, lng: 28.0519 },
-          { lat: -26.1056, lng: 28.0527 },
-          { lat: -26.1052, lng: 28.0518 }
+          { lat: -26.1126, lng: 28.0554 }
         ],
         description: 'Premium service area with 50% additional fees. Includes Sandton City, Nelson Mandela Square, and financial district.'
       },
@@ -156,40 +141,10 @@ const GeofencingPage: React.FC = () => {
           { lat: -26.2066, lng: 28.0469 },
           { lat: -26.2079, lng: 28.0467 },
           { lat: -26.2090, lng: 28.0459 },
-          { lat: -26.2097, lng: 28.0446 },
-          { lat: -26.2099, lng: 28.0430 },
-          { lat: -26.2096, lng: 28.0414 },
-          { lat: -26.2088, lng: 28.0400 },
-          { lat: -26.2076, lng: 28.0391 },
-          { lat: -26.2062, lng: 28.0387 },
-          { lat: -26.2048, lng: 28.0389 },
-          { lat: -26.2038, lng: 28.0397 },
-          { lat: -26.2033, lng: 28.0410 },
-          { lat: -26.2034, lng: 28.0425 },
-          { lat: -26.2041, lng: 28.0438 },
-          { lat: -26.2052, lng: 28.0446 },
-          { lat: -26.2065, lng: 28.0448 },
-          { lat: -26.2077, lng: 28.0443 },
-          { lat: -26.2085, lng: 28.0432 },
-          { lat: -26.2087, lng: 28.0417 },
-          { lat: -26.2083, lng: 28.0403 },
-          { lat: -26.2073, lng: 28.0393 },
-          { lat: -26.2060, lng: 28.0389 },
-          { lat: -26.2047, lng: 28.0392 },
-          { lat: -26.2037, lng: 28.0401 },
-          { lat: -26.2033, lng: 28.0415 },
-          { lat: -26.2035, lng: 28.0430 },
-          { lat: -26.2042, lng: 28.0442 },
-          { lat: -26.2053, lng: 28.0449 },
-          { lat: -26.2066, lng: 28.0450 },
-          { lat: -26.2078, lng: 28.0445 },
-          { lat: -26.2085, lng: 28.0434 },
-          { lat: -26.2087, lng: 28.0419 }
+          { lat: -26.2097, lng: 28.0446 }
         ],
         description: 'High risk area requiring additional safety measures and dual therapist verification. Limited service hours: 8 AM - 6 PM only.'
-      },
-     
-     
+      }
     ];
 
     setGeofences(mockGeofences);
@@ -296,12 +251,18 @@ const GeofencingPage: React.FC = () => {
     };
     setGeofences(prev => [...prev, newGeofence]);
     setShowGeofenceModal(false);
+    setSelectedGeofence(null);
   };
 
   const enableDrawing = () => {
     if (!map || !isGoogleLoaded) return;
 
-    const drawingManager = new google.maps.drawing.DrawingManager({
+    // Clear existing drawing manager
+    if (drawingManager) {
+      drawingManager.setMap(null);
+    }
+
+    const newDrawingManager = new google.maps.drawing.DrawingManager({
       drawingMode: google.maps.drawing.OverlayType.POLYGON,
       drawingControl: true,
       drawingControlOptions: {
@@ -318,12 +279,13 @@ const GeofencingPage: React.FC = () => {
       }
     });
 
-    drawingManager.setMap(map);
+    newDrawingManager.setMap(map);
 
-    google.maps.event.addListener(drawingManager, 'polygoncomplete', (polygon: google.maps.Polygon) => {
+    google.maps.event.addListener(newDrawingManager, 'polygoncomplete', (polygon: google.maps.Polygon) => {
       const path = polygon.getPath();
       const coordinates: Array<{ lat: number; lng: number }> = [];
       
+      // Get all coordinates from the polygon
       for (let i = 0; i < path.getLength(); i++) {
         const point = path.getAt(i);
         coordinates.push({
@@ -332,46 +294,77 @@ const GeofencingPage: React.FC = () => {
         });
       }
 
+      // Limit to 12 coordinates by sampling evenly
+      const limitedCoordinates = limitCoordinatesToTwelve(coordinates);
+
       // Prompt user to save the new geofence
       setSelectedGeofence({
         id: 'new',
         name: 'New Geofence Area',
         type: 'premium',
-        coordinates,
+        coordinates: limitedCoordinates,
         description: 'New geofence area created from map drawing'
       });
       setShowGeofenceModal(true);
 
-      // Remove the temporary polygon
+      // Remove the temporary polygon and drawing manager
       polygon.setMap(null);
-      drawingManager.setMap(null);
+      newDrawingManager.setMap(null);
+      setDrawingManager(null);
     });
+
+    setDrawingManager(newDrawingManager);
+  };
+
+  const limitCoordinatesToTwelve = (coordinates: Array<{ lat: number; lng: number }>) => {
+    if (coordinates.length <= 12) {
+      return coordinates;
+    }
+
+    const limited: Array<{ lat: number; lng: number }> = [];
+    const step = coordinates.length / 12;
+    
+    for (let i = 0; i < 12; i++) {
+      const index = Math.floor(i * step);
+      limited.push(coordinates[index]);
+    }
+
+    return limited;
+  };
+
+  const handlePlotOnMap = () => {
+    enableDrawing();
   };
 
   return (
     <div className="container mx-auto px-4 py-8">
+      
+      <Breadcrumbs />
       <div className="flex justify-between items-center mb-6">
         <div>
           <div className="flex items-center gap-3">
             <GrLocationPin className="w-8 h-8 text-green-600" />
-            <h1 className="text-3xl font-bold text-green-700">Service Area Management</h1>
+            <h1 className="text-3xl font-bold text-gray-700">Service Area Management</h1>
           </div>
           <p className="text-gray-600 mt-2">Manage service areas and restrictions</p>
         </div>
         <div className="flex gap-3">
-         <button
-            onClick={() => setShowGeofenceModal(true)}
-            className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors font-semibold flex items-center gap-2 shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200"
+          <button
+            onClick={handlePlotOnMap}
+            className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold flex items-center gap-2 shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200"
           >
             <GrLocationPin className="w-5 h-5" />
-             Plot on map 
+            Plot on map 
           </button>
-         <button
-            onClick={() => setShowGeofenceModal(true)}
+          <button
+            onClick={() => {
+              setSelectedGeofence(null);
+              setShowGeofenceModal(true);
+            }}
             className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors font-semibold flex items-center gap-2 shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200"
           >
             <GrLocationPin className="w-5 h-5" />
-             New Geofence
+            New Geofence
           </button>
         </div>
       </div>
@@ -519,7 +512,10 @@ const GeofencingPage: React.FC = () => {
       {/* Geofence Management Modal */}
       {showGeofenceModal && (
         <GeofenceModal
-          onClose={() => setShowGeofenceModal(false)}
+          onClose={() => {
+            setShowGeofenceModal(false);
+            setSelectedGeofence(null);
+          }}
           onSave={handleSaveGeofence}
           existingGeofence={selectedGeofence}
         />
@@ -555,7 +551,14 @@ const GeofenceModal: React.FC<GeofenceModalProps> = ({ onClose, onSave, existing
         { lat: -26.1940, lng: 28.0580 },
         { lat: -26.1910, lng: 28.0575 },
         { lat: -26.1915, lng: 28.0542 },
-        { lat: -26.1930, lng: 28.0530 }
+        { lat: -26.1930, lng: 28.0530 },
+        { lat: -26.1920, lng: 28.0520 },
+        { lat: -26.1905, lng: 28.0535 },
+        { lat: -26.1895, lng: 28.0550 },
+        { lat: -26.1900, lng: 28.0565 },
+        { lat: -26.1915, lng: 28.0570 },
+        { lat: -26.1930, lng: 28.0560 },
+        { lat: -26.1940, lng: 28.0550 }
       ]
     });
   };
@@ -613,7 +616,8 @@ const GeofenceModal: React.FC<GeofenceModalProps> = ({ onClose, onSave, existing
         <div className="bg-gray-50 border rounded-lg p-4 mb-6">
           <h3 className="font-semibold mb-2">Area Information</h3>
           <p className="text-gray-600 text-sm mb-3">
-            This area has {existingGeofence?.coordinates.length || 0} boundary points defined.
+            This area has {existingGeofence?.coordinates.length || 12} boundary points defined.
+            {existingGeofence?.coordinates.length === 12 && ' (Maximum of 12 coordinates)'}
           </p>
           {existingGeofence && (
             <div className="text-xs text-gray-500 space-y-1">
