@@ -15,15 +15,14 @@ const LandingPage: React.FC = () => {
   const navigate = useNavigate();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
+    setFormData(prev => ({
+      ...prev,
       [e.target.name]: e.target.value
-    });
+    }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
     // Mock authentication - in real app, this would be an API call
     if (formData.email === 'admin@rubhub.com' && formData.password === 'admin') {
       navigate('/');
@@ -35,8 +34,11 @@ const LandingPage: React.FC = () => {
 
   const handleTherapistSignup = (e: React.FormEvent) => {
     e.preventDefault();
-    // Redirect to therapist onboarding
     navigate('/therapists/onboarding');
+  };
+
+  const backgroundStyle = {
+    backgroundImage: 'url("https://images.unsplash.com/photo-1544161515-4ab6ce6db874?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80")',
   };
 
   return (
@@ -44,26 +46,23 @@ const LandingPage: React.FC = () => {
       {/* Background Image with Overlay */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat z-0"
-        style={{
-          backgroundImage: 'url("https://images.unsplash.com/photo-1544161515-4ab6ce6db874?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80")',
-          // Alternative serene massage-related images:
-          // - https://images.unsplash.com/photo-1544168185-4d8cba7f2ed7?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80
-          // - https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80
-          // - https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80
-        }}
+        style={backgroundStyle}
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-900/80 to-purple-900/70 mix-blend-multiply"></div>
-        <div className="absolute inset-0 bg-black/30"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-900/80 to-purple-900/70 mix-blend-multiply" />
+        <div className="absolute inset-0 bg-black/30" />
       </div>
 
       {/* Header */}
       <header className="relative z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
-           
             <div className="hidden md:flex items-center space-x-6">
-              <a href="#features" className="text-white/90 hover:text-white font-medium transition-colors">Features</a>
-              <a href="#download" className="text-white/90 hover:text-white font-medium transition-colors">Download App</a>
+              <a href="#features" className="text-white/90 hover:text-white font-medium transition-colors">
+                Features
+              </a>
+              <a href="#download" className="text-white/90 hover:text-white font-medium transition-colors">
+                Download App
+              </a>
               <button 
                 onClick={() => setActiveTab('signin')}
                 className="text-white/90 hover:text-white font-medium transition-colors"
@@ -78,6 +77,7 @@ const LandingPage: React.FC = () => {
       {/* Main Content */}
       <div className="relative z-10 min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          
           {/* Left Side - App Info & QR */}
           <div className="text-center lg:text-left">
             <h1 className="text-4xl lg:text-6xl font-bold text-white leading-tight">
@@ -89,8 +89,6 @@ const LandingPage: React.FC = () => {
               Professional therapists, serene experiences, complete relaxation.
             </p>
 
-  
-
             {/* QR Code & App Download */}
             <div className="mt-8 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 p-8 max-w-md">
               <h3 className="text-2xl font-bold text-white mb-4">Download Our App</h3>
@@ -98,67 +96,58 @@ const LandingPage: React.FC = () => {
                 Scan the QR code to download the RubHub app and book your first massage today.
               </p>
               
-              
-              {/* QR Code Placeholder */}
               <div className="bg-white rounded-lg p-6 flex items-center justify-center mb-6 border border-white/30">
                 <div className="text-center">
-             <div className="flex flex-col">
-                    <div className="flex items-baseline space-x-2">
-                      <span className="text-2xl font-bold text-green-600">RubHub <span className="pb-8 text-md text-white font-normal">CRM</span></span>
+                  <div className="flex flex-col mb-4">
+                    <div className="flex items-baseline space-x-2 justify-center">
+                      <span className="text-2xl font-bold text-green-600">RubHub</span>
                     </div>
-                    <p className="text-xs text-gray-400 ">version 1.0.0 BETA</p>
+                    <p className="text-xs text-gray-400 mt-1">version 1.0.0 BETA</p>
                   </div>
 
-                              <div className="flex justify-center items-center gap-4">
-                              <img
-                                src={'./assets/images/android qr.png'}
-                                alt={'Android QR Code'}
-                                className="max-w-48 max-h-48 w-auto h-auto object-contain transition-all duration-200 hover:opacity-90 hover:scale-105"
-                              />
-                              <img
-                                src={'./assets/images/apple qr.png'}
-                                alt={'Apple QR Code'}
-                                className="max-w-48 max-h-48 w-auto h-auto object-contain transition-all duration-200 hover:opacity-90 hover:scale-105"
-                              />
-                            </div>
-                            <div className="flex justify-center items-center gap-4">
-                              <img
-                                src={'./assets/images/android.png'}
-                                alt={'Android QR Code'}
-                                className="max-w-48 max-h-48 w-auto h-auto object-contain transition-all duration-200 hover:opacity-90 hover:scale-105"
-                              />
-                              <img
-                                src={'./assets/images/apple.png'}
-                                alt={'Apple QR Code'}
-                                className="max-w-48 max-h-48 w-auto h-auto object-contain transition-all duration-200 hover:opacity-90 hover:scale-105"
-                              />
-
-                            </div>
-                  <div className="w-48 h-15 bg-white/30 border-2 border-white/40 rounded-lg flex items-center justify-center mx-auto mb-4">
-                    <div className="text-center">
-                          
-                        <div className="flex flex-col">
-   
-  </div>
-                      <div className="text-white/80 text-sm">Scan to Download</div>
-                    </div>
+                  <div className="flex justify-center items-center gap-4 mb-4">
+                    <img
+                      src="./assets/images/android qr.png"
+                      alt="Android QR Code"
+                      className="max-w-32 max-h-32 w-auto h-auto object-contain transition-all duration-200 hover:opacity-90 hover:scale-105"
+                    />
+                    <img
+                      src="./assets/images/apple qr.png"
+                      alt="Apple QR Code"
+                      className="max-w-32 max-h-32 w-auto h-auto object-contain transition-all duration-200 hover:opacity-90 hover:scale-105"
+                    />
                   </div>
-                  <p className="text-sm text-white/80">Scan with your phone camera</p>
+
+                  <div className="flex justify-center items-center gap-4">
+                    <img
+                      src="./assets/images/android.png"
+                      alt="Get it on Google Play"
+                      className="h-12 w-auto object-contain transition-all duration-200 hover:opacity-90 hover:scale-105"
+                    />
+                    <img
+                      src="./assets/images/apple.png"
+                      alt="Download on App Store"
+                      className="h-12 w-auto object-contain transition-all duration-200 hover:opacity-90 hover:scale-105"
+                    />
+                  </div>
+
+                  <p className="text-sm text-white/80 mt-4">Scan with your phone camera</p>
                 </div>
               </div>
-
             </div>
           </div>
 
           {/* Right Side - Auth Forms */}
           <div className="bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 shadow-2xl p-8 max-w-md mx-auto lg:mx-0">
-            {/* Tab Navigation */}
-               <div className="flex flex-col">
-              <div className="flex items-baseline space-x-2">
-               <span className="text-2xl font-bold text-green-600">Rub<span className="text-green-600">Hub</span> <span className="mb-15 text-sm text-white font-normal">CRM</span></span>
+            {/* Brand Header */}
+            <div className="flex flex-col mb-6">
+              <div className="flex items-baseline space-x-2 justify-center lg:justify-start">
+                <span className="text-2xl font-bold text-green-600">RubHub</span>
+                <span className="text-sm text-white font-normal bg-gray-800 px-2 py-1 rounded">CRM</span>
               </div>
             </div>
-           <h1></h1>
+
+            {/* Tab Navigation */}
             <div className="flex border-b border-white/20 mb-8">
               <button
                 onClick={() => setActiveTab('signin')}
@@ -168,47 +157,32 @@ const LandingPage: React.FC = () => {
                     : 'border-transparent text-white/70 hover:text-white'
                 }`}
               >
-                 
-             
                 Sign In
               </button>
-            
             </div>
 
             {/* Sign In Form */}
             {activeTab === 'signin' && (
               <form onSubmit={handleSubmit} className="space-y-6">
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-white mb-2">
-                    Email Address
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    id="email"
-                    required
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-colors text-white placeholder-white/60"
-                    placeholder="Enter your email"
-                  />
-                </div>
+                <FormField
+                  label="Email Address"
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  placeholder="Enter your email"
+                  required
+                />
 
-                <div>
-                  <label htmlFor="password" className="block text-sm font-medium text-white mb-2">
-                    Password
-                  </label>
-                  <input
-                    type="password"
-                    name="password"
-                    id="password"
-                    required
-                    value={formData.password}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-colors text-white placeholder-white/60"
-                    placeholder="Enter your password"
-                  />
-                </div>
+                <FormField
+                  label="Password"
+                  type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  placeholder="Enter your password"
+                  required
+                />
 
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
@@ -226,12 +200,7 @@ const LandingPage: React.FC = () => {
                   </a>
                 </div>
 
-                <button
-                  type="submit"
-                  className="w-full bg-blue-500 text-white py-3 px-4 rounded-lg hover:bg-blue-600 focus:ring-4 focus:ring-blue-400/30 transition-colors font-medium"
-                >
-                  Sign In
-                </button>
+                <SubmitButton text="Sign In" />
 
                 <div className="text-center">
                   <p className="text-sm text-white/70">
@@ -244,117 +213,49 @@ const LandingPage: React.FC = () => {
             {/* Sign Up Form */}
             {activeTab === 'signup' && (
               <div>
-                {/* User Type Selection */}
-                <div className="grid grid-cols-2 gap-4 mb-6">
-                  <button
-                    onClick={() => setUserType('customer')}
-                    className={`p-4 border-2 rounded-lg text-center transition-colors ${
-                      userType === 'customer'
-                        ? 'border-blue-400 bg-blue-400/20 text-white'
-                        : 'border-white/30 text-white/80 hover:border-white/50 hover:text-white'
-                    }`}
-                  >
-                    <span className="block text-2xl mb-2">👤</span>
-                    <span className="font-medium">Customer</span>
-                  </button>
-                  <button
-                    onClick={() => setUserType('therapist')}
-                    className={`p-4 border-2 rounded-lg text-center transition-colors ${
-                      userType === 'therapist'
-                        ? 'border-blue-400 bg-blue-400/20 text-white'
-                        : 'border-white/30 text-white/80 hover:border-white/50 hover:text-white'
-                    }`}
-                  >
-                    <span className="block text-2xl mb-2">👨‍⚕️</span>
-                    <span className="font-medium">Therapist</span>
-                  </button>
-                </div>
-
+                <UserTypeSelector userType={userType} setUserType={setUserType} />
+                
                 {userType === 'customer' ? (
                   <form onSubmit={handleSubmit} className="space-y-6">
-                    <div>
-                      <label htmlFor="fullName" className="block text-sm font-medium text-white mb-2">
-                        Full Name
-                      </label>
-                      <input
-                        type="text"
-                        name="fullName"
-                        id="fullName"
-                        required
-                        value={formData.fullName}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-colors text-white placeholder-white/60"
-                        placeholder="Enter your full name"
-                      />
-                    </div>
+                    <FormField
+                      label="Full Name"
+                      type="text"
+                      name="fullName"
+                      value={formData.fullName}
+                      onChange={handleInputChange}
+                      placeholder="Enter your full name"
+                      required
+                    />
 
-                    <div>
-                      <label htmlFor="signupEmail" className="block text-sm font-medium text-white mb-2">
-                        Email Address
-                      </label>
-                      <input
-                        type="email"
-                        name="email"
-                        id="signupEmail"
-                        required
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-colors text-white placeholder-white/60"
-                        placeholder="Enter your email"
-                      />
-                    </div>
+                    <FormField
+                      label="Email Address"
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      placeholder="Enter your email"
+                      required
+                    />
 
-                    <div>
-                      <label htmlFor="signupPassword" className="block text-sm font-medium text-white mb-2">
-                        Password
-                      </label>
-                      <input
-                        type="password"
-                        name="password"
-                        id="signupPassword"
-                        required
-                        value={formData.password}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-colors text-white placeholder-white/60"
-                        placeholder="Create a password"
-                      />
-                    </div>
+                    <FormField
+                      label="Password"
+                      type="password"
+                      name="password"
+                      value={formData.password}
+                      onChange={handleInputChange}
+                      placeholder="Create a password"
+                      required
+                    />
 
-                    <button
-                      type="submit"
-                      className="w-full bg-blue-500 text-white py-3 px-4 rounded-lg hover:bg-blue-600 focus:ring-4 focus:ring-blue-400/30 transition-colors font-medium"
-                    >
-                      Create Account
-                    </button>
+                    <SubmitButton text="Create Account" />
                   </form>
                 ) : (
-                  <div className="text-center">
-                    <div className="bg-white/10 rounded-lg p-6 mb-6 border border-white/20">
-                      <span className="text-4xl mb-4 block">👨‍⚕️</span>
-                      <h3 className="text-xl font-bold text-white mb-2">Become a RubHub Therapist</h3>
-                      <p className="text-white/80 mb-4">
-                        Join our network of professional massage therapists and start earning on your schedule.
-                      </p>
-                      <ul className="text-sm text-white/80 space-y-2 text-left">
-                        <li>✅ Flexible working hours</li>
-                        <li>✅ Competitive earnings</li>
-                        <li>✅ Professional support</li>
-                        <li>✅ Safety guaranteed</li>
-                      </ul>
-                    </div>
-
-                    <button
-                      onClick={handleTherapistSignup}
-                      className="w-full bg-green-500 text-white py-3 px-4 rounded-lg hover:bg-green-600 focus:ring-4 focus:ring-green-400/30 transition-colors font-medium"
-                    >
-                      Apply as Therapist
-                    </button>
-                  </div>
+                  <TherapistSignup onSignup={handleTherapistSignup} />
                 )}
               </div>
             )}
 
-            {/* Divider */}
+            {/* Terms Footer */}
             <div className="mt-8 pt-8 border-t border-white/20">
               <p className="text-center text-white/70 text-sm">
                 By continuing, you agree to our{' '}
@@ -373,5 +274,133 @@ const LandingPage: React.FC = () => {
     </div>
   );
 };
+
+// Extracted Components for Better Organization
+
+interface FormFieldProps {
+  label: string;
+  type: string;
+  name: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  placeholder: string;
+  required?: boolean;
+}
+
+const FormField: React.FC<FormFieldProps> = ({
+  label,
+  type,
+  name,
+  value,
+  onChange,
+  placeholder,
+  required = false
+}) => (
+  <div>
+    <label htmlFor={name} className="block text-sm font-medium text-white mb-2">
+      {label}
+    </label>
+    <input
+      type={type}
+      name={name}
+      id={name}
+      required={required}
+      value={value}
+      onChange={onChange}
+      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-colors text-white placeholder-white/60"
+      placeholder={placeholder}
+    />
+  </div>
+);
+
+interface SubmitButtonProps {
+  text: string;
+  onClick?: () => void;
+}
+
+const SubmitButton: React.FC<SubmitButtonProps> = ({ text, onClick }) => (
+  <button
+    type="submit"
+    onClick={onClick}
+    className="w-full bg-blue-500 text-white py-3 px-4 rounded-lg hover:bg-blue-600 focus:ring-4 focus:ring-blue-400/30 transition-colors font-medium"
+  >
+    {text}
+  </button>
+);
+
+interface UserTypeSelectorProps {
+  userType: 'customer' | 'therapist';
+  setUserType: (type: 'customer' | 'therapist') => void;
+}
+
+const UserTypeSelector: React.FC<UserTypeSelectorProps> = ({ userType, setUserType }) => (
+  <div className="grid grid-cols-2 gap-4 mb-6">
+    <UserTypeButton
+      type="customer"
+      icon="👤"
+      label="Customer"
+      isSelected={userType === 'customer'}
+      onClick={() => setUserType('customer')}
+    />
+    <UserTypeButton
+      type="therapist"
+      icon="👨‍⚕️"
+      label="Therapist"
+      isSelected={userType === 'therapist'}
+      onClick={() => setUserType('therapist')}
+    />
+  </div>
+);
+
+interface UserTypeButtonProps {
+  type: 'customer' | 'therapist';
+  icon: string;
+  label: string;
+  isSelected: boolean;
+  onClick: () => void;
+}
+
+const UserTypeButton: React.FC<UserTypeButtonProps> = ({ icon, label, isSelected, onClick }) => (
+  <button
+    onClick={onClick}
+    className={`p-4 border-2 rounded-lg text-center transition-colors ${
+      isSelected
+        ? 'border-blue-400 bg-blue-400/20 text-white'
+        : 'border-white/30 text-white/80 hover:border-white/50 hover:text-white'
+    }`}
+  >
+    <span className="block text-2xl mb-2">{icon}</span>
+    <span className="font-medium">{label}</span>
+  </button>
+);
+
+interface TherapistSignupProps {
+  onSignup: (e: React.FormEvent) => void;
+}
+
+const TherapistSignup: React.FC<TherapistSignupProps> = ({ onSignup }) => (
+  <div className="text-center">
+    <div className="bg-white/10 rounded-lg p-6 mb-6 border border-white/20">
+      <span className="text-4xl mb-4 block">👨‍⚕️</span>
+      <h3 className="text-xl font-bold text-white mb-2">Become a RubHub Therapist</h3>
+      <p className="text-white/80 mb-4">
+        Join our network of professional massage therapists and start earning on your schedule.
+      </p>
+      <ul className="text-sm text-white/80 space-y-2 text-left">
+        <li>✅ Flexible working hours</li>
+        <li>✅ Competitive earnings</li>
+        <li>✅ Professional support</li>
+        <li>✅ Safety guaranteed</li>
+      </ul>
+    </div>
+
+    <button
+      onClick={onSignup}
+      className="w-full bg-green-500 text-white py-3 px-4 rounded-lg hover:bg-green-600 focus:ring-4 focus:ring-green-400/30 transition-colors font-medium"
+    >
+      Apply as Therapist
+    </button>
+  </div>
+);
 
 export default LandingPage;

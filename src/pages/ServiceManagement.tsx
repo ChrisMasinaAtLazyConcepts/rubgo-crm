@@ -221,9 +221,8 @@ const ServiceManagement: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      
-                 <Breadcrumbs />
       <div className="container mx-auto px-4 py-8">
+        <Breadcrumbs />
         {/* Header Section */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
           <div className="flex items-center space-x-4 mb-4 lg:mb-0">
