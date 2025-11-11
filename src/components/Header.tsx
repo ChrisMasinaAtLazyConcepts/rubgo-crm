@@ -1,10 +1,8 @@
 // frontend/src/components/Header.tsx
-import { BarChart3, Bell, BellDotIcon, BellIcon, Home, LayoutDashboard, Shield, Stethoscope, Users } from 'lucide-react';
+import { BarChart3, Bell, Home, Shield, Stethoscope, Users } from 'lucide-react';
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { CreditCard, Coins, Trophy, Megaphone } from 'lucide-react';
-import { BiNotification } from 'react-icons/bi';
-import { FaLocationPin } from 'react-icons/fa6';
+import { CreditCard } from 'lucide-react';
 import { GrLocationPin } from 'react-icons/gr';
 
 // Define types for menu items
@@ -114,20 +112,20 @@ const Header: React.FC = () => {
     const isSubmenuActive = item.submenu?.some(subItem => isActiveLink(subItem.path)) || false;
 
     return (
-      <div className="border-b border-blue-600 last:border-b-0">
+      <div className="border-b border-green-200/20 last:border-b-0">
         {/* Main category item that acts as toggle */}
         <button
           onClick={() => setIsSubmenuOpen(!isSubmenuOpen)}
           className={`
-            w-full flex items-center justify-between px-4 py-3 text-sm font-medium transition-colors duration-200
+            w-full flex items-center justify-between px-4 py-3 text-sm font-medium transition-all duration-200
             ${isSubmenuActive
-              ? 'bg-white text-blue-900'
-              : 'text-blue-100 hover:bg-[#051025] hover:text-white'
+              ? 'bg-green-600/10 text-green-600 border-r-2 border-green-600'
+              : 'text-gray-700 hover:bg-green-50 hover:text-green-600'
             }
           `}
         >
           <div className="flex items-center">
-            <span className={`mr-3 ${isSubmenuActive ? 'text-blue-900' : 'text-blue-200'}`}>
+            <span className={`mr-3 ${isSubmenuActive ? 'text-green-600' : 'text-gray-500'}`}>
               {item.icon}
             </span>
             {item.label}
@@ -135,7 +133,7 @@ const Header: React.FC = () => {
           <svg
             className={`h-4 w-4 transition-transform duration-200 ${
               isSubmenuOpen ? 'rotate-180' : ''
-            } ${isSubmenuActive ? 'text-blue-900' : 'text-blue-300'}`}
+            } ${isSubmenuActive ? 'text-green-600' : 'text-gray-400'}`}
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -146,21 +144,21 @@ const Header: React.FC = () => {
 
         {/* Submenu items */}
         {isSubmenuOpen && (
-          <div className="bg-[#08172F] space-y-1 py-1">
+          <div className="bg-green-50/50 space-y-1 py-1">
             {item.submenu?.map(subItem => (
               <Link
                 key={subItem.path}
                 to={subItem.path}
                 onClick={() => setIsMenuOpen(false)}
                 className={`
-                  flex items-center px-8 py-2 text-sm transition-colors duration-200
+                  flex items-center px-8 py-2 text-sm transition-all duration-200
                   ${isActiveLink(subItem.path)
-                    ? 'text-white bg-white/20 border-r-2 border-white'
-                    : 'text-blue-200 hover:text-white hover:bg-[#051025]'
+                    ? 'text-green-600 bg-green-600/10 border-r-2 border-green-600 font-semibold'
+                    : 'text-gray-600 hover:text-green-600 hover:bg-green-600/5'
                   }
                 `}
               >
-                <span className="mr-2 text-sm">•</span>
+                <span className={`mr-2 text-sm ${isActiveLink(subItem.path) ? 'text-green-600' : 'text-gray-400'}`}>•</span>
                 {subItem.label}
               </Link>
             ))}
@@ -177,11 +175,11 @@ const Header: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Left side - Burger menu and Logo */}
-            <div className="flex items-center">
+            <div className="flex items-center space-x-4">
               {/* Burger Menu Button */}
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
+                className="p-2 rounded-md text-gray-600 hover:text-green-600 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 transition-colors duration-200"
                 aria-label="Open menu"
               >
                 <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -190,85 +188,72 @@ const Header: React.FC = () => {
               </button>
 
               {/* Logo */}
-              <Link to="/" className="flex items-center ml-4">
-                <div className="flex-shrink-0">
-                 
+              <Link to="/" className="flex items-center space-x-3">
+                <div className="flex items-center space-x-2">
+                  <span className="text-2xl font-bold text-green-600">RubHub</span>
+                  <span className="text-sm text-gray-500 font-normal">CRM</span>
                 </div>
               </Link>
             </div>
-{/* Center - Navigation (hidden on mobile) */}
-<nav className="hidden md:flex space-x-8">
-  {/* Home */}
-  <Link
-    to="/"
-    className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-      location.pathname === '/'
-        ? 'border-green-500 text-green-500'
-        : 'border-transparent text-gray-700 hover:border-gray-300 hover:text-gray-900'
-    }`}
-  >
-    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-    </svg>
-    Home
-  </Link>
 
-  {/* Analytics */}
-  <Link
-    to="/analytics"
-    className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-      location.pathname === '/analytics'
-        ? 'border-green-500 text-green-500'
-        : 'border-transparent text-gray-700 hover:border-gray-300 hover:text-gray-900'
-    }`}
-  >
-    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-    </svg>
-    Analytics
-  </Link>
+            {/* Center - Navigation (hidden on mobile) */}
+            <nav className="hidden md:flex space-x-1">
+              <Link
+                to="/"
+                className={`inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  location.pathname === '/'
+                    ? 'bg-green-600 text-white shadow-sm'
+                    : 'text-gray-700 hover:text-green-600 hover:bg-green-50'
+                }`}
+              >
+                <Home className="w-4 h-4 mr-2" />
+                Home
+              </Link>
 
-  {/* Security Centre */}
-  <Link
-    to="/security-centre"
-    className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-      location.pathname === '/security'
-        ? 'border-green-500 text-green-500'
-        : 'border-transparent text-gray-700 hover:border-gray-300 hover:text-gray-900'
-    }`}
-  >
-     <Shield className="w-5 h-5 mr-2" />
-      
-    Security Centre
-  </Link>
-</nav>
+              <Link
+                to="/analytics"
+                className={`inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  location.pathname === '/analytics'
+                    ? 'bg-green-600 text-white shadow-sm'
+                    : 'text-gray-700 hover:text-green-600 hover:bg-green-50'
+                }`}
+              >
+                <BarChart3 className="w-4 h-4 mr-2" />
+                Analytics
+              </Link>
 
-        {/* Right - Notifications with Counter */}
-        <div className="flex items-center space-x-4">
-          {/* Notifications Bell with Counter */}
-        
+              <Link
+                to="/security"
+                className={`inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  location.pathname === '/security'
+                    ? 'bg-green-600 text-white shadow-sm'
+                    : 'text-gray-700 hover:text-green-600 hover:bg-green-50'
+                }`}
+              >
+                <Shield className="w-4 h-4 mr-2" />
+                Security Center
+              </Link>
+            </nav>
 
-          
-        </div>
             {/* Right side - User menu */}
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-3">
               {/* Notifications */}
-              <button className="p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100">
-                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5zM10.5 3.75a6 6 0 0 0-6 6v2.25l-2.47 2.47a.75.75 0 0 0 .53 1.28h15.88a.75.75 0 0 0 .53-1.28L16.5 12V9.75a6 6 0 0 0-6-6z" />
-                </svg>
-                  {/* Notification Counter */}
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-semibold">
-                    3
-                  </span>
+              <button className="relative p-2 rounded-lg text-gray-600 hover:text-green-600 hover:bg-green-50 transition-colors duration-200">
+                <Bell className="h-5 w-5" />
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-semibold">
+                  3
+                </span>
               </button>
 
               {/* User profile */}
-              <div className="flex items-center space-x-2">
-                <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">
-                  <span className="text-gray-700 text-sm font-medium">A</span>
+              <div className="flex items-center space-x-3 pl-3 border-l border-gray-200">
+                <div className="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center border border-green-200">
+                  <span className="text-green-600 text-sm font-semibold">A</span>
                 </div>
-                <span className="text-sm font-medium text-gray-700 hidden sm:block">Admin</span>
+                <div className="hidden sm:block text-right">
+                  <p className="text-sm font-medium text-gray-700">Administrator</p>
+                  <p className="text-xs text-gray-500">admin@rubhub.com</p>
+                </div>
               </div>
             </div>
           </div>
@@ -287,55 +272,41 @@ const Header: React.FC = () => {
 
       {/* Sidebar Menu */}
       <div className={`
-        fixed top-0 left-0 z-50 h-full w-80 bg-[#0B1F3D] shadow-lg transform transition-transform duration-300 ease-in-out
+        fixed top-0 left-0 z-50 h-full w-80 bg-white shadow-xl transform transition-transform duration-300 ease-in-out
         ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'}
       `}>
         {/* Menu Header */}
-        <div className="flex items-center justify-between p-4 border-b border-blue-600 bg-whitesmoke">
-          <div className="flex items-center space-x-4">
-  {/* Logo */}
-  <div className="flex items-center">
-    <img
-      src={'./assets/images/Rubbgo2.png'}
-      alt={'RubGo Logo'}
-      className="h-12 w-auto object-contain transition-all duration-200 hover:opacity-90"
-    />
-  </div>
-  
-  {/* Brand Name and Details */}
-  <div className="flex flex-col">
-    <div className="flex items-baseline space-x-2">
-      <div className="flex items-center space-x-2">
-              <span className="text-2xl font-bold text-green-600">RubGo</span>
-              <span className="text-sm text-white">CRM</span>
+        <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-white">
+          <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-2">
+              <span className="text-2xl font-bold text-green-600">RubHub</span>
+              <span className="text-sm text-gray-500">CRM</span>
             </div>
-    </div>
-  </div>
-</div>
+          </div>
           <button
             onClick={() => setIsMenuOpen(false)}
-            className="p-2 rounded-md text-blue-200 hover:text-white hover:bg-[#051025] transition-colors"
+            className="p-2 rounded-lg text-gray-500 hover:text-green-600 hover:bg-green-50 transition-colors duration-200"
           >
-            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
 
-        {/* Menu Content - Scrollable with hidden scrollbar */}
-        <div className="h-full overflow-y-auto pb-20 scrollbar-hide">
-          <div className="py-2">
+        {/* Menu Content - Scrollable */}
+        <div className="h-full overflow-y-auto pb-20">
+          <div className="py-4">
             {menuItems.map((category, index) => (
-              <div key={category.category} className="border-b border-blue-600 last:border-b-0">
+              <div key={category.category} className="mb-6 last:mb-0">
                 {/* Category Header */}
-                <div className={`px-4 py-3 ${index === 0 ? 'pt-4' : ''}`}>
-                  <h3 className="text-xs font-semibold text-blue-300 uppercase tracking-wider">
+                <div className={`px-6 py-2 ${index === 0 ? 'pt-0' : ''}`}>
+                  <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
                     {category.category}
                   </h3>
                 </div>
                 
                 {/* Menu Items */}
-                <div className="space-y-1 pb-2">
+                <div className="space-y-1">
                   {category.items.map(item => (
                     <div key={item.label}>
                       {item.submenu ? (
@@ -352,20 +323,17 @@ const Header: React.FC = () => {
                             to={item.path}
                             onClick={() => setIsMenuOpen(false)}
                             className={`
-                              flex items-center px-4 py-3 text-sm font-medium transition-colors duration-200
+                              flex items-center px-6 py-3 text-sm font-medium transition-all duration-200 mx-2 rounded-lg
                               ${isActiveLink(item.path)
-                                ? 'bg-[#051025] text-white border-r-2 border-white'
-                                : 'text-blue-100 hover:bg-[#051025] hover:text-white'
+                                ? 'bg-green-600 text-white shadow-sm'
+                                : 'text-gray-700 hover:text-green-600 hover:bg-green-50'
                               }
                             `}
                           >
-                            <span className={`mr-3 ${isActiveLink(item.path) ? 'text-blue-900' : 'text-blue-200'}`}>
+                            <span className={`mr-3 ${isActiveLink(item.path) ? 'text-white' : 'text-gray-500'}`}>
                               {item.icon}
                             </span>
                             {item.label}
-                            {isActiveLink(item.path) && (
-                              <span className="ml-auto w-2 h-2 bg-white rounded-full"></span>
-                            )}
                           </Link>
                         )
                       )}
@@ -377,17 +345,17 @@ const Header: React.FC = () => {
           </div>
         </div>
 
-        {/* Menu Footer - Whitesmoke Background */}
-        <div className="absolute bottom-0 left-0 right-0 border-t border-blue-600 bg-gray-50 p-4">
+        {/* Menu Footer */}
+        <div className="absolute bottom-0 left-0 right-0 border-t border-gray-200 bg-gray-50/80 backdrop-blur-sm p-4">
           <div className="flex items-center space-x-3">
-            <div className="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center">
-              <span className="text-gray-700 font-medium">A</span>
+            <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center border border-green-200">
+              <span className="text-green-600 font-semibold">A</span>
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-green-600 truncate">Administrator</p>
-              <p className="text-sm text-green-600 truncate">admin@rubgo.com</p>
+              <p className="text-sm font-medium text-gray-900 truncate">Administrator</p>
+              <p className="text-sm text-gray-500 truncate">admin@rubhub.com</p>
             </div>
-            <button className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-200 rounded-md transition-colors">
+            <button className="p-2 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors duration-200">
               <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
               </svg>

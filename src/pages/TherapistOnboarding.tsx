@@ -42,6 +42,16 @@ interface Availability {
   sunday: string[];
 }
 
+interface BankingDetails {
+  bankName: string;
+  accountNumber: string;
+  accountType: string;
+  branchCode: string;
+  accountHolderName: string;
+  swiftCode: string;
+  taxNumber: string;
+}
+
 interface VideoIntroduction {
   uploaded: boolean;
   fileName: string;
@@ -62,6 +72,7 @@ interface Application {
   professionalInfo: ProfessionalInfo;
   certifications: Certification[];
   availability: Availability;
+  bankingDetails: BankingDetails;
   videoIntroduction: VideoIntroduction;
   videoAssessments: VideoAssessment[];
 }
@@ -118,6 +129,15 @@ const TherapistOnboarding: React.FC = () => {
       saturday: ["10:00-14:00"],
       sunday: []
     },
+    bankingDetails: {
+      bankName: "Standard Bank",
+      accountNumber: "0123456789",
+      accountType: "Cheque Account",
+      branchCode: "051001",
+      accountHolderName: "Sarah Wilson",
+      swiftCode: "SBZA-ZA-JJ",
+      taxNumber: "1234567890"
+    },
     videoIntroduction: {
       uploaded: true,
       fileName: "introduction_video.mp4",
@@ -156,8 +176,9 @@ const TherapistOnboarding: React.FC = () => {
     { number: 2, title: 'Professional Details' },
     { number: 3, title: 'Certifications' },
     { number: 4, title: 'Availability' },
-    { number: 5, title: 'Video Introduction' },
-    { number: 6, title: 'Video Assessments' }
+    { number: 5, title: 'Banking Details' },
+    { number: 6, title: 'Video Introduction' },
+    { number: 7, title: 'Video Assessments' }
   ];
 
   const handleVideoPlay = (video: VideoAssessment): void => {
@@ -381,8 +402,80 @@ const TherapistOnboarding: React.FC = () => {
           </div>
         )}
 
-        {/* Step 5: Video Introduction */}
+        {/* Step 5: Banking Details */}
         {currentStep === 5 && (
+          <div className="space-y-6">
+            <h2 className="text-2xl font-semibold text-gray-900">Banking Details</h2>
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
+              <div className="flex items-center gap-3 mb-4">
+                <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                </svg>
+                <h3 className="font-semibold text-blue-900">Payment Information</h3>
+              </div>
+              <p className="text-blue-800 text-sm">
+                Your banking details are securely stored and encrypted. Payments will be processed weekly.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Bank Name</label>
+                <div className="bg-gray-50 border border-gray-300 rounded-lg px-4 py-3">
+                  {application.bankingDetails.bankName}
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Account Number</label>
+                <div className="bg-gray-50 border border-gray-300 rounded-lg px-4 py-3 font-mono">
+                  •••• {application.bankingDetails.accountNumber.slice(-4)}
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Account Type</label>
+                <div className="bg-gray-50 border border-gray-300 rounded-lg px-4 py-3">
+                  {application.bankingDetails.accountType}
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Branch Code</label>
+                <div className="bg-gray-50 border border-gray-300 rounded-lg px-4 py-3">
+                  {application.bankingDetails.branchCode}
+                </div>
+              </div>
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">Account Holder Name</label>
+                <div className="bg-gray-50 border border-gray-300 rounded-lg px-4 py-3">
+                  {application.bankingDetails.accountHolderName}
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">SWIFT Code</label>
+                <div className="bg-gray-50 border border-gray-300 rounded-lg px-4 py-3">
+                  {application.bankingDetails.swiftCode}
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Tax Number</label>
+                <div className="bg-gray-50 border border-gray-300 rounded-lg px-4 py-3">
+                  {application.bankingDetails.taxNumber}
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4 mt-6">
+              <div className="flex items-center gap-2">
+                <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span className="text-green-800 font-medium">Banking details verified and ready for payments</span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Step 6: Video Introduction */}
+        {currentStep === 6 && (
           <div className="space-y-6">
             <h2 className="text-2xl font-semibold text-gray-900">Video Introduction</h2>
             <div className="bg-gray-50 rounded-lg p-6 border-2 border-green-200">
@@ -417,8 +510,8 @@ const TherapistOnboarding: React.FC = () => {
           </div>
         )}
 
-        {/* Step 6: Video Assessments */}
-        {currentStep === 6 && (
+        {/* Step 7: Video Assessments */}
+        {currentStep === 7 && (
           <div className="space-y-6">
             <h2 className="text-2xl font-semibold text-green-700">Video Assessments</h2>
             <p className="text-gray-600">Technical assessment videos demonstrating your massage techniques</p>
@@ -511,9 +604,9 @@ const TherapistOnboarding: React.FC = () => {
           >
             Previous
           </button>
-         <button
+          <button
             onClick={currentStep === steps.length ? () => window.location.href = '/therapists' : handleNextStep}
-            className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+            className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors"
           >
             {currentStep === steps.length ? 'Close' : 'Next Step'}
           </button>

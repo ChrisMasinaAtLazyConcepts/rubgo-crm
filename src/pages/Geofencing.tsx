@@ -224,7 +224,7 @@ const GeofencingPage: React.FC = () => {
             };
           case 'premium':
             return {
-              fillColor: '#3b82f6',
+              fillColor: '#1d4ed8',
               fillOpacity: 0.3,
               strokeColor: '#1d4ed8',
               strokeWeight: 3,
@@ -379,7 +379,7 @@ const GeofencingPage: React.FC = () => {
       {/* Geofence Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         {geofences.map(geofence => (
-          <div key={geofence.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-shadow">
+          <div key={geofence.id} className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-shadow">
             <div className="flex justify-between items-start mb-3">
               <h3 className="font-semibold text-lg text-gray-800">{geofence.name}</h3>
               <span className={`px-2 py-1 rounded-full text-xs font-medium ${getGeofenceColor(geofence.type)}`}>

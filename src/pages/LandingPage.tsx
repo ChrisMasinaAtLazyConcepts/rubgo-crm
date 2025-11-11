@@ -25,7 +25,7 @@ const LandingPage: React.FC = () => {
     e.preventDefault();
     
     // Mock authentication - in real app, this would be an API call
-    if (formData.email === 'admin@rubgo.com' && formData.password === 'admin') {
+    if (formData.email === 'admin@rubhub.com' && formData.password === 'admin') {
       navigate('/');
     } else {
       // For demo purposes, redirect to home for any login
@@ -95,7 +95,7 @@ const LandingPage: React.FC = () => {
             <div className="mt-8 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 p-8 max-w-md">
               <h3 className="text-2xl font-bold text-white mb-4">Download Our App</h3>
               <p className="text-white/90 mb-6">
-                Scan the QR code to download the RubGo app and book your first massage today.
+                Scan the QR code to download the RubHub app and book your first massage today.
               </p>
               
               
@@ -104,9 +104,9 @@ const LandingPage: React.FC = () => {
                 <div className="text-center">
              <div className="flex flex-col">
                     <div className="flex items-baseline space-x-2">
-                      <span className="text-2xl font-bold text-green-600">RubGo <span className="pb-8 text-md text-white font-normal">CRM</span></span>
+                      <span className="text-2xl font-bold text-green-600">RubHub <span className="pb-8 text-md text-white font-normal">CRM</span></span>
                     </div>
-                    <p className="text-xs text-gray-400 mt-1">version 1.0.0 BETA</p>
+                    <p className="text-xs text-gray-400 ">version 1.0.0 BETA</p>
                   </div>
 
                               <div className="flex justify-center items-center gap-4">
@@ -155,7 +155,7 @@ const LandingPage: React.FC = () => {
             {/* Tab Navigation */}
                <div className="flex flex-col">
               <div className="flex items-baseline space-x-2">
-                <span className="text-2xl font-bold text-green-600">RubGo <span className="pb-8 text-md text-white font-normal">CRM</span></span>
+               <span className="text-2xl font-bold text-green-600">Rub<span className="text-green-600">Hub</span> <span className="mb-15 text-sm text-white font-normal">CRM</span></span>
               </div>
             </div>
            <h1></h1>
@@ -235,7 +235,7 @@ const LandingPage: React.FC = () => {
 
                 <div className="text-center">
                   <p className="text-sm text-white/70">
-                    Admin demo: admin@rubgo.com / admin
+                    Admin demo: admin@rubhub.co.za / admin
                   </p>
                 </div>
               </form>
@@ -331,7 +331,7 @@ const LandingPage: React.FC = () => {
                   <div className="text-center">
                     <div className="bg-white/10 rounded-lg p-6 mb-6 border border-white/20">
                       <span className="text-4xl mb-4 block">👨‍⚕️</span>
-                      <h3 className="text-xl font-bold text-white mb-2">Become a RubGo Therapist</h3>
+                      <h3 className="text-xl font-bold text-white mb-2">Become a RubHub Therapist</h3>
                       <p className="text-white/80 mb-4">
                         Join our network of professional massage therapists and start earning on your schedule.
                       </p>

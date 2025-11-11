@@ -7,7 +7,9 @@ import {
   FaChartLine,
   FaArrowUp, 
   FaArrowDown, 
-  FaMinus 
+  FaMinus,
+  FaDownload,
+  FaStar
 } from 'react-icons/fa';
 import { Doughnut, Bar } from 'react-chartjs-2';
 import { 
@@ -85,7 +87,7 @@ const AnalyticsDashboard: React.FC = () => {
         change: 12.5,
         changeType: 'positive',
         format: 'number',
-        icon: <FaUsers className="w-6 h-6" />
+        icon: <FaUsers className="w-5 h-5" />
       },
       {
         label: 'Total Revenue',
@@ -93,7 +95,7 @@ const AnalyticsDashboard: React.FC = () => {
         change: 8.3,
         changeType: 'positive',
         format: 'currency',
-        icon: <FaMoneyBillWave className="w-6 h-6" />
+        icon: <FaMoneyBillWave className="w-5 h-5" />
       },
       {
         label: 'Appointments',
@@ -101,7 +103,7 @@ const AnalyticsDashboard: React.FC = () => {
         change: -2.1,
         changeType: 'negative',
         format: 'number',
-        icon: <FaCalendarCheck className="w-6 h-6" />
+        icon: <FaCalendarCheck className="w-5 h-5" />
       },
       {
         label: 'Growth Rate',
@@ -109,7 +111,7 @@ const AnalyticsDashboard: React.FC = () => {
         change: 3.2,
         changeType: 'positive',
         format: 'percentage',
-        icon: <FaChartLine className="w-6 h-6" />
+        icon: <FaChartLine className="w-5 h-5" />
       }
     ];
 
@@ -161,489 +163,384 @@ const AnalyticsDashboard: React.FC = () => {
     if (format === 'percentage') {
       return `${value}%`;
     }
-    return value.toString();
+    return value.toLocaleString();
   };
 
   const getChangeColor = (changeType: string) => {
     switch (changeType) {
-      case 'positive': return 'bg-green-500/20 text-green-300';
-      case 'negative': return 'bg-red-500/20 text-red-300';
-      default: return 'bg-gray-500/20 text-gray-300';
+      case 'positive': return 'text-green-600 bg-green-50';
+      case 'negative': return 'text-red-600 bg-red-50';
+      default: return 'text-gray-600 bg-gray-50';
     }
   };
 
   const getChangeIcon = (changeType: string) => {
     switch (changeType) {
-      case 'positive': return <FaArrowUp className="inline w-3 h-3" />;
-      case 'negative': return <FaArrowDown className="inline w-3 h-3" />;
-      default: return <FaMinus className="inline w-3 h-3" />;
+      case 'positive': return <FaArrowUp className="inline w-3 h-3 mr-1" />;
+      case 'negative': return <FaArrowDown className="inline w-3 h-3 mr-1" />;
+      default: return <FaMinus className="inline w-3 h-3 mr-1" />;
     }
   };
 
-  return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-green-800">Analytics Dashboard</h1>
-        <div className="flex items-center space-x-4">
-          <select
-            value={timeRange}
-            onChange={(e) => setTimeRange(e.target.value as any)}
-            className="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="7d">Last 7 Days</option>
-            <option value="30d">Last 30 Days</option>
-            <option value="90d">Last 90 Days</option>
-            <option value="1y">Last Year</option>
-          </select>
-          <button className="bg-green-800 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-            Export Report
-          </button>
-        </div>
-      </div>
+  const chartColors = {
+    primary: '#10B981', // Green-500
+    secondary: '#0B1F3D', // Dark blue
+    accent: '#3B82F6', // Blue-500
+    success: '#10B981', // Green-500
+    warning: '#F59E0B', // Amber-500
+    danger: '#EF4444', // Red-500
+  };
 
-      {/* Time Period Summary */}
-      <div className="bg-[#2D5B7C] rounded-lg shadow-lg text-white p-6 mb-8">
-        <div className="flex justify-between items-start">
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <div className="container mx-auto px-4 py-8">
+        {/* Header */}
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
           <div>
-            <h2 className="text-2xl font-bold mb-2">Performance Overview</h2>
-            <p className="text-blue-100">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Analytics Dashboard</h1>
+            <p className="text-gray-600">
               {timeRange === '7d' && 'Last 7 Days'}
               {timeRange === '30d' && 'Last 30 Days'}
               {timeRange === '90d' && 'Last 90 Days'}
               {timeRange === '1y' && 'Last 12 Months'}
             </p>
           </div>
-          <div className="text-right">
-            <div className="text-3xl font-bold">R125,430</div>
-            <div className="text-green-300">+12.5% from previous period</div>
+          <div className="flex items-center space-x-3 mt-4 lg:mt-0">
+            <select
+              value={timeRange}
+              onChange={(e) => setTimeRange(e.target.value as any)}
+              className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white"
+            >
+              <option value="7d">Last 7 Days</option>
+              <option value="30d">Last 30 Days</option>
+              <option value="90d">Last 90 Days</option>
+              <option value="1y">Last Year</option>
+            </select>
+            <button className="flex items-center space-x-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+              <FaDownload className="w-4 h-4" />
+              <span>Export</span>
+            </button>
           </div>
         </div>
-      </div>
 
-      {/* Navigation Tabs */}
-      <div className="bg-white rounded-lg shadow-md p-4 mb-6">
-        <div className="flex space-x-8 border-b">
-          {[
-            { id: 'overview', name: 'Overview' },
-            { id: 'revenue', name: 'Revenue Analytics' },
-            { id: 'therapists', name: 'Therapist Performance' },
-            { id: 'services', name: 'Service Analysis' },
-            { id: 'geography', name: 'Geographic Performance' }
-          ].map(tab => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id as any)}
-              className={`pb-4 px-1 border-b-2 font-medium text-sm ${
-                activeTab === tab.id
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              {tab.name}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* KPI Grid */}
-      {(activeTab === 'overview' || activeTab === 'revenue') && (
+        {/* KPI Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {kpis.map((kpi, index) => (
-            <div key={index} className="bg-[#2D5B7C] rounded-lg shadow-lg p-6 hover:shadow-xl transition-all duration-300 border border-blue-700/30 hover:border-blue-500/50">
-              <div className="flex justify-between items-start mb-4">
-                <div className="text-2xl text-white bg-blue-600/20 p-2 rounded-lg">
-                  {kpi.icon}
+            <div key={index} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+              <div className="flex items-center justify-between mb-4">
+                <div className="p-2 bg-green-50 rounded-lg">
+                  <div className="text-green-600">{kpi.icon}</div>
                 </div>
                 <span className={`px-2 py-1 rounded-full text-xs font-medium ${getChangeColor(kpi.changeType)}`}>
-                  {getChangeIcon(kpi.changeType)} {kpi.change}%
+                  {getChangeIcon(kpi.changeType)}{Math.abs(kpi.change)}%
                 </span>
               </div>
-              <div className="text-2xl font-bold text-white mb-1">
+              <div className="text-2xl font-bold text-gray-900 mb-1">
                 {formatValue(kpi.value, kpi.format)}
               </div>
-              <div className="text-sm text-gray-300">{kpi.label}</div>
+              <div className="text-sm text-gray-600">{kpi.label}</div>
             </div>
           ))}
         </div>
-      )}
 
-      {/* Main Content Area */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-        {/* Revenue Chart */}
-        {(activeTab === 'overview' || activeTab === 'revenue') && (
-          <div className="lg:col-span-2 bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-lg font-semibold mb-4">Revenue Trend</h3>
-            <div className="h-80">
-              <Bar
-                data={{
-                  labels: revenueData.map(day => day.date),
-                  datasets: [
-                    {
-                      label: 'Daily Revenue',
-                      data: revenueData.map(day => day.revenue),
-                      backgroundColor: '#10B981',
-                      borderColor: '#047857',
-                      borderWidth: 1,
-                      borderRadius: 6,
-                      borderSkipped: false,
-                    },
-                    {
-                      label: 'Number of Bookings',
-                      data: revenueData.map(day => day.bookings),
-                      backgroundColor: '#0B1F3D',
-                      borderColor: '#1D4ED8',
-                      borderWidth: 1,
-                      borderRadius: 6,
-                      borderSkipped: false,
-                      yAxisID: 'y1',
-                    }
-                  ]
-                }}
-                options={{
-                  responsive: true,
-                  maintainAspectRatio: false,
-                  interaction: {
-                    mode: 'index' as const,
-                    intersect: false,
-                  },
-                  scales: {
-                    x: {
-                      grid: {
-                        display: false
-                      }
-                    },
-                    y: {
-                      type: 'linear' as const,
-                      display: true,
-                      position: 'left' as const,
-                      title: {
-                        display: true,
-                        text: 'Revenue (R)'
-                      },
-                      grid: {
-                        color: '#F3F4F6'
-                      }
-                    },
-                    y1: {
-                      type: 'linear' as const,
-                      display: true,
-                      position: 'right' as const,
-                      title: {
-                        display: true,
-                        text: 'Bookings'
-                      },
-                      grid: {
-                        drawOnChartArea: false,
-                      },
-                    },
-                  },
-                  plugins: {
-                    legend: {
-                      position: 'top' as const,
-                    },
-                    tooltip: {
-                      callbacks: {
-                        label: function(context: any) {
-                          let label = context.dataset.label || '';
-                          if (label) {
-                            label += ': ';
-                          }
-                          if (context.datasetIndex === 0) {
-                            label += `R${context.parsed.y.toLocaleString()}`;
-                          } else {
-                            label += `${context.parsed.y} bookings`;
-                          }
-                          return label;
-                        },
-                        afterLabel: function(context: any) {
-                          if (context.datasetIndex === 0) {
-                            const dayIndex = Number(context.dataIndex);
-                            const day = revenueData[dayIndex];
-                            return `Avg: R${day.averageOrder}`;
-                          }
-                          return '';
-                        }
-                      }
-                    }
-                  }
-                }}
-              />
-            </div>
-          </div>
-        )}
-
-        {/* Quick Stats */}
-        {(activeTab === 'overview' || activeTab === 'revenue') && (
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-lg font-semibold mb-4">Performance Snapshot</h3>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center p-3 bg-blue-50 rounded-lg">
-                <span className="text-blue-800 font-medium">Peak Revenue Day</span>
-                <span className="text-blue-600 font-bold">R12,450</span>
-              </div>
-              <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
-                <span className="text-green-800 font-medium">Most Booked Service</span>
-                <span className="text-green-600 font-bold">Deep Tissue</span>
-              </div>
-              <div className="flex justify-between items-center p-3 bg-purple-50 rounded-lg">
-                <span className="text-purple-800 font-medium">Top Therapist</span>
-                <span className="text-purple-600 font-bold">Sarah Wilson</span>
-              </div>
-              <div className="flex justify-between items-center p-3 bg-orange-50 rounded-lg">
-                <span className="text-orange-800 font-medium">Busiest Area</span>
-                <span className="text-orange-600 font-bold">Johannesburg</span>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Therapist Performance */}
-      {(activeTab === 'overview' || activeTab === 'therapists') && (
-        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-          <h3 className="text-lg font-semibold mb-4">Top Performing Therapists</h3>
-          <div className="overflow-x-auto">
-            <table className="min-w-full">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Therapist
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Sessions
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Revenue
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Rating
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Completion Rate
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {therapistPerformance.map((therapist) => (
-                  <tr key={therapist.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">{therapist.name}</div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">{therapist.sessions}</div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-green-600">R{therapist.revenue.toLocaleString()}</div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center">
-                        <span className="text-yellow-600 font-medium">{therapist.rating}</span>
-                        <span className="text-yellow-500 ml-1">⭐</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">{therapist.completionRate}%</div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        {/* Navigation Tabs */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-1 mb-6">
+          <div className="flex space-x-1">
+            {[
+              { id: 'overview', name: 'Overview' },
+              { id: 'revenue', name: 'Revenue' },
+              { id: 'therapists', name: 'Therapists' },
+              { id: 'services', name: 'Services' },
+              { id: 'geography', name: 'Geography' }
+            ].map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id as any)}
+                className={`flex-1 py-3 px-4 rounded-lg text-sm font-medium transition-colors ${
+                  activeTab === tab.id
+                    ? 'bg-green-600 text-white shadow-sm'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                }`}
+              >
+                {tab.name}
+              </button>
+            ))}
           </div>
         </div>
-      )}
 
-      {/* Service Performance */}
-      {(activeTab === 'overview' || activeTab === 'services') && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-lg font-semibold mb-4">Service Performance</h3>
-            <div className="space-y-4">
-              {servicePerformance.map((service, index) => (
-                <div key={index} className="flex justify-between items-center p-3 border rounded-lg">
-                  <div>
-                    <div className="font-medium text-gray-900">{service.service}</div>
-                    <div className="text-sm text-gray-600">{service.bookings} bookings</div>
-                  </div>
-                  <div className="text-right">
-                    <div className="font-bold text-green-600">R{service.revenue.toLocaleString()}</div>
-                    <div className="text-sm text-yellow-600">⭐ {service.averageRating}</div>
+        {/* Main Content Area */}
+        <div className="space-y-6">
+          {/* Revenue Chart */}
+          {(activeTab === 'overview' || activeTab === 'revenue') && (
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-lg font-semibold text-gray-900">Revenue Trend</h3>
+                  <div className="text-sm text-gray-600">
+                    Total: <span className="font-bold text-green-600">R{revenueData.reduce((sum, day) => sum + day.revenue, 0).toLocaleString()}</span>
                   </div>
                 </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-lg font-semibold mb-4">Service Distribution</h3>
-            <div className="space-y-3">
-              {servicePerformance.map((service, index) => {
-                const totalRevenue = servicePerformance.reduce((sum, s) => sum + s.revenue, 0);
-                const percentage = (service.revenue / totalRevenue) * 100;
-                return (
-                  <div key={index} className="space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span className="font-medium">{service.service}</span>
-                      <span className="text-gray-600">{percentage.toFixed(1)}%</span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div
-                        className="bg-blue-600 h-2 rounded-full"
-                        style={{ width: `${percentage}%` }}
-                      ></div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Geographic Performance */}
-      {(activeTab === 'overview' || activeTab === 'geography') && (
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h3 className="text-lg font-semibold mb-4">Geographic Performance - Revenue Distribution</h3>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Pie Chart */}
-            <div className="flex flex-col items-center">
-              <div className="w-full max-w-md h-80">
-                <Doughnut
-                  data={{
-                    labels: geographicPerformance.map(area => area.area),
-                    datasets: [
-                      {
-                        data: geographicPerformance.map(area => area.revenue),
-                        backgroundColor: [
-                          '#3B82F6', // Blue
-                          '#10B981', // Green
-                          '#F59E0B', // Yellow
-                          '#EF4444', // Red
-                          '#8B5CF6', // Purple
-                        ],
-                        borderColor: '#ffffff',
-                        borderWidth: 2,
-                        hoverOffset: 8,
-                      }
-                    ]
-                  }}
-                  options={{
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                      legend: {
-                        position: 'right',
-                        labels: {
-                          boxWidth: 12,
-                          padding: 15,
-                          font: {
-                            size: 11
-                          }
+                <div className="h-80">
+                  <Bar
+                    data={{
+                      labels: revenueData.map(day => day.date),
+                      datasets: [
+                        {
+                          label: 'Daily Revenue',
+                          data: revenueData.map(day => day.revenue),
+                          backgroundColor: chartColors.primary,
+                          borderColor: chartColors.primary,
+                          borderWidth: 1,
+                          borderRadius: 6,
+                          borderSkipped: false,
                         }
+                      ]
+                    }}
+                    options={{
+                      responsive: true,
+                      maintainAspectRatio: false,
+                      scales: {
+                        x: {
+                          grid: {
+                            display: false
+                          }
+                        },
+                        y: {
+                          beginAtZero: true,
+                          grid: {
+                            color: '#F3F4F6'
+                          },
+                          ticks: {
+                            callback: function(value) {
+                              return 'R' + value.toLocaleString();
+                            }
+                          }
+                        },
                       },
-                      tooltip: {
-                        callbacks: {
-                          label: function(context: any) {
-                            const label = context.label || '';
-                            const value = context.parsed;
-                            const total = context.dataset.data.reduce((a: number, b: number) => a + b, 0);
-                            const percentage = ((value / total) * 100).toFixed(1);
-                            return `${label}: R${value.toLocaleString()} (${percentage}%)`;
+                      plugins: {
+                        legend: {
+                          display: false
+                        },
+                        tooltip: {
+                          callbacks: {
+                            label: function(context: any) {
+                              return `Revenue: R${context.parsed.y.toLocaleString()}`;
+                            }
                           }
                         }
                       }
-                    }
-                  }}
-                />
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* Performance Snapshot */}
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-6">Performance Snapshot</h3>
+                <div className="space-y-4">
+                  {[
+                    { label: 'Peak Revenue Day', value: 'R12,450', color: 'text-blue-600', bg: 'bg-blue-50' },
+                    { label: 'Most Booked Service', value: 'Deep Tissue', color: 'text-green-600', bg: 'bg-green-50' },
+                    { label: 'Top Therapist', value: 'Sarah Wilson', color: 'text-purple-600', bg: 'bg-purple-50' },
+                    { label: 'Busiest Area', value: 'Johannesburg', color: 'text-orange-600', bg: 'bg-orange-50' }
+                  ].map((item, index) => (
+                    <div key={index} className={`flex justify-between items-center p-3 rounded-lg ${item.bg}`}>
+                      <span className="text-sm font-medium text-gray-700">{item.label}</span>
+                      <span className={`text-sm font-bold ${item.color}`}>{item.value}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
+          )}
 
-            {/* Performance Details */}
-            <div className="space-y-4">
-              <h4 className="font-semibold text-gray-900 mb-3">Area Performance Details</h4>
-              {geographicPerformance.map((area, index) => {
-                const totalRevenue = geographicPerformance.reduce((sum, a) => sum + a.revenue, 0);
-                const percentage = ((area.revenue / totalRevenue) * 100).toFixed(1);
-                
-                return (
-                  <div key={index} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                    <div className="flex justify-between items-start mb-2">
-                      <h5 className="font-medium text-gray-900">{area.area}</h5>
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        area.growth >= 10 ? 'bg-green-100 text-green-800' :
-                        area.growth >= 5 ? 'bg-yellow-100 text-yellow-800' :
-                        'bg-red-100 text-red-800'
-                      }`}>
-                        {area.growth > 0 ? '+' : ''}{area.growth}%
-                      </span>
+          {/* Therapist Performance */}
+          {(activeTab === 'overview' || activeTab === 'therapists') && (
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-6">Top Performing Therapists</h3>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-gray-200">
+                      <th className="text-left py-3 px-4 text-sm font-medium text-gray-600">Therapist</th>
+                      <th className="text-left py-3 px-4 text-sm font-medium text-gray-600">Sessions</th>
+                      <th className="text-left py-3 px-4 text-sm font-medium text-gray-600">Revenue</th>
+                      <th className="text-left py-3 px-4 text-sm font-medium text-gray-600">Rating</th>
+                      <th className="text-left py-3 px-4 text-sm font-medium text-gray-600">Completion</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200">
+                    {therapistPerformance.map((therapist) => (
+                      <tr key={therapist.id} className="hover:bg-gray-50 transition-colors">
+                        <td className="py-4 px-4">
+                          <div className="font-medium text-gray-900">{therapist.name}</div>
+                        </td>
+                        <td className="py-4 px-4">
+                          <div className="text-gray-900">{therapist.sessions}</div>
+                        </td>
+                        <td className="py-4 px-4">
+                          <div className="font-medium text-green-600">R{therapist.revenue.toLocaleString()}</div>
+                        </td>
+                        <td className="py-4 px-4">
+                          <div className="flex items-center">
+                            <FaStar className="w-4 h-4 text-yellow-400 mr-1" />
+                            <span className="font-medium text-gray-900">{therapist.rating}</span>
+                          </div>
+                        </td>
+                        <td className="py-4 px-4">
+                          <div className="flex items-center">
+                            <div className="w-16 bg-gray-200 rounded-full h-2 mr-3">
+                              <div
+                                className="bg-green-600 h-2 rounded-full"
+                                style={{ width: `${therapist.completionRate}%` }}
+                              ></div>
+                            </div>
+                            <span className="text-sm text-gray-600">{therapist.completionRate}%</span>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* Service Performance */}
+          {(activeTab === 'overview' || activeTab === 'services') && (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-6">Service Performance</h3>
+                <div className="space-y-4">
+                  {servicePerformance.map((service, index) => (
+                    <div key={index} className="flex justify-between items-center p-4 border border-gray-200 rounded-lg hover:border-green-300 transition-colors">
+                      <div>
+                        <div className="font-medium text-gray-900">{service.service}</div>
+                        <div className="text-sm text-gray-600 mt-1">{service.bookings} bookings</div>
+                      </div>
+                      <div className="text-right">
+                        <div className="font-bold text-green-600">R{service.revenue.toLocaleString()}</div>
+                        <div className="flex items-center justify-end text-sm text-yellow-600 mt-1">
+                          <FaStar className="w-3 h-3 mr-1" />
+                          {service.averageRating}
+                        </div>
+                      </div>
                     </div>
-                    <div className="space-y-2">
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm text-gray-600">Revenue Share:</span>
-                        <span className="text-sm font-medium">{percentage}%</span>
+                  ))}
+                </div>
+              </div>
+
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-6">Revenue Distribution</h3>
+                <div className="space-y-4">
+                  {servicePerformance.map((service, index) => {
+                    const totalRevenue = servicePerformance.reduce((sum, s) => sum + s.revenue, 0);
+                    const percentage = (service.revenue / totalRevenue) * 100;
+                    return (
+                      <div key={index} className="space-y-2">
+                        <div className="flex justify-between text-sm">
+                          <span className="font-medium text-gray-700">{service.service}</span>
+                          <span className="text-gray-600">{percentage.toFixed(1)}%</span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div
+                            className="bg-green-600 h-2 rounded-full transition-all duration-500"
+                            style={{ width: `${percentage}%` }}
+                          ></div>
+                        </div>
                       </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm text-gray-600">Revenue:</span>
-                        <span className="text-sm font-medium text-green-600">R{area.revenue.toLocaleString()}</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm text-gray-600">Bookings:</span>
-                        <span className="text-sm font-medium">{area.bookings}</span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
-                        <div
-                          className="h-2 rounded-full bg-blue-500"
-                          style={{ width: `${percentage}%` }}
-                        ></div>
-                      </div>
-                    </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Geographic Performance */}
+          {(activeTab === 'overview' || activeTab === 'geography') && (
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-6">Geographic Performance</h3>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div className="flex justify-center">
+                  <div className="w-full max-w-md h-80">
+                    <Doughnut
+                      data={{
+                        labels: geographicPerformance.map(area => area.area.split(' - ')[0]),
+                        datasets: [
+                          {
+                            data: geographicPerformance.map(area => area.revenue),
+                            backgroundColor: [
+                              chartColors.primary,
+                              chartColors.accent,
+                              chartColors.warning,
+                              '#8B5CF6',
+                              '#EC4899'
+                            ],
+                            borderColor: '#ffffff',
+                            borderWidth: 2,
+                            hoverOffset: 8,
+                          }
+                        ]
+                      }}
+                      options={{
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                          legend: {
+                            position: 'bottom',
+                            labels: {
+                              padding: 20,
+                              usePointStyle: true,
+                            }
+                          }
+                        }
+                      }}
+                    />
                   </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      )}
+                </div>
 
-      {/* Additional Metrics */}
-      {activeTab === 'overview' && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-lg font-semibold mb-4">Customer Insights</h3>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                <span className="text-gray-700">New vs Returning Customers</span>
-                <span className="font-medium">65% / 35%</span>
-              </div>
-              <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                <span className="text-gray-700">Average Customer Lifetime Value</span>
-                <span className="font-medium text-green-600">R2,450</span>
-              </div>
-              <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                <span className="text-gray-700">Customer Acquisition Cost</span>
-                <span className="font-medium text-blue-600">R185</span>
+                <div className="space-y-4">
+                  {geographicPerformance.map((area, index) => {
+                    const totalRevenue = geographicPerformance.reduce((sum, a) => sum + a.revenue, 0);
+                    const percentage = ((area.revenue / totalRevenue) * 100).toFixed(1);
+                    
+                    return (
+                      <div key={index} className="border border-gray-200 rounded-lg p-4 hover:shadow-sm transition-shadow">
+                        <div className="flex justify-between items-start mb-3">
+                          <h5 className="font-medium text-gray-900">{area.area}</h5>
+                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                            area.growth >= 10 ? 'bg-green-100 text-green-800' :
+                            area.growth >= 5 ? 'bg-yellow-100 text-yellow-800' :
+                            'bg-red-100 text-red-800'
+                          }`}>
+                            {area.growth > 0 ? '+' : ''}{area.growth}%
+                          </span>
+                        </div>
+                        <div className="space-y-2">
+                          <div className="flex justify-between items-center text-sm">
+                            <span className="text-gray-600">Revenue</span>
+                            <span className="font-medium text-green-600">R{area.revenue.toLocaleString()}</span>
+                          </div>
+                          <div className="flex justify-between items-center text-sm">
+                            <span className="text-gray-600">Bookings</span>
+                            <span className="font-medium text-gray-900">{area.bookings}</span>
+                          </div>
+                          <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+                            <div
+                              className="h-2 rounded-full bg-green-600 transition-all duration-500"
+                              style={{ width: `${percentage}%` }}
+                            ></div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-lg font-semibold mb-4">Operational Efficiency</h3>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                <span className="text-gray-700">Average Response Time</span>
-                <span className="font-medium">12 min</span>
-              </div>
-              <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                <span className="text-gray-700">Therapist On-time Rate</span>
-                <span className="font-medium text-green-600">94%</span>
-              </div>
-              <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                <span className="text-gray-700">Customer Satisfaction Score</span>
-                <span className="font-medium text-yellow-600">4.7/5</span>
-              </div>
-            </div>
-          </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 };

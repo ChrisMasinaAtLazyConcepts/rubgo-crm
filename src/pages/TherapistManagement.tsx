@@ -30,6 +30,11 @@ interface Therapist {
     provider?: string;
     completedAt?: string;
   };
+   bankDetails: {
+    status: 'pending' | 'in-prsogress' | 'passed' | 'failed';
+    provider?: string;
+    completedAt?: string;
+  };
   applicationVideo: {
     url: string;
     reviewStatus: 'pending' | 'approved' | 'rejected';
@@ -121,7 +126,12 @@ const TherapistManagement: React.FC = () => {
         lastActive: '2024-01-20',
         idNumber: '',
         specialties: undefined,
-        licenseNumber: ''
+        licenseNumber: '',
+        bankDetails: {
+          status: 'pending',
+          provider: undefined,
+          completedAt: undefined
+        }
       },
       {
         id: '2',
@@ -162,7 +172,12 @@ const TherapistManagement: React.FC = () => {
         lastActive: '2024-01-19',
         idNumber: '',
         specialties: undefined,
-        licenseNumber: ''
+        licenseNumber: '',
+        bankDetails: {
+          status: 'pending',
+          provider: undefined,
+          completedAt: undefined
+        }
       },
       {
         id: '3',
@@ -200,7 +215,12 @@ const TherapistManagement: React.FC = () => {
         lastActive: '2024-01-20',
         idNumber: '',
         specialties: undefined,
-        licenseNumber: ''
+        licenseNumber: '',
+        bankDetails: {
+          status: 'pending',
+          provider: undefined,
+          completedAt: undefined
+        }
       }
     ];
 
@@ -739,24 +759,57 @@ const VerificationModal: React.FC<VerificationModalProps> = ({ therapist, onClos
   </h3>
   
   <div className="flex items-center justify-between">
-    {/* Step 1 - Profile Completed */}
-    <div className="flex flex-col items-center text-center flex-1">
-      <div className="relative mb-3">
-        <div className="w-12 h-12 rounded-full bg-green-300 flex items-center justify-center text-white text-lg font-semibold shadow-md">
-          1
-        </div>
-        <div className="absolute -top-1 -right-1 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-          <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-          </svg>
-        </div>
+  <div className="flex items-center justify-between">
+  {/* Step 1 - Profile Completed */}
+  <div className="flex flex-col items-center text-center flex-1">
+    <div className="relative mb-3">
+      <div className="w-12 h-12 rounded-full bg-green-300 flex items-center justify-center text-white text-lg font-semibold shadow-md">
+        1
       </div>
-      <span className="font-medium text-gray-900 text-sm">Profile Completed</span>
-      <p className="text-xs text-gray-500 mt-1">All information provided</p>
-      <span className="inline-flex items-center gap-1 text-green-600 text-xs font-medium mt-2">
-        Done
-      </span>
+      <div className="absolute -top-1 -right-1 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+        <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+        </svg>
+      </div>
     </div>
+    <span className="font-medium text-gray-900 text-sm">Profile Completed</span>
+    <p className="text-xs text-gray-500 mt-1">All information provided</p>
+    <span className="inline-flex items-center gap-1 text-green-600 text-xs font-medium mt-2">
+      Done
+    </span>
+  </div>
+
+  {/* Connector Line */}
+  <div className="flex-1 relative">
+    <div className="h-0.5 bg-green-500 mx-4"></div>
+    <div className="absolute inset-0 flex items-center justify-center">
+      <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+        <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
+      </svg>
+    </div>
+  </div>
+
+  {/* Step 2 - Banking Details Verified */}
+  <div className="flex flex-col items-center text-center flex-1">
+    <div className="relative mb-3">
+      <div className="w-12 h-12 rounded-full bg-green-300 flex items-center justify-center text-white text-lg font-semibold shadow-md">
+        2
+      </div>
+      <div className="absolute -top-1 -right-1 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+        <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+        </svg>
+      </div>
+    </div>
+    <span className="font-medium text-gray-900 text-sm">Banking Details</span>
+    <p className="text-xs text-gray-500 mt-1">Payment information verified</p>
+    <span className="inline-flex items-center gap-1 text-green-600 text-xs font-medium mt-2">
+      Verified
+    </span>
+  </div>
+
+  {/* Continue with other steps... */}
+</div>
 
     {/* Connector Line 1 */}
     <div className="flex-1 relative">
@@ -873,6 +926,16 @@ const VerificationModal: React.FC<VerificationModalProps> = ({ therapist, onClos
           </div>
           
           <div className="space-y-3">
+             <div className="flex justify-between items-center">
+              <span className="text-gray-600 font-medium">Status:</span>
+              <span className={`px-2 py-1 rounded text-xs font-medium ${
+                therapist.bankDetails?.status === 'passed' 
+                  ? 'bg-green-100 text-green-800' 
+                  : 'bg-yellow-100 text-yellow-800'
+              }`}>
+                {therapist.backgroundCheck?.status || 'passed'}
+              </span>
+            </div>
             <div className="flex justify-between items-center">
               <span className="text-gray-600 font-medium">Status:</span>
               <span className={`px-2 py-1 rounded text-xs font-medium ${

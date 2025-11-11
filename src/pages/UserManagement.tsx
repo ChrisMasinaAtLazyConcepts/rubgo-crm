@@ -884,12 +884,14 @@ const GeofenceModal: React.FC<GeofenceModalProps> = ({ onClose, onSave }) => {
       <div className="bg-white rounded-lg p-6 w-full max-w-2xl">
         <h2 className="text-xl font-semibold mb-4">Create Geofence</h2>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div className="bg-white grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Geofence Name
             </label>
             <input
+
+            
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}

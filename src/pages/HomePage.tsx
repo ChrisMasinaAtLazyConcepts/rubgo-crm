@@ -105,18 +105,38 @@ const HomePage: React.FC = () => {
     return false;
   };
 
+  // Clear all filters
+  const clearFilters = () => {
+    setSelectedProvince('');
+    setSelectedTown('');
+  };
+
   return (
-    <div className="pt-5">
-      <div className="container mx-auto px-4">
+    <div className="min-h-screen bg-gray-50">
+      <div className="container mx-auto px-4 py-6">
         {/* Stats Overview */}
         <StatsOverview />
 
- {/* Add larger cityy or town or surburb search ba
- r to Filter */}
+        {/* Location Filter Section */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mt-6">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6">
+            <div>
+              <h2 className="text-xl font-semibold text-gray-900 mb-2">Location Filter</h2>
+              <p className="text-gray-600 text-sm">Find services in specific areas</p>
+            </div>
+            {(selectedProvince || selectedTown) && (
+              <button
+                onClick={clearFilters}
+                className="flex items-center space-x-2 text-green-600 hover:text-green-700 text-sm font-medium mt-2 lg:mt-0"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+                <span>Clear Filters</span>
+              </button>
+            )}
+          </div>
 
-        {/* Province and Town Filter */}
-        <div className="bg-white rounded-lg shadow-md p-6 mt-6">
-          <h2 className="text-xl font-semibold mb-4">Location Filter</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Province Selector */}
             <div>
@@ -127,7 +147,7 @@ const HomePage: React.FC = () => {
                 id="province"
                 value={selectedProvince}
                 onChange={handleProvinceChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white transition-colors"
               >
                 {Object.entries(provincesData).map(([key, province]) => (
                   <option key={key} value={key}>
@@ -140,46 +160,85 @@ const HomePage: React.FC = () => {
             {/* Town/Suburb Selector */}
             <div>
               <label htmlFor="town" className="block text-sm font-medium text-gray-700 mb-2">
-                Town/Suburb
+                City/Town/Suburb
               </label>
               <select
                 id="town"
                 value={selectedTown}
                 onChange={handleTownChange}
                 disabled={!selectedProvince}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white disabled:bg-gray-50 disabled:cursor-not-allowed transition-colors"
               >
-                {selectedProvince && provincesData[selectedProvince].towns.map((town) => (
-                  <option key={town} value={town}>
-                    {town}
-                  </option>
-                ))}
+                {selectedProvince ? (
+                  provincesData[selectedProvince].towns.map((town) => (
+                    <option key={town} value={town}>
+                      {town}
+                    </option>
+                  ))
+                ) : (
+                  <option value="">Select a province first</option>
+                )}
               </select>
             </div>
           </div>
 
           {/* Selected Filters Display */}
           {(selectedProvince || selectedTown) && (
-            <div className="mt-4 p-3 bg-blue-50 rounded-md">
-              <p className="text-sm text-blue-800">
-                <span className="font-semibold">Active Filters:</span>
-                {selectedProvince && ` Province: ${provincesData[selectedProvince].name}`}
-                {selectedTown && selectedTown !== 'All Towns' && `, Town: ${selectedTown}`}
-                {!hasLiveServices() && selectedTown !== 'All Towns' && (
-                  <span className="text-orange-600 font-semibold"> • No live services in this area yet</span>
-                )}
-              </p>
+            <div className={`mt-4 p-4 rounded-lg border ${
+              hasLiveServices() 
+                ? 'bg-green-50 border-green-200' 
+                : 'bg-yellow-50 border-yellow-200'
+            }`}>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className={`p-2 rounded-full ${
+                    hasLiveServices() ? 'bg-green-100 text-green-600' : 'bg-yellow-100 text-yellow-600'
+                  }`}>
+                    {hasLiveServices() ? (
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    ) : (
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                      </svg>
+                    )}
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium">
+                      <span className="text-gray-700">Active Filters:</span>
+                      {selectedProvince && ` ${provincesData[selectedProvince].name}`}
+                      {selectedTown && selectedTown !== 'All Towns' && ` • ${selectedTown}`}
+                    </p>
+                    <p className={`text-sm ${hasLiveServices() ? 'text-green-700' : 'text-yellow-700'}`}>
+                      {hasLiveServices() 
+                        ? 'Live services available in this area' 
+                        : 'No live services in this area yet'
+                      }
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
         </div>
 
+        {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
           {/* Live Map or No Services Component */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-semibold mb-4">Live Activity</h2>
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 h-full">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-semibold text-gray-900">Live Activity Map</h2>
+                <div className="flex items-center space-x-2 text-sm text-gray-600">
+                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                  <span>Active</span>
+                  <div className="w-3 h-3 bg-gray-300 rounded-full ml-2"></div>
+                  <span>Inactive</span>
+                </div>
+              </div>
               {hasLiveServices() ? (
-               <LiveMap province={selectedProvince} town={selectedTown} />
+                <LiveMap province={selectedProvince} town={selectedTown} />
               ) : (
                 <NoServices selectedProvince={selectedProvince} selectedTown={selectedTown} />
               )}
@@ -188,8 +247,7 @@ const HomePage: React.FC = () => {
           
           {/* Recent Requests */}
           <div className="lg:col-span-1">
-            
-              <RecentRequests province={selectedProvince} town={selectedTown} />
+            <RecentRequests province={selectedProvince} town={selectedTown} />
           </div>
         </div>
       </div>
