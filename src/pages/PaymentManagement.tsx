@@ -29,6 +29,455 @@ interface PayoutSummary {
   completedPayouts: number;
 }
 
+// Manual Payment Modal Component
+interface ManualPaymentModalProps {
+  payment: Payment | null;
+  onClose: () => void;
+  onProcess: (paymentId: string, amount: number, notes: string) => void;
+}
+
+const ManualPaymentModal: React.FC<ManualPaymentModalProps> = ({ payment, onClose, onProcess }) => {
+  const [amount, setAmount] = useState(payment?.therapistEarnings || 0);
+  const [notes, setNotes] = useState('');
+  const [processing, setProcessing] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setProcessing(true);
+    
+    const paymentId = payment?.id || 'manual-' + Date.now();
+    await onProcess(paymentId, amount, notes);
+    
+    setProcessing(false);
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+      <div className="bg-white rounded-xl p-6 w-full max-w-md">
+        <h2 className="text-xl font-semibold text-gray-900 mb-4">Manual Payment</h2>
+        
+        <form onSubmit={handleSubmit}>
+          <div className="space-y-4">
+            {payment && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Therapist
+                </label>
+                <p className="text-gray-900">{payment.therapistName}</p>
+              </div>
+            )}
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Amount (R)
+              </label>
+              <input
+                type="number"
+                value={amount}
+                onChange={(e) => setAmount(parseFloat(e.target.value))}
+                className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                required
+                min="0"
+                step="0.01"
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Notes
+              </label>
+              <textarea
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                rows={3}
+                className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                placeholder="Add any notes about this manual payment..."
+              />
+            </div>
+          </div>
+
+          <div className="flex justify-end space-x-3 mt-6">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2.5 text-gray-600 hover:text-gray-800 transition-colors"
+              disabled={processing}
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="bg-green-600 text-white px-6 py-2.5 rounded-lg hover:bg-green-700 disabled:bg-gray-400 transition-colors"
+              disabled={processing}
+            >
+              {processing ? 'Processing...' : 'Process Payment'}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+// Invoice Modal Component (FIXED VERSION)
+interface InvoiceModalProps {
+  payment: Payment;
+  onClose: () => void;
+}
+
+const InvoiceModal: React.FC<InvoiceModalProps> = ({ payment, onClose }) => {
+  const printInvoice = () => {
+    window.print();
+  };
+
+  // Status icons to replace emojis
+  const StatusIcon = ({ status }: { status: string }) => {
+    switch (status) {
+      case 'completed':
+        return (
+          <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
+        );
+      case 'processing':
+        return (
+          <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        );
+      case 'pending':
+        return (
+          <svg className="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        );
+      default:
+        return (
+          <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        );
+    }
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'completed': return 'bg-green-100 text-green-800 border border-green-200';
+      case 'processing': return 'bg-blue-100 text-blue-800 border border-blue-200';
+      case 'pending': return 'bg-yellow-100 text-yellow-800 border border-yellow-200';
+      case 'failed': return 'bg-red-100 text-red-800 border border-red-200';
+      default: return 'bg-gray-100 text-gray-800 border border-gray-200';
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+      <div className="bg-white rounded-xl shadow-2xl w-full max-w-6xl max-h-[95vh] overflow-hidden">
+        {/* Header Section */}
+        <div className="bg-gradient-to-r from-green-600 to-green-800 text-white p-8">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-6">
+                <span className="text-3xl font-bold">RubHub</span>
+              <div className="border-l border-green-400 h-12"></div>
+              <div>
+                <h1 className="text-3xl font-bold">PAYMENT INVOICE</h1>
+                <p className="text-green-100 text-lg mt-1">Professional Therapy Services</p>
+              </div>
+            </div>
+            <div className="text-right">
+              <p className="text-green-100 font-medium text-lg">Invoice #</p>
+              <p className="font-mono font-bold text-2xl">{payment.requestId}</p>
+              <p className="text-green-100 text-sm mt-2">{payment.paymentDate}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="p-8 space-y-8 max-h-[80vh] overflow-y-auto">
+          {/* Action Buttons */}
+          <div className="flex justify-between items-center bg-gray-50 rounded-lg p-6">
+            <div>
+              <p className="text-gray-600 text-lg">Issued Date</p>
+              <p className="font-semibold text-gray-900 text-xl">{payment.paymentDate}</p>
+            </div>
+            <div className="flex space-x-4">
+              <button
+                onClick={printInvoice}
+                className="flex items-center space-x-3 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors shadow-lg font-semibold"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                </svg>
+                <span className="text-lg">Print Invoice</span>
+              </button>
+              <button
+                onClick={onClose}
+                className="flex items-center space-x-3 bg-gray-200 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-300 transition-colors font-semibold"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+                <span className="text-lg">Close</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Payment Method & Earnings */}
+          <div className="bg-gray-500 rounded-xl p-6 text-white">
+            <div className="flex justify-between items-center">
+              <div className="flex items-center space-x-4">
+                <div className="bg-white bg-opacity-20 p-3 rounded-xl">
+                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="font-bold text-xl">Instant EFT Payment</p>
+                  <p className="text-gray-300">Processed via secure payment gateway</p>
+                </div>
+              </div>
+              <div className="text-right">
+                <p className="font-bold text-3xl">R{payment.therapistEarnings}</p>
+                <p className="text-gray-300 text-lg">Therapist Earnings</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Service Details - Side by Side */}
+          <div className="grid grid-cols-2 gap-8">
+            {/* Therapist Details */}
+            <div className="border-2 border-gray-100 rounded-xl p-6 bg-white shadow-lg">
+              <div className="flex items-center space-x-4 mb-6">
+                <div className="bg-green-100 p-3 rounded-xl">
+                  <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                </div>
+                <h3 className="font-bold text-xl text-gray-900">Therapist Information</h3>
+              </div>
+              <div className="space-y-4">
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <p className="text-sm text-gray-600 font-medium">Therapist Name</p>
+                  <p className="font-bold text-lg text-gray-900">{payment.therapistName}</p>
+                </div>
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <p className="text-sm text-gray-600 font-medium">Therapist ID</p>
+                  <p className="font-mono font-bold text-gray-900 text-lg">{payment.therapistId}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Service Details */}
+            <div className="border-2 border-gray-100 rounded-xl p-6 bg-white shadow-lg">
+              <div className="flex items-center space-x-4 mb-6">
+                <div className="bg-purple-100 p-3 rounded-xl">
+                  <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                  </svg>
+                </div>
+                <h3 className="font-bold text-xl text-gray-900">Service Information</h3>
+              </div>
+              <div className="space-y-4">
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <p className="text-sm text-gray-600 font-medium">Service Type</p>
+                  <p className="font-bold text-lg text-gray-900">{payment.serviceType}</p>
+                </div>
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <p className="text-sm text-gray-600 font-medium">Customer</p>
+                  <p className="font-bold text-lg text-gray-900">{payment.customerName}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Payment Breakdown - Full Width */}
+          <div className="border-2 border-gray-100 rounded-xl overflow-hidden bg-white shadow-lg">
+            <div className="bg-gray-500 px-8 py-6">
+              <h3 className="font-bold text-white text-2xl">Payment Breakdown</h3>
+              <p className="text-gray-300 mt-1">Detailed cost analysis and earnings</p>
+            </div>
+            
+            <div className="p-8">
+              <div className="space-y-4">
+                {/* Base Price */}
+                <div className="flex justify-between items-center py-4 border-b border-gray-100">
+                  <div className="flex items-center space-x-4">
+                    <div className="bg-blue-50 p-3 rounded-lg">
+                      <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="font-semibold text-gray-900">Base Service Price</p>
+                      <p className="text-sm text-gray-600">Standard service charge</p>
+                    </div>
+                  </div>
+                  <p className="font-bold text-lg text-gray-900">R{payment.basePrice}</p>
+                </div>
+
+                {/* Travel Fee */}
+                <div className="flex justify-between items-center py-4 border-b border-gray-100">
+                  <div className="flex items-center space-x-4">
+                    <div className="bg-green-50 p-3 rounded-lg">
+                      <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="font-semibold text-gray-900">Travel Fee</p>
+                      <p className="text-sm text-gray-600">Transportation costs</p>
+                    </div>
+                  </div>
+                  <p className="font-bold text-lg text-gray-900">R{payment.travelFee}</p>
+                </div>
+
+                {/* Total Amount */}
+                <div className="flex justify-between items-center py-4 border-b border-gray-200 bg-gray-50 rounded-lg px-4">
+                  <div className="flex items-center space-x-4">
+                    <div className="bg-purple-50 p-3 rounded-lg">
+                      <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="font-semibold text-gray-900">Total Amount</p>
+                      <p className="text-sm text-gray-600">Customer paid amount</p>
+                    </div>
+                  </div>
+                  <p className="font-bold text-xl text-purple-600">R{payment.totalAmount}</p>
+                </div>
+
+                {/* Service Fee Deduction */}
+                <div className="flex justify-between items-center py-4 border-b border-gray-100">
+                  <div className="flex items-center space-x-4">
+                    <div className="bg-red-50 p-3 rounded-lg">
+                      <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="font-semibold text-gray-900">RubGo Service Fee</p>
+                      <p className="text-sm text-gray-600">Platform commission (12%)</p>
+                    </div>
+                  </div>
+                  <p className="font-bold text-lg text-red-600">-R{payment.rubgoServiceFee}</p>
+                </div>
+
+                {/* Final Earnings */}
+                <div className="flex justify-between items-center py-6 bg-gradient-to-r from-green-50 to-emerald-100 rounded-lg px-6 border-2 border-green-200">
+                  <div className="flex items-center space-x-4">
+                    <div className="bg-green-600 p-3 rounded-lg">
+                      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="font-bold text-2xl text-green-900">Therapist Earnings</p>
+                      <p className="text-green-700 font-medium">Final amount transferred to therapist</p>
+                    </div>
+                  </div>
+                  <p className="font-bold text-3xl text-green-600">R{payment.therapistEarnings}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Payment Status & Timeline */}
+          <div className="grid grid-cols-2 gap-8">
+            {/* Payment Status */}
+            <div className="border-2 border-gray-100 rounded-xl p-6 bg-white shadow-lg">
+              <div className="flex items-center space-x-4 mb-6">
+                <div className="bg-orange-100 p-3 rounded-xl">
+                  <svg className="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <h3 className="font-bold text-xl text-gray-900">Payment Status</h3>
+              </div>
+              <div className="space-y-4">
+                <div className={`inline-flex items-center px-4 py-3 rounded-full text-lg font-semibold ${getStatusColor(payment.status)}`}>
+                  <span className="mr-3">
+                    <StatusIcon status={payment.status} />
+                  </span>
+                  {payment.status.charAt(0).toUpperCase() + payment.status.slice(1)}
+                </div>
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <p className="text-sm text-gray-600">Payment Method</p>
+                  <p className="font-bold text-lg text-gray-900 capitalize">{payment.paymentMethod.replace('-', ' ')}</p>
+                </div>
+                {payment.payoutDate && (
+                  <div className="bg-green-50 rounded-lg p-4 border border-green-200">
+                    <p className="text-sm text-green-600">Payout Completed</p>
+                    <p className="font-bold text-lg text-green-700">{payment.payoutDate}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Payment Timeline */}
+            <div className="border-2 border-gray-100 rounded-xl p-6 bg-white shadow-lg">
+              <div className="flex items-center space-x-4 mb-6">
+                <div className="bg-indigo-100 p-3 rounded-xl">
+                  <svg className="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <h3 className="font-bold text-xl text-gray-900">Payment Timeline</h3>
+              </div>
+              <div className="space-y-4">
+                <div className="flex items-center space-x-4">
+                  <div className="bg-green-100 p-2 rounded-full">
+                    <div className="bg-green-500 w-3 h-3 rounded-full"></div>
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-semibold text-gray-900">Payment Received</p>
+                    <p className="text-sm text-gray-600">{payment.paymentDate}</p>
+                  </div>
+                </div>
+                {payment.status === 'completed' && payment.payoutDate ? (
+                  <div className="flex items-center space-x-4">
+                    <div className="bg-green-100 p-2 rounded-full">
+                      <div className="bg-green-500 w-3 h-3 rounded-full"></div>
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-semibold text-gray-900">Payout Sent to Therapist</p>
+                      <p className="text-sm text-gray-600">{payment.payoutDate}</p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex items-center space-x-4 opacity-50">
+                    <div className="bg-gray-100 p-2 rounded-full">
+                      <div className="bg-gray-400 w-3 h-3 rounded-full"></div>
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-semibold text-gray-600">Payout Pending</p>
+                      <p className="text-sm text-gray-500">Will be processed shortly</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className="border-t-2 border-gray-200 pt-8">
+            <div className="bg-gray-50 rounded-xl p-6 text-center">
+              <p className="text-gray-600 text-sm">
+                Thank you for choosing RubGo for your therapy services. 
+                This invoice was generated automatically and does not require a signature.
+              </p>
+              <p className="text-gray-500 text-xs mt-2">
+                If you have any questions, please contact support@rubgo.com
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Main PaymentManagement Component
 const PaymentManagement: React.FC = () => {
   const [payments, setPayments] = useState<Payment[]>([]);
   const [filteredPayments, setFilteredPayments] = useState<Payment[]>([]);
@@ -295,7 +744,7 @@ const PaymentManagement: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 py-8">
-            <Breadcrumbs />
+        <Breadcrumbs />
         {/* Header Section */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
           <div className="flex items-center space-x-4 mb-4 lg:mb-0">
@@ -303,7 +752,7 @@ const PaymentManagement: React.FC = () => {
               <Coins className="w-8 h-8 text-white" />
             </div>
             <div>
-              {/* <h1 className="text-3xl font-bold text-gray-900">Payment Management</h1> */}
+              <h1 className="text-3xl font-bold text-gray-900">Payment Management</h1>
               <p className="text-gray-600">Manage therapist payments and payouts</p>
             </div>
           </div>
@@ -448,7 +897,7 @@ const PaymentManagement: React.FC = () => {
                 disabled={selectedPayments.length === 0}
                 className="flex items-center space-x-2 bg-green-600 text-white px-6 py-2.5 rounded-lg hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
               >
-                <Coins className="pt-3 w-4 h-4" />
+                <Coins className="w-4 h-4" />
                 <span>Process Selected ({selectedPayments.length})</span>
               </button>
             </div>
@@ -587,353 +1036,6 @@ const PaymentManagement: React.FC = () => {
           }}
         />
       )}
-    </div>
-  );
-};
-
-// Manual Payment Modal Component (keep existing implementation)
-interface ManualPaymentModalProps {
-  payment: Payment | null;
-  onClose: () => void;
-  onProcess: (paymentId: string, amount: number, notes: string) => void;
-}
-
-const ManualPaymentModal: React.FC<ManualPaymentModalProps> = ({ payment, onClose, onProcess }) => {
-  const [amount, setAmount] = useState(payment?.therapistEarnings || 0);
-  const [notes, setNotes] = useState('');
-  const [processing, setProcessing] = useState(false);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setProcessing(true);
-    
-    const paymentId = payment?.id || 'manual-' + Date.now();
-    await onProcess(paymentId, amount, notes);
-    
-    setProcessing(false);
-  };
-
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-xl p-6 w-full max-w-md">
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">Manual Payment</h2>
-        
-        <form onSubmit={handleSubmit}>
-          <div className="space-y-4">
-            {payment && (
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Therapist
-                </label>
-                <p className="text-gray-900">{payment.therapistName}</p>
-              </div>
-            )}
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Amount (R)
-              </label>
-              <input
-                type="number"
-                value={amount}
-                onChange={(e) => setAmount(parseFloat(e.target.value))}
-                className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                required
-                min="0"
-                step="0.01"
-              />
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Notes
-              </label>
-              <textarea
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                rows={3}
-                className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                placeholder="Add any notes about this manual payment..."
-              />
-            </div>
-          </div>
-
-          <div className="flex justify-end space-x-3 mt-6">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2.5 text-gray-600 hover:text-gray-800 transition-colors"
-              disabled={processing}
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="bg-green-600 text-white px-6 py-2.5 rounded-lg hover:bg-green-700 disabled:bg-gray-400 transition-colors"
-              disabled={processing}
-            >
-              {processing ? 'Processing...' : 'Process Payment'}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
-};
-
-// Invoice Modal Component (keep existing implementation)
-interface InvoiceModalProps {
-  payment: Payment;
-  onClose: () => void;
-}
-
-const InvoiceModal: React.FC<InvoiceModalProps> = ({ payment, onClose }) => {
-  const printInvoice = () => {
-    window.print();
-  };
-  return (
-   <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-        {/* Header with Branding */}
-        <div className="bg-gray-100 text-green p-6 rounded-t-xl">
-          <div className="flex justify-between items-start">
-            <div className="flex items-center space-x-4">
-              <div className=" p-2 rounded-lg">
-               <span className="text-2xl font-bold text-green-600">RubHub</span>
-              </div>
-              
-            </div>
-             <svg   onClick={onClose} className="cursor-pointer flex items-right w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-           
-          </div>
-        </div>
-
-        <div className="p-6 space-y-6">
-          <div>
-                <h1 className="text-2xl font-bold">PAYMENT INVOICE</h1>
-                <p className="text-green-700 text-sm">Professional Therapy Services</p>
-              </div>
-
-               <div className="text-left">
-              <p className=" font-medium text-green-700 ">Invoice #</p>
-              <p className="font-mono font-bold text-lg">{payment.requestId}</p>
-            </div>
-          {/* Action Buttons */}
-          <div className="flex justify-between items-center">
-            <div>
-              <p className="text-gray-500 text-sm">Issued Date</p>
-              <p className="font-semibold text-gray-700">{payment.paymentDate}</p>
-            </div>
-            <div className="flex space-x-3">
-              <button
-                onClick={printInvoice}
-                className="flex items-center space-x-2 bg-green-600 text-white px-4 py-2.5 rounded-lg hover:bg-green-700 transition-colors shadow-sm"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-                </svg>
-                <span>Print Invoice</span>
-              </button>
-             
-            </div>
-          </div>
-
-          {/* Payment Method Badge */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="bg-white p-2 rounded-lg shadow-sm">
-                  <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                  </svg>
-                </div>
-                <div>
-                  <p className="font-semibold text-blue-900">Instant EFT Payment</p>
-                  <p className="text-blue-700 text-sm">Processed via secure payment gateway</p>
-                </div>
-              </div>
-              <div className="text-right">
-                <p className="text-blue-900 font-bold text-lg">R{payment.therapistEarnings}</p>
-                <p className="text-blue-700 text-sm">Therapist Earnings</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Service Details Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Therapist Details */}
-            <div className="border border-gray-200 rounded-lg p-5 bg-white shadow-sm">
-              <div className="flex items-center space-x-3 mb-4">
-                <div className="bg-green-100 p-2 rounded-lg">
-                  <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
-                </div>
-                <h3 className="font-semibold text-gray-900">Therapist Information</h3>
-              </div>
-              <div className="space-y-2">
-                <div>
-                  <p className="text-sm text-gray-600">Therapist Name</p>
-                  <p className="font-medium text-gray-900">{payment.therapistName}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600">Therapist ID</p>
-                  <p className="font-mono text-gray-700">{payment.therapistId}</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Service Details */}
-            <div className="border border-gray-200 rounded-lg p-5 bg-white shadow-sm">
-              <div className="flex items-center space-x-3 mb-4">
-                <div className="bg-purple-100 p-2 rounded-lg">
-                  <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                  </svg>
-                </div>
-                <h3 className="font-semibold text-gray-900">Service Information</h3>
-              </div>
-              <div className="space-y-2">
-                <div>
-                  <p className="text-sm text-gray-600">Service Type</p>
-                  <p className="font-medium text-gray-900">{payment.serviceType}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600">Customer</p>
-                  <p className="font-medium text-gray-900">{payment.customerName}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Payment Breakdown */}
-          <div className="border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm">
-            <div className="bg-gray-50 px-6 py-4 border-b border-gray-200">
-              <h3 className="font-semibold text-gray-900 text-lg">Payment Breakdown</h3>
-            </div>
-            <div className="p-6">
-              <div className="space-y-4">
-                <div className="flex justify-between items-center py-2">
-                  <div>
-                    <span className="text-gray-700 font-medium">Base Service Price</span>
-                  </div>
-                  <span className="font-medium text-gray-900">R{payment.basePrice}</span>
-                </div>
-                
-                <div className="flex justify-between items-center py-2">
-                  <div>
-                    <span className="text-gray-700 font-medium">Travel Fee</span>
-                  </div>
-                  <span className="font-medium text-gray-900">R{payment.travelFee}</span>
-                </div>
-                
-                <div className="flex justify-between items-center py-3 border-t border-gray-200">
-                  <div>
-                    <span className="text-gray-900 font-semibold">Subtotal</span>
-                  </div>
-                  <span className="font-bold text-gray-900">R{payment.basePrice + payment.travelFee}</span>
-                </div>
-                
-                <div className="flex justify-between items-center py-2 bg-red-50 -mx-2 px-2 rounded">
-                  <div>
-                    <span className="text-red-700 font-medium">RubGo Service Fee (12%)</span>
-                    <p className="text-red-600 text-xs">Platform & processing fees</p>
-                  </div>
-                  <span className="font-medium text-red-700">- R{payment.rubgoServiceFee}</span>
-                </div>
-                
-                <div className="flex justify-between items-center py-4 border-t border-gray-200 bg-green-50 -mx-6 px-6 mt-4">
-                  <div>
-                    <span className="text-green-900 font-bold text-lg">Therapist Earnings</span>
-                    <p className="text-green-700 text-sm">Amount transferred to therapist</p>
-                  </div>
-                  <span className="font-bold text-green-600 text-xl">R{payment.therapistEarnings}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Status and Payment Info */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="border border-gray-200 rounded-lg p-5 bg-white shadow-sm">
-              <h4 className="font-semibold text-gray-900 mb-3">Payment Status</h4>
-              <div className="flex items-center space-x-3">
-                <div className={`p-2 rounded-full ${
-                  payment.status === 'completed' 
-                    ? 'bg-green-100 text-green-600' 
-                    : 'bg-yellow-100 text-yellow-600'
-                }`}>
-                  {payment.status === 'completed' ? (
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                  ) : (
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  )}
-                </div>
-                <div>
-                  <span className={`font-semibold ${
-                    payment.status === 'completed' ? 'text-green-700' : 'text-yellow-700'
-                  }`}>
-                    {payment.status.charAt(0).toUpperCase() + payment.status.slice(1)}
-                  </span>
-                  <p className="text-gray-600 text-sm">
-                    {payment.status === 'completed' ? 'Payment completed successfully' : 'Payment processing'}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {payment.payoutDate && (
-              <div className="border border-gray-200 rounded-lg p-5 bg-white shadow-sm">
-                <h4 className="font-semibold text-gray-900 mb-3">Payout Information</h4>
-                <div className="flex items-center space-x-3">
-                  <div className="bg-blue-100 p-2 rounded-full text-blue-600">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <span className="font-semibold text-gray-900">Paid Out</span>
-                    <p className="text-gray-700">{payment.payoutDate}</p>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Payment Partners */}
-          <div className="border-t border-gray-200 pt-6">
-            <div className="text-center">
-              <p className="text-gray-600 text-sm mb-4">Secured by trusted payment partners</p>
-              <div className="flex justify-center items-center space-x-8">
-                <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center">
-                <img src="./assets/images/ozow.jfif" alt="PayPal" className="w-20 h-16" />
-                </div>
-                <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center">
-                <img src="./assets/images/payfast.png" alt="PayPal" className="w-20 h-16" />
-                </div>
-              </div>
-              <p className="text-gray-500 text-xs mt-4">
-                Transaction ID: {payment.requestId} • {new Date().toLocaleDateString()}
-              </p>
-            </div>
-             {/* <button
-                onClick={onClose}
-                className="flex items-center space-x-2 bg-gray-100 text-gray-700 px-4 py-2.5 rounded-lg hover:bg-gray-200 transition-colors"
-              >
-                <svg   onClick={onClose} className="flex items-right w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-                <span>Close</span>
-              </button> */}
-          </div>
-        </div>
-      </div>
     </div>
   );
 };
